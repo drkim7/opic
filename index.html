@@ -566,26 +566,32 @@ function makeRecognizer(onResult, onEnd) {
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (!SR) return null;
   const r = new SR(); r.lang = "en-US"; r.interimResults = true; r.continuous = true;
-  let finalText = "";
+  let committed = "";       // 이전 세션들에서 확정된 텍스트(재시작해도 보존)
+  let finalText = "";       // committed + 현재 세션 확정분
   r.manualStop = false;     // 사용자가 직접 중지를 눌렀는지
   r.fatalError = false;     // 권한 등 재시작하면 안 되는 에러인지
   r.restartCount = 0;       // 무한 재시작 방지용 카운터
   r.onresult = (e) => {
-    let interim = "";
-    for (let i = e.resultIndex; i < e.results.length; i++) {
+    // 모바일 크롬은 resultIndex가 0부터 다시 오거나 같은 구간을 여러 번 final로
+    // 보내는 버그가 있다. 누적(+=) 대신 현재 세션의 results 전체를 매번 처음부터
+    // 다시 읽어 통째로 재구성하고, 이전 세션 확정분(committed)에 이어붙인다.
+    let sessionFinal = "", interim = "";
+    for (let i = 0; i < e.results.length; i++) {
       const t = e.results[i][0].transcript;
-      if (e.results[i].isFinal) finalText += t + " "; else interim += t;
+      if (e.results[i].isFinal) sessionFinal += t + " "; else interim += t;
     }
+    finalText = committed + sessionFinal;
     r.restartCount = 0;     // 말이 인식되면 카운터 리셋
     onResult(finalText, interim);
   };
   r.onend = () => {
     // 침묵으로 세션이 끊겨도, 사용자가 직접 멈춘 게 아니고 치명적 에러도 아니면
-    // 자동으로 다시 이어 듣는다. finalText는 유지되므로 중복 누적되지 않는다.
-    // (단, 말 없이 계속 끊기기만 하면 무한루프가 되므로 연속 재시작은 최대 20회로 제한)
+    // 자동으로 다시 이어 듣는다. 현재까지 확정된 finalText를 committed에 보존한 뒤
+    // 재시작하면, 새 세션의 빈 results와 합쳐져도 중복/유실이 없다.
     if (!r.manualStop && !r.fatalError && r.restartCount < 20) {
+      committed = finalText;   // 지금까지 인식분을 보존
       r.restartCount++;
-      try { r.start(); return; } catch (e) { /* 아직 정지 중이면 잠깐 뒤 재시도 */
+      try { r.start(); return; } catch (e) {
         setTimeout(() => { if (!r.manualStop && !r.fatalError) { try { r.start(); return; } catch (e2) {} } onEnd(finalText); }, 250);
         return;
       }
