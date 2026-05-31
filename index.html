@@ -261,7 +261,7 @@
       <div id="voiceMode">
         <button class="mic-btn" id="micBtn" onclick="toggleMic()">🎙️ 녹음 시작</button>
         <div class="transcript" id="transcript"><span style="color:var(--dim)">녹음을 시작하면 영어 음성이 여기에 전사됩니다.</span></div>
-        <div class="small-note">⚠️ 음성인식은 Chrome + HTTPS(또는 localhost) 환경에서만 작동합니다. <b>다운로드한 파일을 직접 열면 마이크가 막히므로</b>, GitHub Pages 같은 HTTPS 주소에 올려 접속해야 합니다. 내부망/미지원 환경에서는 위 '텍스트' 모드를 사용하세요.</div>
+        <div class="small-note">⚠️ 음성인식은 Chrome + HTTPS(또는 localhost) 환경에서만 작동합니다. <b>다운로드한 파일을 직접 열면 마이크가 막히므로</b>, GitHub Pages 같은 HTTPS 주소에 올려 접속해야 합니다. 내부망/미지원 환경에서는 위 '텍스트' 모드를 사용하세요.<br>📱 <b>모바일</b>에서는 말을 잠깐 멈추면 녹음이 자동 종료됩니다. 답변을 끊지 말고 이어서 말한 뒤 직접 '녹음 중지'를 누르세요. (아이폰 사파리는 음성인식 미지원 → 텍스트 모드 사용)</div>
       </div>
       <div id="textMode" style="display:none;">
         <textarea id="textAnswer" placeholder="국문 흐름을 보고 영어로 답변을 입력하세요..."></textarea>
@@ -561,12 +561,14 @@ function resetProgress() {
   progress = {}; saveProgress(); renderPills(); showCard();
 }
 
+const IS_MOBILE = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 function makeRecognizer(onResult, onEnd) {
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (!SR) return null;
   const r = new SR(); r.lang = "en-US"; r.interimResults = true; r.continuous = true;
   let finalText = "";
-  r.manualStop = false; // 사용자가 직접 중지를 눌렀는지 표시
+  r.manualStop = false;     // 사용자가 직접 중지를 눌렀는지
+  r.gotError = false;       // 에러로 끝났는지 (권한 등)
   r.onresult = (e) => {
     let interim = "";
     for (let i = e.resultIndex; i < e.results.length; i++) {
@@ -576,22 +578,22 @@ function makeRecognizer(onResult, onEnd) {
     onResult(finalText, interim);
   };
   r.onend = () => {
-    // continuous 모드는 침묵 시 자동 재시작될 수 있음.
-    // 사용자가 직접 멈춘 게 아니면 계속 듣도록 재시작, 직접 멈췄으면 종료 처리.
-    if (!r.manualStop) {
-      try { r.start(); return; } catch (e) { /* 이미 시작됨 등은 무시 */ }
+    // 모바일: 자동 재시작하지 않는다 (재시작 시 권한 에러·전사 중복 발생).
+    //         침묵으로 끊기면 그대로 종료 처리해 누적을 막는다.
+    // PC: 사용자가 직접 멈추지 않았고 에러도 없으면 한 번 재시작해 길게 듣기 허용.
+    if (!IS_MOBILE && !r.manualStop && !r.gotError) {
+      try { r.start(); return; } catch (e) {}
     }
     onEnd(finalText);
   };
   r.onerror = (e) => {
-    // no-speech, aborted 등의 에러 시에도 안전하게 종료 처리
+    r.gotError = true;
+    // no-speech / aborted 는 정상적인 종료 흐름이므로 조용히 처리
     if (e.error === "not-allowed" || e.error === "service-not-allowed") {
-      alert("마이크 권한이 거부되었습니다. 브라우저 주소창의 마이크 아이콘에서 권한을 허용해주세요.");
-      r.manualStop = true;
+      alert("마이크 권한이 거부되었습니다. 주소창 왼쪽 자물쇠(또는 ⓘ) 아이콘 → 권한 → 마이크를 '허용'으로 바꾼 뒤 다시 시도해주세요.");
     }
     console.warn("STT error", e.error);
   };
-  // 강제 종료용 헬퍼: stop이 안 먹힐 때 abort까지 시도
   r.forceStop = () => {
     r.manualStop = true;
     try { r.stop(); } catch (e) {}
