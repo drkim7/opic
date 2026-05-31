@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OPIc AL Trainer — 스크립트 리콜</title>
+<style>
+  :root {
+    --bg: #0a0a0f; --surface: #12121a; --surface2: #1a1a26;
+    --border: #2a2a3e; --accent: #6c63ff; --accent2: #ff6b9d;
+    --accent3: #00d4aa; --text: #e8e8f0; --dim: #7a7a9a;
+    --gold: #ffd700; --warn: #f59e0b; --error: #ef4444; --success: #22c55e;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg); color: var(--text);
+    font-family: system-ui, -apple-system, sans-serif; min-height: 100vh;
+    background-image:
+      linear-gradient(rgba(108,99,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(108,99,255,0.025) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+  .app { max-width: 920px; margin: 0 auto; padding: 22px 16px; }
+  header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 22px; padding-bottom: 14px; border-bottom: 1px solid var(--border);
+    flex-wrap: wrap; gap: 10px;
+  }
+  .logo { display: flex; align-items: baseline; gap: 10px; }
+  .logo-main {
+    font-size: 26px; font-weight: 900; letter-spacing: 1px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .logo-badge {
+    background: linear-gradient(135deg, var(--gold), #ffaa00); color: #000;
+    font-size: 10px; font-weight: 800; padding: 3px 7px; border-radius: 4px; letter-spacing: 1px;
+  }
+  .config-status {
+    display: flex; align-items: center; gap: 7px; font-size: 12px; color: var(--dim);
+    cursor: pointer; padding: 6px 12px; border: 1px solid var(--border);
+    border-radius: 8px; background: var(--surface);
+  }
+  .dot-ind { width: 8px; height: 8px; border-radius: 50%; }
+  .tabs {
+    display: flex; gap: 4px; background: var(--surface); padding: 5px;
+    border-radius: 12px; margin-bottom: 22px; border: 1px solid var(--border);
+  }
+  .tab {
+    flex: 1; padding: 10px 6px; background: transparent; border: none;
+    color: var(--dim); font-family: inherit; font-size: 13px; font-weight: 600;
+    cursor: pointer; border-radius: 8px; transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 5px;
+  }
+  .tab:hover { color: var(--text); background: var(--surface2); }
+  .tab.active { background: linear-gradient(135deg, var(--accent), #8b5cf6); color: #fff; }
+  .panel { display: none; }
+  .panel.active { display: block; }
+  .modal-bg {
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7);
+    z-index: 100; align-items: center; justify-content: center; padding: 20px;
+  }
+  .modal-bg.show { display: flex; }
+  .modal {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+    padding: 24px; max-width: 480px; width: 100%; max-height: 90vh; overflow-y: auto;
+  }
+  .modal h3 { font-size: 17px; margin-bottom: 6px; }
+  .modal p.sub { font-size: 13px; color: var(--dim); margin-bottom: 16px; line-height: 1.5; }
+  .field { margin-bottom: 14px; }
+  .field label { font-size: 12px; color: var(--dim); font-weight: 600; display: block; margin-bottom: 6px; }
+  .field input {
+    width: 100%; padding: 10px 14px; background: var(--surface2);
+    border: 1px solid var(--border); border-radius: 10px; color: var(--text);
+    font-family: monospace; font-size: 13px; outline: none;
+  }
+  .pills { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
+  .pill {
+    padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 600;
+    cursor: pointer; border: 1px solid var(--border); background: var(--surface);
+    color: var(--dim); transition: all 0.2s; position: relative;
+  }
+  .pill:hover { border-color: var(--accent); color: var(--text); }
+  .pill.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .pill .count {
+    font-size: 10px; background: var(--accent2); color: #fff;
+    border-radius: 8px; padding: 1px 5px; margin-left: 4px;
+  }
+  .card-wrap { perspective: 1400px; margin-bottom: 16px; }
+  .flashcard {
+    width: 100%; min-height: 260px; position: relative; transform-style: preserve-3d;
+    transition: transform 0.55s cubic-bezier(0.175,0.885,0.32,1.275); cursor: pointer;
+  }
+  .flashcard.flipped { transform: rotateY(180deg); }
+  .face {
+    position: absolute; width: 100%; min-height: 260px; backface-visibility: hidden;
+    border-radius: 16px; padding: 28px; display: flex; flex-direction: column;
+  }
+  .front { background: linear-gradient(135deg, var(--surface), var(--surface2)); border: 1px solid var(--border); }
+  .back {
+    background: linear-gradient(135deg, rgba(108,99,255,0.14), rgba(139,92,246,0.08));
+    border: 1px solid var(--accent); transform: rotateY(180deg);
+  }
+  .card-tag { font-size: 11px; color: var(--dim); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px; }
+  .card-title { font-size: 19px; font-weight: 700; margin-bottom: 16px; }
+  .card-flow { font-size: 16px; line-height: 1.9; color: var(--text); flex: 1; display: flex; align-items: center; }
+  .card-hint { font-size: 12px; color: var(--dim); font-style: italic; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); }
+  .card-section-label { font-size: 11px; color: var(--accent3); font-weight: 700; letter-spacing: 1px; margin-bottom: 6px; }
+  .card-key { font-size: 15px; color: var(--accent3); line-height: 1.6; margin-bottom: 16px; font-weight: 500; }
+  .card-script { font-size: 13px; color: #c8c8e0; line-height: 1.7; overflow-y: auto; max-height: 130px; }
+  .flip-hint { text-align: center; font-size: 12px; color: var(--dim); margin-bottom: 16px; }
+  .recall-row { display: flex; gap: 8px; margin-bottom: 16px; }
+  .recall-btn {
+    flex: 1; padding: 11px; border-radius: 10px; font-family: inherit; font-size: 13px;
+    font-weight: 600; cursor: pointer; border: 1px solid var(--border);
+    background: var(--surface); color: var(--text); transition: all 0.2s;
+  }
+  .recall-btn.ok:hover { border-color: var(--success); color: var(--success); }
+  .recall-btn.mid:hover { border-color: var(--warn); color: var(--warn); }
+  .recall-btn.no:hover { border-color: var(--error); color: var(--error); }
+  .recall-btn.sel-ok { background: rgba(34,197,94,0.15); border-color: var(--success); color: var(--success); }
+  .recall-btn.sel-mid { background: rgba(245,158,11,0.15); border-color: var(--warn); color: var(--warn); }
+  .recall-btn.sel-no { background: rgba(239,68,68,0.15); border-color: var(--error); color: var(--error); }
+  .nav-row { display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 8px; }
+  .btn {
+    padding: 10px 18px; border: 1px solid var(--border); border-radius: 10px;
+    background: var(--surface2); color: var(--text); font-family: inherit;
+    font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s;
+  }
+  .btn:hover { border-color: var(--accent); }
+  .btn-primary { background: linear-gradient(135deg, var(--accent), #8b5cf6); border: none; color: #fff; }
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn-accent3 { background: linear-gradient(135deg, var(--accent3), #00a88a); border: none; color: #000; }
+  .counter { font-family: monospace; font-size: 14px; color: var(--dim); min-width: 56px; text-align: center; }
+  .voice-box { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 18px; margin-bottom: 14px; }
+  .voice-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; flex-wrap: wrap; gap: 8px; }
+  .voice-title { font-size: 13px; font-weight: 700; color: var(--accent); letter-spacing: 1px; }
+  .mode-toggle { display: flex; gap: 6px; }
+  .mode-btn {
+    padding: 5px 12px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer;
+    border: 1px solid var(--border); background: var(--surface2); color: var(--dim); font-family: inherit;
+  }
+  .mode-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+  textarea {
+    width: 100%; padding: 14px; background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 10px; color: var(--text); font-family: inherit; font-size: 14px;
+    line-height: 1.7; resize: vertical; min-height: 110px; outline: none;
+  }
+  textarea::placeholder { color: var(--dim); }
+  .mic-btn {
+    width: 100%; padding: 16px; border-radius: 12px; border: none; cursor: pointer;
+    font-family: inherit; font-size: 15px; font-weight: 700; transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    background: linear-gradient(135deg, var(--accent2), #ff4081); color: #fff;
+  }
+  .mic-btn.recording { animation: pulse-rec 1.3s infinite; background: linear-gradient(135deg, var(--error), #c0392b); }
+  @keyframes pulse-rec { 0%,100% { box-shadow: 0 0 0 0 rgba(239,68,68,0.5); } 50% { box-shadow: 0 0 0 12px rgba(239,68,68,0); } }
+  .transcript {
+    margin-top: 12px; padding: 14px; background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 10px; font-size: 14px; line-height: 1.7; min-height: 60px; color: var(--text);
+  }
+  .transcript .interim { color: var(--dim); font-style: italic; }
+  .small-note { font-size: 11px; color: var(--dim); margin-top: 8px; line-height: 1.5; }
+  .feedback { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; margin-top: 14px; }
+  .fb-head { padding: 13px 18px; background: var(--surface2); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+  .fb-body { padding: 18px; }
+  .check-item { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px; font-size: 14px; line-height: 1.6; }
+  .check-icon { flex-shrink: 0; font-size: 15px; margin-top: 1px; }
+  .fb-section-title { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin: 14px 0 8px; padding-top: 12px; border-top: 1px solid var(--border); }
+  .grade-badge { font-family: monospace; font-size: 19px; font-weight: 800; padding: 3px 11px; border-radius: 6px; }
+  .grade-al { background: linear-gradient(135deg, var(--gold), #ffaa00); color: #000; }
+  .grade-ih { background: linear-gradient(135deg, var(--accent3), #00a88a); color: #000; }
+  .grade-im { background: linear-gradient(135deg, #4fc3f7, #0288d1); color: #000; }
+  .loading { display: flex; align-items: center; gap: 6px; color: var(--dim); font-size: 13px; }
+  .ld { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; animation: bnc 1.2s infinite; }
+  @keyframes bnc { 0%,80%,100% { transform: translateY(0); } 40% { transform: translateY(-6px); } }
+  .question-box { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 16px; margin-bottom: 12px; }
+  .q-label { font-size: 11px; color: var(--accent); font-weight: 700; letter-spacing: 1.5px; margin-bottom: 8px; }
+  .q-text { font-size: 15px; line-height: 1.6; font-weight: 500; }
+  .chat { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 14px; min-height: 200px; max-height: 320px; overflow-y: auto; margin-bottom: 12px; display: flex; flex-direction: column; gap: 10px; }
+  .msg { display: flex; gap: 9px; }
+  .msg.user { flex-direction: row-reverse; }
+  .avatar { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; }
+  .avatar.ai { background: linear-gradient(135deg, var(--accent), #8b5cf6); }
+  .avatar.user { background: linear-gradient(135deg, var(--accent2), #ff4081); }
+  .bubble { max-width: 76%; padding: 9px 13px; border-radius: 12px; font-size: 14px; line-height: 1.6; }
+  .msg.ai .bubble { background: var(--surface2); border: 1px solid var(--border); }
+  .msg.user .bubble { background: linear-gradient(135deg, var(--accent), #8b5cf6); color: #fff; }
+  .empty { text-align: center; color: var(--dim); padding: 36px 20px; }
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: var(--surface); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  @media (max-width: 600px) {
+    .tab span { display: none; }
+    .recall-row { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="logo">
+      <div class="logo-main">OPIc Trainer</div>
+      <div class="logo-badge">AL · 스크립트 리콜</div>
+    </div>
+    <div class="config-status" id="configStatus" onclick="openConfig()">
+      <span class="dot-ind" id="dotInd" style="background:var(--error)"></span>
+      <span id="configLabel">AI 미연결 (로컬 체크)</span>
+    </div>
+  </header>
+
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('cards')">🃏 <span>스크립트 카드</span></button>
+    <button class="tab" onclick="switchTab('speaking')">🎙️ <span>스피킹 연습</span></button>
+    <button class="tab" onclick="switchTab('roleplay')">🎭 <span>롤플레이</span></button>
+  </div>
+
+  <div id="panel-cards" class="panel active">
+    <div class="pills" id="catPills"></div>
+    <div class="card-wrap">
+      <div class="flashcard" id="flashcard" onclick="flipCard(event)">
+        <div class="face front">
+          <div class="card-tag" id="cardTag">스크립트</div>
+          <div class="card-title" id="cardTitle">로딩 중...</div>
+          <div class="card-flow" id="cardFlow"></div>
+          <div class="card-hint" id="cardHint"></div>
+        </div>
+        <div class="face back">
+          <div class="card-section-label">영어 핵심문장</div>
+          <div class="card-key" id="cardKey"></div>
+          <div class="card-section-label">전체 스크립트</div>
+          <div class="card-script" id="cardScript"></div>
+        </div>
+      </div>
+    </div>
+    <div class="flip-hint">💡 카드를 누르면 국문 흐름 ↔ 영어 스크립트가 뒤집힙니다</div>
+    <div class="recall-row">
+      <button class="recall-btn ok" onclick="markRecall('ok')">✅ 바로 말함</button>
+      <button class="recall-btn mid" onclick="markRecall('mid')">⚠️ 버벅임</button>
+      <button class="recall-btn no" onclick="markRecall('no')">❌ 기억 안 남</button>
+    </div>
+    <div class="nav-row">
+      <button class="btn" onclick="prevCard()">← 이전</button>
+      <span class="counter" id="counter">1 / 1</span>
+      <button class="btn" onclick="nextCard()">다음 →</button>
+    </div>
+    <div style="text-align:center; margin-bottom:18px; display:flex; gap:8px; justify-content:center; flex-wrap:wrap;">
+      <button class="btn btn-accent3" style="font-size:12px; padding:6px 14px;" onclick="openCardManager()">➕ 카드 추가/관리</button>
+      <button class="btn" style="font-size:12px; padding:6px 14px;" onclick="resetProgress()">🔄 취약 카드 기록 초기화</button>
+    </div>
+    <div id="cardEditNote" style="text-align:center; margin-bottom:12px;"></div>
+
+    <div class="voice-box">
+      <div class="voice-head">
+        <span class="voice-title">🎤 음성 리콜 — 국문 흐름 보고 영어로 말하기</span>
+        <div class="mode-toggle">
+          <button class="mode-btn active" id="modeVoice" onclick="setInputMode('voice')">음성</button>
+          <button class="mode-btn" id="modeText" onclick="setInputMode('text')">텍스트</button>
+        </div>
+      </div>
+      <div id="voiceMode">
+        <button class="mic-btn" id="micBtn" onclick="toggleMic()">🎙️ 녹음 시작</button>
+        <div class="transcript" id="transcript"><span style="color:var(--dim)">녹음을 시작하면 영어 음성이 여기에 전사됩니다.</span></div>
+        <div class="small-note">⚠️ 음성인식은 Chrome + HTTPS(또는 localhost) 환경에서만 작동합니다. <b>다운로드한 파일을 직접 열면 마이크가 막히므로</b>, GitHub Pages 같은 HTTPS 주소에 올려 접속해야 합니다. 내부망/미지원 환경에서는 위 '텍스트' 모드를 사용하세요.<br>📱 <b>모바일</b>: 말을 잠깐 멈춰도 계속 듣습니다. 다 말한 뒤 직접 '녹음 중지'를 누르세요. (아이폰 사파리는 음성인식 미지원 → 텍스트 모드 사용)</div>
+      </div>
+      <div id="textMode" style="display:none;">
+        <textarea id="textAnswer" placeholder="국문 흐름을 보고 영어로 답변을 입력하세요..."></textarea>
+      </div>
+      <div style="display:flex; gap:10px; margin-top:12px;">
+        <button class="btn" onclick="clearRecall()">지우기</button>
+        <button class="btn btn-accent3" style="flex:1;" onclick="compareRecall()">📊 기준 스크립트와 비교하기</button>
+      </div>
+    </div>
+    <div id="recallFeedback"></div>
+  </div>
+
+  <div id="panel-speaking" class="panel">
+    <div class="question-box">
+      <div class="q-label">● OPIc 문제</div>
+      <div class="q-text" id="speakQ">아래 버튼으로 문제를 받아보세요. 의견/기술형은 One Main Point로 답하는 연습을 합니다.</div>
+    </div>
+    <div style="display:flex; gap:10px; margin-bottom:12px;">
+      <button class="btn" onclick="newSpeakQ()">🔄 새 문제</button>
+    </div>
+    <div class="voice-box">
+      <div class="voice-head">
+        <span class="voice-title">🎤 내 영어 답변 / 전사문</span>
+        <div class="mode-toggle">
+          <button class="mode-btn active" id="spModeVoice" onclick="setSpeakMode('voice')">음성</button>
+          <button class="mode-btn" id="spModeText" onclick="setSpeakMode('text')">텍스트</button>
+        </div>
+      </div>
+      <div id="spVoiceMode">
+        <button class="mic-btn" id="spMicBtn" onclick="toggleSpeakMic()">🎙️ 녹음 시작</button>
+        <div class="transcript" id="spTranscript"><span style="color:var(--dim)">녹음을 시작하면 전사됩니다.</span></div>
+        <div class="small-note">⚠️ Chrome + HTTPS(또는 localhost)에서만 음성인식이 작동합니다. 다운로드 파일을 직접 열면 마이크가 막히므로 GitHub Pages 같은 HTTPS 주소에서 접속하세요.</div>
+      </div>
+      <div id="spTextMode" style="display:none;">
+        <textarea id="speakAnswer" placeholder="영어 답변을 입력하세요..."></textarea>
+      </div>
+    </div>
+    <button class="btn btn-primary" id="speakSubmit" style="width:100%; margin-top:12px;" onclick="submitSpeak()">✨ OPIc 기준 피드백 받기</button>
+    <div id="speakFeedback" style="margin-top:14px;"></div>
+  </div>
+
+  <div id="panel-roleplay" class="panel">
+    <div class="question-box" style="background:linear-gradient(135deg,rgba(255,107,157,0.08),rgba(108,99,255,0.08)); border-color:rgba(255,107,157,0.25)">
+      <div class="q-label" style="color:var(--accent2)">🎭 롤플레이 시나리오</div>
+      <div class="q-text" id="rpScenario">아래 버튼으로 시나리오를 시작하세요.</div>
+    </div>
+    <div class="chat" id="rpChat">
+      <div class="empty"><div style="font-size:32px; margin-bottom:8px;">🎭</div><div>새 시나리오를 시작해보세요!</div></div>
+    </div>
+    <div class="voice-box">
+      <div class="voice-head">
+        <span class="voice-title">내 대사</span>
+        <div class="mode-toggle">
+          <button class="mode-btn active" id="rpModeText" onclick="setRpMode('text')">텍스트</button>
+          <button class="mode-btn" id="rpModeVoice" onclick="setRpMode('voice')">음성</button>
+        </div>
+      </div>
+      <div id="rpTextMode">
+        <textarea id="rpInput" placeholder="영어로 답변하세요... (Enter 전송)" style="min-height:70px;" onkeydown="rpKey(event)"></textarea>
+      </div>
+      <div id="rpVoiceMode" style="display:none;">
+        <button class="mic-btn" id="rpMicBtn" onclick="toggleRpMic()">🎙️ 녹음 시작</button>
+        <div class="transcript" id="rpTranscript"><span style="color:var(--dim)">녹음하면 전사 후 대화에 전송됩니다.</span></div>
+      </div>
+    </div>
+    <div style="display:flex; gap:10px; margin-top:12px;">
+      <button class="btn" onclick="startRp()">🔄 새 시나리오</button>
+      <button class="btn btn-primary" style="flex:1;" onclick="sendRp()">📤 전송</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="configModal">
+  <div class="modal">
+    <h3>⚙️ AI 연결 설정 (선택)</h3>
+    <p class="sub">내부/외부 LLM API를 연결하면 더 정교한 피드백을 받을 수 있습니다. <b>연결하지 않아도</b> 키워드 기반 로컬 체크로 학습이 가능합니다.</p>
+    <div class="field">
+      <label>API 엔드포인트 URL</label>
+      <input id="cfgUrl" placeholder="http://internal-llm:8000/v1/chat/completions">
+    </div>
+    <div class="field">
+      <label>모델명</label>
+      <input id="cfgModel" placeholder="예: qwen3-next, llama3, exaone...">
+    </div>
+    <div class="field">
+      <label>API Key (없으면 공란)</label>
+      <input id="cfgKey" type="password" placeholder="선택">
+      <div style="font-size:11px; color:var(--error); margin-top:6px; line-height:1.5;">🔒 공개 GitHub Pages에서는 API Key가 브라우저(localStorage)에 저장되므로 <b>민감한 키를 입력하지 마세요.</b> 개인 학습용/로컬 테스트용으로만 사용하세요.</div>
+    </div>
+    <div style="display:flex; gap:10px; margin-top:6px;">
+      <button class="btn" style="flex:1;" onclick="closeConfig()">닫기</button>
+      <button class="btn btn-primary" style="flex:1;" onclick="saveConfig()">저장</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="cardModal">
+  <div class="modal" style="max-width:560px;">
+    <h3>➕ 스크립트 카드 추가/관리</h3>
+    <p class="sub">나만의 OPIc 스크립트를 추가하세요. 추가한 카드는 이 브라우저에 저장되어 '내 카드' 카테고리에 모입니다.</p>
+
+    <div style="display:flex; gap:6px; margin-bottom:16px;">
+      <button class="mode-btn active" id="cmTabForm" onclick="setCardTab('form')" style="flex:1; padding:8px;">직접 입력</button>
+      <button class="mode-btn" id="cmTabImport" onclick="setCardTab('import')" style="flex:1; padding:8px;">파일 가져오기</button>
+      <button class="mode-btn" id="cmTabList" onclick="setCardTab('list')" style="flex:1; padding:8px;">내 카드 목록</button>
+    </div>
+
+    <!-- 직접 입력 -->
+    <div id="cmForm">
+      <div class="field"><label>제목 *</label><input id="ncTitle" placeholder="예: 3-1 직장 소개"></div>
+      <div class="field">
+        <label>카테고리</label>
+        <select id="ncCat" style="width:100%; padding:10px 14px; background:var(--surface2); border:1px solid var(--border); border-radius:10px; color:var(--text); font-size:13px;">
+          <option value="opi">의견/기술</option>
+          <option value="exp">경험 묘사</option>
+          <option value="rp">롤플레이</option>
+        </select>
+      </div>
+      <div class="field"><label>국문 흐름 * (→ 로 구분)</label><input id="ncFlow" placeholder="장소 → 문제 발생 → 노력 → 결과"></div>
+      <div class="field"><label>힌트</label><input id="ncHint" placeholder="이 답변의 핵심 전략 한 줄"></div>
+      <div class="field"><label>영어 핵심문장</label><textarea id="ncKey" style="min-height:60px;" placeholder="가장 중요한 1~2문장"></textarea></div>
+      <div class="field"><label>전체 스크립트 *</label><textarea id="ncScript" style="min-height:100px;" placeholder="전체 영어 답변"></textarea></div>
+      <div class="field"><label>핵심 키워드 (쉼표로 구분, 로컬 비교에 사용)</label><input id="ncKeywords" placeholder="golf course, Zoom meeting, couldn't find"><div style="font-size:11px; color:var(--warn); margin-top:5px;">💡 키워드를 입력하면 비교 정확도가 높아집니다. 비워두면 스크립트에서 자동 추출합니다.</div></div>
+      <div style="display:flex; gap:10px;">
+        <button class="btn" style="flex:1;" onclick="closeCardManager()">닫기</button>
+        <button class="btn btn-primary" style="flex:1;" onclick="addCardFromForm()">카드 추가</button>
+      </div>
+    </div>
+
+    <!-- 파일 가져오기 -->
+    <div id="cmImport" style="display:none;">
+      <p class="sub">JSON 파일로 여러 카드를 한 번에 가져옵니다. 아래 형식을 따르세요.</p>
+      <pre style="background:var(--surface2); border:1px solid var(--border); border-radius:8px; padding:12px; font-size:11px; overflow-x:auto; color:var(--dim); line-height:1.5;">[
+  {
+    "cat": "exp",
+    "title": "3-2 여행 경험",
+    "koreanFlow": "제주 → 일출 → 평화로움 → 계획변경 → 최고였음",
+    "hint": "경험을 시간순으로 묘사",
+    "keyEnglish": "It was the most memorable trip.",
+    "fullScript": "Last spring, I visited Jeju...",
+    "keywords": ["Jeju", "sunrise", "peaceful", "memorable"]
+  }
+]</pre>
+      <div class="field">
+        <label>JSON 파일 선택</label>
+        <input type="file" id="ncFile" accept=".json,application/json" style="font-family:inherit;">
+      </div>
+      <div id="importMsg" style="font-size:13px; margin-bottom:12px;"></div>
+      <div style="display:flex; gap:10px;">
+        <button class="btn" style="flex:1;" onclick="closeCardManager()">닫기</button>
+        <button class="btn btn-primary" style="flex:1;" onclick="importCardsFromFile()">가져오기</button>
+      </div>
+    </div>
+
+    <!-- 내 카드 목록 -->
+    <div id="cmList" style="display:none;">
+      <div id="myCardList" style="max-height:320px; overflow-y:auto; margin-bottom:14px;"></div>
+      <div style="display:flex; gap:10px;">
+        <button class="btn" style="flex:1;" onclick="exportMyCards()">📤 내 카드 내보내기(JSON)</button>
+        <button class="btn btn-primary" style="flex:1;" onclick="closeCardManager()">닫기</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+const DEFAULT_CARDS = [
+  { cat: "rp", set: "w2", title: "2-1 미아 발견",
+    koreanFlow: "괜찮니? → 이름/나이 → 마지막 본 장소 → 부모 옷차림 → 관리사무소로",
+    hint: "아이를 안심시키고 정보를 물은 뒤 관리사무소로 데려가는 흐름",
+    keyEnglish: "Are you okay? Can you tell me your name? Let's go to the information center together.",
+    fullScript: "Hi there, are you okay? Don't worry, I'll help you find your parents. Can you tell me your name and how old you are? Do you remember where you last saw your mom or dad? What were they wearing today? Okay, let's go to the information center together — they can make an announcement to find your parents.",
+    keywords: ["okay", "name", "last saw", "wearing", "information center"] },
+  { cat: "rp", set: "w2", title: "2-2 신고",
+    koreanFlow: "긴급 신고 → 민호 정보 → 부모 못 찾음 → 부모 특징 → 방송 요청",
+    hint: "상황 설명, 아이 정보, 부모 찾기 방송 요청",
+    keyEnglish: "I found a lost child. Could you please make an announcement to find his parents?",
+    fullScript: "Excuse me, I need to report something urgent. I found a lost child here. His name is Minho and he's about seven years old. We've looked around but we can't find his parents. His mother is wearing a red jacket and his father has glasses. Could you please make an announcement over the speaker to help find his parents?",
+    keywords: ["report", "lost child", "Minho", "can't find", "announcement"] },
+  { cat: "exp", set: "w2", title: "2-3 분실 경험",
+    koreanFlow: "골프장 → 줌 회의 → 이어폰 케이스 없음 → 찾아봄 → 못 찾음 → 새로 삼",
+    hint: "장소 → 문제 발생 → 찾으려는 노력 → 결과",
+    keyEnglish: "I looked around, but I couldn't find it. In the end, I had to buy a new one.",
+    fullScript: "I once lost my AirPods case at a golf course. I had a Zoom meeting right after playing golf, so I was in a hurry. When I opened my bag, the case was gone. I looked around the locker room and the parking lot, but I couldn't find it. In the end, I had to buy a new one.",
+    keywords: ["golf course", "Zoom meeting", "AirPods case", "looked around", "buy a new one"] },
+  { cat: "opi", set: "w2", title: "2-4 AI 변화",
+    koreanFlow: "예전엔 단순 기능 → 지금은 AI로 다양화 → 업무에서 사용 → 개인 비서처럼",
+    hint: "AI agent 하나의 주제로 기술 변화를 설명 (One Main Point)",
+    keyEnglish: "AI has changed technology by making AI agents more practical and useful in daily life.",
+    fullScript: "When it comes to AI technology, I think AI agents have changed the way people use technology. In the past, apps only had simple functions, but now AI can handle many things at once. What I find really convenient is that they can summarize long documents or organize my schedule, almost like a personal assistant. So I think AI agents are one of the most practical changes brought by AI technology.",
+    keywords: ["AI agents", "in the past", "convenient", "personal assistant", "practical changes"] },
+  { cat: "opi", set: "w2", title: "2-5 기술 이슈",
+    koreanFlow: "프라이버시 → 데이터 수집 → 해킹 위험 → 오용 → 통제권 문제",
+    hint: "AI의 가장 큰 문제를 privacy 하나로 잡고 끝까지 유지 (One Main Point)",
+    keyEnglish: "I think the biggest issue with AI is privacy, because our personal data could be leaked.",
+    fullScript: "In my opinion, the biggest issue related to AI technology is privacy. AI systems collect a lot of personal data, like what we say and where we go. I feel really nervous about this because that data could be leaked to hackers or misused by companies. What worries me the most is that we lose control over our own information. So I think privacy is the most serious problem when it comes to AI.",
+    keywords: ["privacy", "personal data", "leaked", "hackers", "control"] },
+];
+const CATS = [
+  { id: "all", label: "전체" }, { id: "w2", label: "W2 세트" }, { id: "rp", label: "롤플레이" },
+  { id: "exp", label: "경험 묘사" }, { id: "opi", label: "의견/기술" },
+  { id: "my", label: "내 카드" }, { id: "weak", label: "취약 카드" },
+];
+const SPEAK_QS = [
+  "Do you think people should use AI in daily life?",
+  "How has technology changed the way people work?",
+  "What is the biggest issue with smartphones these days?",
+  "Tell me about a time when you lost something important.",
+  "Describe a memorable trip you took recently.",
+];
+const SCENARIOS = [
+  "You found a lost child at a shopping mall. Talk to the child, get information, and help find the parents.",
+  "You lost your bag on the subway. Call the lost-and-found center and explain the situation.",
+  "You want to return a damaged product without a receipt. Talk to the store clerk.",
+];
+
+let config = { apiUrl: "", apiKey: "", modelName: "" };
+let currentCat = "all", cardIdx = 0, inputMode = "voice", speakMode = "voice", rpMode = "text";
+let progress = {}, rpHistory = [], curScenario = "", speakCurQ = "";
+let userCards = [];          // 사용자가 추가한 카드
+let CARD_DATA = [];          // 기본 + 사용자 카드 병합 결과
+const LS_PROG = "opic_progress_v1", LS_CFG = "opic_config_v1", LS_CARDS = "opic_usercards_v1";
+
+function rebuildCards() {
+  CARD_DATA = [...DEFAULT_CARDS, ...userCards];
+}
+function loadState() {
+  try { progress = JSON.parse(localStorage.getItem(LS_PROG)) || {}; } catch { progress = {}; }
+  try { const c = JSON.parse(localStorage.getItem(LS_CFG)); if (c) config = c; } catch {}
+  try { userCards = JSON.parse(localStorage.getItem(LS_CARDS)) || []; } catch { userCards = []; }
+  rebuildCards();
+}
+function saveProgress() { localStorage.setItem(LS_PROG, JSON.stringify(progress)); }
+function saveConfigLS() { localStorage.setItem(LS_CFG, JSON.stringify(config)); }
+function saveUserCards() { localStorage.setItem(LS_CARDS, JSON.stringify(userCards)); rebuildCards(); }
+
+function filteredCards() {
+  if (currentCat === "all") return CARD_DATA;
+  if (currentCat === "w2") return CARD_DATA.filter(c => c.set === "w2");
+  if (currentCat === "weak") return CARD_DATA.filter(c => progress[c.title] === "mid" || progress[c.title] === "no");
+  if (currentCat === "my") return userCards;
+  return CARD_DATA.filter(c => c.cat === currentCat);
+}
+function renderPills() {
+  const weakCount = CARD_DATA.filter(c => progress[c.title] === "mid" || progress[c.title] === "no").length;
+  const myCount = userCards.length;
+  document.getElementById("catPills").innerHTML = CATS.map(c => {
+    let badge = "";
+    if (c.id === "weak" && weakCount > 0) badge = `<span class="count">${weakCount}</span>`;
+    if (c.id === "my" && myCount > 0) badge = `<span class="count" style="background:var(--accent3)">${myCount}</span>`;
+    return `<div class="pill ${currentCat===c.id?'active':''}" onclick="setCat('${c.id}')">${c.label}${badge}</div>`;
+  }).join("");
+}
+function setCat(id) { currentCat = id; cardIdx = 0; renderPills(); showCard(); }
+function showCard() {
+  const cards = filteredCards();
+  const fc = document.getElementById("flashcard");
+  fc.classList.remove("flipped");
+  if (cards.length === 0) {
+    document.getElementById("cardTitle").textContent = "카드 없음";
+    document.getElementById("cardFlow").textContent = currentCat === "weak" ? "아직 취약 카드가 없습니다. ⚠️/❌로 표시하면 여기 모입니다." : "";
+    document.getElementById("cardHint").textContent = "";
+    document.getElementById("cardTag").textContent = "";
+    document.getElementById("counter").textContent = "0 / 0";
+    return;
+  }
+  if (cardIdx >= cards.length) cardIdx = 0;
+  const c = cards[cardIdx];
+  const status = progress[c.title];
+  const statusIcon = status === "ok" ? " ✅" : status === "mid" ? " ⚠️" : status === "no" ? " ❌" : "";
+  document.getElementById("cardTag").textContent = "스크립트 카드" + statusIcon;
+  document.getElementById("cardTitle").textContent = c.title;
+  document.getElementById("cardFlow").textContent = c.koreanFlow;
+  document.getElementById("cardHint").textContent = "💡 " + c.hint;
+  document.getElementById("cardKey").textContent = c.keyEnglish;
+  document.getElementById("cardScript").textContent = c.fullScript;
+  document.getElementById("counter").textContent = `${cardIdx + 1} / ${cards.length}`;
+  const noteEl = document.getElementById("cardEditNote");
+  if (noteEl) noteEl.innerHTML = c._user
+    ? `<span style="font-size:12px; color:var(--accent3);">✏️ 내가 추가한 카드 · <a href="#" onclick="openCardManager();setCardTab('list');return false;" style="color:var(--accent2);">관리</a></span>`
+    : "";
+  document.querySelectorAll(".recall-btn").forEach(b => b.classList.remove("sel-ok","sel-mid","sel-no"));
+  if (status === "ok") document.querySelector(".recall-btn.ok").classList.add("sel-ok");
+  if (status === "mid") document.querySelector(".recall-btn.mid").classList.add("sel-mid");
+  if (status === "no") document.querySelector(".recall-btn.no").classList.add("sel-no");
+}
+function flipCard() { document.getElementById("flashcard").classList.toggle("flipped"); }
+function nextCard() { const n = filteredCards().length; if (!n) return; cardIdx = (cardIdx + 1) % n; showCard(); }
+function prevCard() { const n = filteredCards().length; if (!n) return; cardIdx = (cardIdx - 1 + n) % n; showCard(); }
+function markRecall(level) {
+  const cards = filteredCards(); if (!cards.length) return;
+  progress[cards[cardIdx].title] = level; saveProgress(); renderPills(); showCard();
+}
+function resetProgress() {
+  if (!confirm("취약 카드 기록을 모두 초기화할까요?")) return;
+  progress = {}; saveProgress(); renderPills(); showCard();
+}
+
+const IS_MOBILE = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+function makeRecognizer(onResult, onEnd) {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) return null;
+  const r = new SR(); r.lang = "en-US"; r.interimResults = true; r.continuous = true;
+  let finalText = "";
+  r.manualStop = false;     // 사용자가 직접 중지를 눌렀는지
+  r.fatalError = false;     // 권한 등 재시작하면 안 되는 에러인지
+  r.restartCount = 0;       // 무한 재시작 방지용 카운터
+  r.onresult = (e) => {
+    let interim = "";
+    for (let i = e.resultIndex; i < e.results.length; i++) {
+      const t = e.results[i][0].transcript;
+      if (e.results[i].isFinal) finalText += t + " "; else interim += t;
+    }
+    r.restartCount = 0;     // 말이 인식되면 카운터 리셋
+    onResult(finalText, interim);
+  };
+  r.onend = () => {
+    // 침묵으로 세션이 끊겨도, 사용자가 직접 멈춘 게 아니고 치명적 에러도 아니면
+    // 자동으로 다시 이어 듣는다. finalText는 유지되므로 중복 누적되지 않는다.
+    // (단, 말 없이 계속 끊기기만 하면 무한루프가 되므로 연속 재시작은 최대 20회로 제한)
+    if (!r.manualStop && !r.fatalError && r.restartCount < 20) {
+      r.restartCount++;
+      try { r.start(); return; } catch (e) { /* 아직 정지 중이면 잠깐 뒤 재시도 */
+        setTimeout(() => { if (!r.manualStop && !r.fatalError) { try { r.start(); return; } catch (e2) {} } onEnd(finalText); }, 250);
+        return;
+      }
+    }
+    onEnd(finalText);
+  };
+  r.onerror = (e) => {
+    // 권한 거부 계열만 치명적 에러로 처리 (재시작 금지).
+    // no-speech / aborted / network 는 자동 재개 대상이므로 막지 않는다.
+    if (e.error === "not-allowed" || e.error === "service-not-allowed") {
+      r.fatalError = true;
+      alert("마이크 권한이 거부되었습니다. 주소창 왼쪽 자물쇠(또는 ⓘ) 아이콘 → 권한 → 마이크를 '허용'으로 바꾼 뒤 다시 시도해주세요.");
+    }
+    console.warn("STT error", e.error);
+  };
+  r.forceStop = () => {
+    r.manualStop = true;
+    try { r.stop(); } catch (e) {}
+    try { r.abort(); } catch (e) {}
+  };
+  return r;
+}
+
+let cardRec = null, cardRecording = false, cardFinal = "";
+function setInputMode(m) {
+  inputMode = m;
+  document.getElementById("modeVoice").classList.toggle("active", m === "voice");
+  document.getElementById("modeText").classList.toggle("active", m === "text");
+  document.getElementById("voiceMode").style.display = m === "voice" ? "block" : "none";
+  document.getElementById("textMode").style.display = m === "text" ? "block" : "none";
+}
+function toggleMic() {
+  const btn = document.getElementById("micBtn");
+  if (cardRecording) { cardRecording = false; btn.classList.remove("recording"); btn.innerHTML = "🎙️ 녹음 시작"; if (cardRec) cardRec.forceStop(); return; }
+  cardRec = makeRecognizer(
+    (fin, interim) => { cardFinal = fin; document.getElementById("transcript").innerHTML = fin + `<span class="interim">${interim}</span>`; },
+    (fin) => { cardRecording = false; btn.classList.remove("recording"); btn.innerHTML = "🎙️ 녹음 시작"; cardFinal = fin; }
+  );
+  if (!cardRec) { alert("이 브라우저에서는 음성인식이 지원되지 않습니다. Chrome에서 사용하거나 텍스트 입력 모드를 이용하세요."); setInputMode("text"); return; }
+  cardFinal = ""; document.getElementById("transcript").innerHTML = '<span style="color:var(--accent3)">🔴 듣는 중...</span>';
+  cardRec.start(); cardRecording = true; btn.classList.add("recording"); btn.innerHTML = "⏹️ 녹음 중지";
+}
+function clearRecall() {
+  cardFinal = ""; document.getElementById("textAnswer").value = "";
+  document.getElementById("transcript").innerHTML = '<span style="color:var(--dim)">녹음을 시작하면 영어 음성이 여기에 전사됩니다.</span>';
+  document.getElementById("recallFeedback").innerHTML = "";
+}
+function getRecallText() { return inputMode === "voice" ? cardFinal.trim() : document.getElementById("textAnswer").value.trim(); }
+
+async function compareRecall() {
+  const cards = filteredCards(); if (!cards.length) return;
+  const card = cards[cardIdx];
+  const answer = getRecallText();
+  const fbEl = document.getElementById("recallFeedback");
+  if (!answer) { fbEl.innerHTML = `<div class="feedback"><div class="fb-body" style="color:var(--warn)">먼저 영어로 말하거나 입력해주세요.</div></div>`; return; }
+  if (config.apiUrl && config.modelName) {
+    fbEl.innerHTML = `<div class="feedback"><div class="fb-body"><div class="loading"><div class="ld"></div><div class="ld"></div><div class="ld"></div> AI가 기준 스크립트와 비교 중...</div></div></div>`;
+    try {
+      const res = await callLLM(
+        [{ role: "user", content: `기준 스크립트: ${card.fullScript}\n\n국문 흐름: ${card.koreanFlow}\n\n학습자가 말한 답변(전사): ${answer}` }],
+        `당신은 OPIc 코치입니다. 학습자가 국문 흐름을 보고 영어로 말한 답변을 기준 스크립트와 비교해 평가하세요. 반드시 JSON만 반환하세요.\n{"checks":[{"label":"국문 흐름 핵심 포인트 포함","pass":true},{"label":"Intro 존재","pass":true},{"label":"Body 흐름 유지","pass":true},{"label":"Outro 존재","pass":false},{"label":"One Main Point 유지","pass":true},{"label":"표현 과반복 없음","pass":true}],"missing":"누락된 핵심 포인트 한국어 설명","feedback":"바로 고칠 수 있는 짧은 피드백 한국어 2-3문장","suggestions":["영어 표현 제안1","영어 표현 제안2"]}`
+      );
+      renderRecallFeedback(JSON.parse(res.replace(/```json|```/g, "").trim()), true);
+    } catch (e) {
+      fbEl.innerHTML = `<div class="feedback"><div class="fb-body" style="color:var(--warn)">AI 비교 실패, 로컬 체크로 전환합니다.</div></div>`;
+      setTimeout(() => renderRecallFeedback(localCheck(card, answer), false), 600);
+    }
+  } else {
+    renderRecallFeedback(localCheck(card, answer), false);
+  }
+}
+function localCheck(card, answer) {
+  const lower = answer.toLowerCase();
+  const found = card.keywords.filter(k => lower.includes(k.toLowerCase()));
+  const missing = card.keywords.filter(k => !lower.includes(k.toLowerCase()));
+  const wordCount = answer.split(/\s+/).filter(Boolean).length;
+  const words = lower.replace(/[^a-z\s]/g, "").split(/\s+/).filter(w => w.length > 3);
+  const freq = {}; words.forEach(w => freq[w] = (freq[w]||0)+1);
+  const overused = Object.entries(freq).filter(([w,c]) => c >= 4).map(([w]) => w);
+  const checks = [
+    { label: `핵심 키워드 포함 (${found.length}/${card.keywords.length})`, pass: found.length >= Math.ceil(card.keywords.length * 0.6) },
+    { label: "답변 길이 충분 (25단어 이상)", pass: wordCount >= 25 },
+    { label: "표현 과반복 없음", pass: overused.length === 0 },
+  ];
+  let missingText = missing.length ? `다음 흐름이 빠졌어요: ${missing.join(", ")}` : "모든 핵심 키워드가 포함됐어요! 👍";
+  let fb = "";
+  if (wordCount < 25) fb += "답변이 다소 짧아요. 구체적 사례나 감정을 한 문장 더 붙여보세요. ";
+  if (missing.length) fb += `특히 '${missing[0]}' 부분을 빠뜨리지 않도록 연습하세요. `;
+  if (overused.length) fb += `'${overused[0]}' 표현이 너무 자주 나와요. 다른 표현으로 바꿔보세요. `;
+  if (!fb) fb = "흐름을 잘 따라갔어요! 기준 스크립트와 비교하며 표현을 다듬어보세요.";
+  return { checks, missing: missingText, feedback: fb, suggestions: [card.keyEnglish] };
+}
+function renderRecallFeedback(data, isAI) {
+  const checksHtml = data.checks.map(c => `<div class="check-item"><span class="check-icon">${c.pass ? "✅" : "❌"}</span><span>${c.label}</span></div>`).join("");
+  const sugHtml = (data.suggestions || []).map(s => `<div style="font-size:13px; color:var(--accent3); margin-bottom:6px;">→ ${s}</div>`).join("");
+  document.getElementById("recallFeedback").innerHTML = `
+    <div class="feedback">
+      <div class="fb-head"><span style="font-weight:700;">📊 비교 결과</span><span style="font-size:11px; color:var(--dim);">${isAI ? "AI 분석" : "로컬 체크"}</span></div>
+      <div class="fb-body">
+        ${checksHtml}
+        <div class="fb-section-title" style="color:var(--accent2)">빠진 흐름</div>
+        <div style="font-size:14px; line-height:1.6; color:#c8c8e0;">${data.missing}</div>
+        <div class="fb-section-title" style="color:var(--accent3)">피드백</div>
+        <div style="font-size:14px; line-height:1.6; color:#c8c8e0;">${data.feedback}</div>
+        ${sugHtml ? `<div class="fb-section-title" style="color:var(--accent)">영어 표현 제안</div>${sugHtml}` : ""}
+      </div>
+    </div>`;
+}
+
+let spRec = null, spRecording = false, spFinal = "";
+function newSpeakQ() {
+  speakCurQ = SPEAK_QS[Math.floor(Math.random() * SPEAK_QS.length)];
+  document.getElementById("speakQ").textContent = speakCurQ;
+  document.getElementById("speakFeedback").innerHTML = "";
+}
+function setSpeakMode(m) {
+  speakMode = m;
+  document.getElementById("spModeVoice").classList.toggle("active", m === "voice");
+  document.getElementById("spModeText").classList.toggle("active", m === "text");
+  document.getElementById("spVoiceMode").style.display = m === "voice" ? "block" : "none";
+  document.getElementById("spTextMode").style.display = m === "text" ? "block" : "none";
+}
+function toggleSpeakMic() {
+  const btn = document.getElementById("spMicBtn");
+  if (spRecording) { spRecording = false; btn.classList.remove("recording"); btn.innerHTML = "🎙️ 녹음 시작"; if (spRec) spRec.forceStop(); return; }
+  spRec = makeRecognizer(
+    (fin, interim) => { spFinal = fin; document.getElementById("spTranscript").innerHTML = fin + `<span class="interim">${interim}</span>`; },
+    (fin) => { spRecording = false; btn.classList.remove("recording"); btn.innerHTML = "🎙️ 녹음 시작"; spFinal = fin; }
+  );
+  if (!spRec) { alert("이 브라우저에서는 음성인식이 지원되지 않습니다. Chrome에서 사용하거나 텍스트 입력 모드를 이용하세요."); setSpeakMode("text"); return; }
+  spFinal = ""; document.getElementById("spTranscript").innerHTML = '<span style="color:var(--accent3)">🔴 듣는 중...</span>';
+  spRec.start(); spRecording = true; btn.classList.add("recording"); btn.innerHTML = "⏹️ 녹음 중지";
+}
+async function submitSpeak() {
+  const answer = speakMode === "voice" ? spFinal.trim() : document.getElementById("speakAnswer").value.trim();
+  const fbEl = document.getElementById("speakFeedback");
+  if (!answer) { fbEl.innerHTML = `<div class="feedback"><div class="fb-body" style="color:var(--warn)">먼저 답변을 말하거나 입력해주세요.</div></div>`; return; }
+  if (!speakCurQ) newSpeakQ();
+  if (config.apiUrl && config.modelName) {
+    fbEl.innerHTML = `<div class="feedback"><div class="fb-body"><div class="loading"><div class="ld"></div><div class="ld"></div><div class="ld"></div> OPIc 기준으로 평가 중...</div></div></div>`;
+    try {
+      const res = await callLLM(
+        [{ role: "user", content: `질문: ${speakCurQ}\n\n학습자 답변: ${answer}` }],
+        `당신은 OPIc 실전 평가자입니다. 반드시 JSON만 반환하세요. 피드백은 한국어, 영어 표현 제안은 2~3개만.\n{"grade":"AL 또는 IH 또는 IM","checks":[{"label":"질문 적합성","pass":true},{"label":"Intro/Body/Outro 구조","pass":true},{"label":"One Main Point 유지","pass":true},{"label":"구체적 개인 경험","pass":false},{"label":"자연스러운 회화체","pass":true},{"label":"문법/어휘 정확성","pass":true}],"feedback":"바로 고칠 수 있는 짧은 한국어 피드백","suggestions":["영어 표현1","영어 표현2"]}`
+      );
+      renderSpeakFeedback(JSON.parse(res.replace(/```json|```/g, "").trim()));
+    } catch (e) {
+      fbEl.innerHTML = `<div class="feedback"><div class="fb-body" style="color:var(--warn)">AI 평가 실패. AI 설정을 확인하거나 스크립트 카드의 로컬 비교를 이용하세요.</div></div>`;
+    }
+  } else {
+    const wc = answer.split(/\s+/).filter(Boolean).length;
+    renderSpeakFeedback({
+      grade: wc >= 60 ? "IH" : "IM",
+      checks: [
+        { label: "답변 길이 충분 (40단어+)", pass: wc >= 40 },
+        { label: "문장 2개 이상", pass: (answer.match(/[.!?]/g) || []).length >= 2 },
+      ],
+      feedback: "AI를 연결하면 질문 적합성·구조·One Main Point 등 OPIc 기준 상세 피드백을 받을 수 있어요. 지금은 길이/문장 수만 체크했습니다.",
+      suggestions: ["So overall, I think...", "What I find really ... is that ..."],
+    });
+  }
+}
+function renderSpeakFeedback(data) {
+  const gc = data.grade === "AL" ? "grade-al" : data.grade === "IH" ? "grade-ih" : "grade-im";
+  const checksHtml = (data.checks||[]).map(c => `<div class="check-item"><span class="check-icon">${c.pass?"✅":"❌"}</span><span>${c.label}</span></div>`).join("");
+  const sugHtml = (data.suggestions||[]).map(s => `<div style="font-size:13px; color:var(--accent3); margin-bottom:6px;">→ ${s}</div>`).join("");
+  document.getElementById("speakFeedback").innerHTML = `
+    <div class="feedback">
+      <div class="fb-head"><span style="font-weight:700;">📊 OPIc 기준 피드백</span><span class="grade-badge ${gc}">${data.grade}</span></div>
+      <div class="fb-body">${checksHtml}
+        <div class="fb-section-title" style="color:var(--accent3)">피드백</div>
+        <div style="font-size:14px; line-height:1.6; color:#c8c8e0;">${data.feedback}</div>
+        ${sugHtml ? `<div class="fb-section-title" style="color:var(--accent)">영어 표현 제안</div>${sugHtml}` : ""}
+      </div>
+    </div>`;
+}
+
+let rpRec = null, rpRecording = false, rpFinal = "";
+function setRpMode(m) {
+  rpMode = m;
+  document.getElementById("rpModeText").classList.toggle("active", m === "text");
+  document.getElementById("rpModeVoice").classList.toggle("active", m === "voice");
+  document.getElementById("rpTextMode").style.display = m === "text" ? "block" : "none";
+  document.getElementById("rpVoiceMode").style.display = m === "voice" ? "block" : "none";
+}
+function toggleRpMic() {
+  const btn = document.getElementById("rpMicBtn");
+  if (rpRecording) { rpRecording = false; btn.classList.remove("recording"); btn.innerHTML = "🎙️ 녹음 시작"; if (rpRec) rpRec.forceStop(); return; }
+  rpRec = makeRecognizer(
+    (fin, interim) => { rpFinal = fin; document.getElementById("rpTranscript").innerHTML = fin + `<span class="interim">${interim}</span>`; },
+    (fin) => { rpRecording = false; btn.classList.remove("recording"); btn.innerHTML = "🎙️ 녹음 시작"; rpFinal = fin; if (fin.trim()) document.getElementById("rpInput").value = fin.trim(); }
+  );
+  if (!rpRec) { alert("이 브라우저에서는 음성인식이 지원되지 않습니다. 텍스트 모드를 이용하세요."); setRpMode("text"); return; }
+  rpFinal = ""; document.getElementById("rpTranscript").innerHTML = '<span style="color:var(--accent3)">🔴 듣는 중...</span>';
+  rpRec.start(); rpRecording = true; btn.classList.add("recording"); btn.innerHTML = "⏹️ 녹음 중지";
+}
+async function startRp() {
+  curScenario = SCENARIOS[Math.floor(Math.random() * SCENARIOS.length)];
+  rpHistory = [];
+  document.getElementById("rpScenario").textContent = curScenario;
+  document.getElementById("rpChat").innerHTML = "";
+  if (config.apiUrl && config.modelName) {
+    addRpMsg("ai", "...");
+    try {
+      const g = await callLLM([{ role: "user", content: "start" }], `You are a character in this OPIc roleplay: ${curScenario}\nStart the conversation naturally as the other party in 2-3 sentences.`);
+      rpHistory.push({ role: "assistant", content: g });
+      document.querySelector("#rpChat .msg:last-child .bubble").textContent = g;
+    } catch { document.querySelector("#rpChat .msg:last-child .bubble").textContent = "Hello, how can I help you?"; }
+  } else {
+    addRpMsg("ai", "Hello! (AI 미연결 — 텍스트로 대화 연습은 가능하지만 상대 응답은 제한적입니다. AI를 연결하면 실제 대화가 가능합니다.)");
+  }
+}
+function addRpMsg(who, text) {
+  const div = document.createElement("div");
+  div.className = `msg ${who}`;
+  div.innerHTML = `<div class="avatar ${who}">${who==="ai"?"🤖":"👤"}</div><div class="bubble">${text}</div>`;
+  const chat = document.getElementById("rpChat");
+  chat.appendChild(div); chat.scrollTop = chat.scrollHeight;
+}
+function rpKey(e) { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendRp(); } }
+async function sendRp() {
+  const input = document.getElementById("rpInput");
+  const text = input.value.trim();
+  if (!text) { if (!curScenario) startRp(); return; }
+  input.value = ""; rpFinal = "";
+  document.getElementById("rpTranscript").innerHTML = '<span style="color:var(--dim)">녹음하면 전사 후 대화에 전송됩니다.</span>';
+  addRpMsg("user", text);
+  rpHistory.push({ role: "user", content: text });
+  if (config.apiUrl && config.modelName) {
+    addRpMsg("ai", "...");
+    try {
+      const reply = await callLLM(rpHistory, `You are a character in this OPIc roleplay: ${curScenario}\nRespond naturally in 2-3 sentences.`);
+      rpHistory.push({ role: "assistant", content: reply });
+      document.querySelector("#rpChat .msg:last-child .bubble").textContent = reply;
+    } catch { document.querySelector("#rpChat .msg:last-child .bubble").textContent = "Sorry, could you repeat that?"; }
+  }
+}
+
+async function callLLM(messages, systemPrompt) {
+  const headers = { "Content-Type": "application/json" };
+  if (config.apiKey) headers["Authorization"] = `Bearer ${config.apiKey}`;
+  const body = JSON.stringify({
+    model: config.modelName,
+    messages: systemPrompt ? [{ role: "system", content: systemPrompt }, ...messages] : messages,
+    max_tokens: 1000, temperature: 0.7,
+  });
+  const resp = await fetch(config.apiUrl, { method: "POST", headers, body });
+  if (!resp.ok) throw new Error("API " + resp.status);
+  const data = await resp.json();
+  if (data.choices?.[0]?.message?.content) return data.choices[0].message.content;
+  if (data.message?.content) return data.message.content;
+  if (data.content) return Array.isArray(data.content) ? data.content.map(b => b.text||"").join("") : data.content;
+  throw new Error("parse fail");
+}
+
+function openConfig() {
+  document.getElementById("cfgUrl").value = config.apiUrl;
+  document.getElementById("cfgModel").value = config.modelName;
+  document.getElementById("cfgKey").value = config.apiKey;
+  document.getElementById("configModal").classList.add("show");
+}
+function closeConfig() { document.getElementById("configModal").classList.remove("show"); }
+function saveConfig() {
+  config.apiUrl = document.getElementById("cfgUrl").value.trim();
+  config.modelName = document.getElementById("cfgModel").value.trim();
+  config.apiKey = document.getElementById("cfgKey").value.trim();
+  saveConfigLS(); updateConfigStatus(); closeConfig();
+}
+function updateConfigStatus() {
+  const ok = config.apiUrl && config.modelName;
+  document.getElementById("dotInd").style.background = ok ? "var(--success)" : "var(--error)";
+  document.getElementById("configLabel").textContent = ok ? `AI 연결됨 (${config.modelName})` : "AI 미연결 (로컬 체크)";
+}
+
+// ───────────────── 카드 관리 ─────────────────
+function openCardManager() { setCardTab("form"); document.getElementById("cardModal").classList.add("show"); }
+function closeCardManager() { document.getElementById("cardModal").classList.remove("show"); }
+function setCardTab(t) {
+  document.getElementById("cmTabForm").classList.toggle("active", t === "form");
+  document.getElementById("cmTabImport").classList.toggle("active", t === "import");
+  document.getElementById("cmTabList").classList.toggle("active", t === "list");
+  document.getElementById("cmForm").style.display = t === "form" ? "block" : "none";
+  document.getElementById("cmImport").style.display = t === "import" ? "block" : "none";
+  document.getElementById("cmList").style.display = t === "list" ? "block" : "none";
+  if (t === "list") renderMyCardList();
+}
+function addCardFromForm() {
+  const title = document.getElementById("ncTitle").value.trim();
+  const flow = document.getElementById("ncFlow").value.trim();
+  const script = document.getElementById("ncScript").value.trim();
+  if (!title || !flow || !script) { alert("제목, 국문 흐름, 전체 스크립트는 필수입니다."); return; }
+  const kw = document.getElementById("ncKeywords").value.split(",").map(s => s.trim()).filter(Boolean);
+  const finalKw = kw.length ? kw : autoKeywords(script);
+  userCards.push({
+    cat: document.getElementById("ncCat").value,
+    title, koreanFlow: flow,
+    hint: document.getElementById("ncHint").value.trim() || "내가 추가한 카드",
+    keyEnglish: document.getElementById("ncKey").value.trim() || script.split(".")[0] + ".",
+    fullScript: script,
+    keywords: finalKw,
+    _user: true,
+  });
+  saveUserCards();
+  ["ncTitle","ncFlow","ncHint","ncKey","ncScript","ncKeywords"].forEach(id => document.getElementById(id).value = "");
+  renderPills();
+  alert(kw.length
+    ? "카드가 추가되었습니다! '내 카드' 카테고리에서 확인하세요."
+    : `카드가 추가되었습니다!\n키워드를 입력하지 않아 스크립트에서 자동 추출했어요:\n${finalKw.join(", ")}\n(목록에서 수정·확인 가능)`);
+  setCardTab("list");
+}
+
+// fullScript에서 핵심 단어 후보 자동 추출 (불용어 제외 + 빈도 상위)
+function autoKeywords(script) {
+  const stop = new Set(["the","a","an","and","or","but","so","because","that","this","these","those","i","you","we","they","it","he","she","my","your","our","their","is","are","was","were","be","been","being","to","of","in","on","at","for","with","about","like","what","when","where","how","really","very","just","also","then","there","here","can","could","would","should","will","my","me","them","us","have","has","had","do","does","did","not","no","more","most","some","one","two","right","after","before","over","than","into","out","up","down","if","as","by","from","get","got"]);
+  const words = script.toLowerCase().replace(/[^a-z\s]/g, " ").split(/\s+/).filter(w => w.length > 3 && !stop.has(w));
+  const freq = {}; words.forEach(w => freq[w] = (freq[w]||0)+1);
+  const sorted = Object.entries(freq).sort((a,b) => b[1]-a[1] || a[0].localeCompare(b[0]));
+  const picked = sorted.slice(0, 5).map(([w]) => w);
+  return picked.length ? picked : ["(키워드 없음)"];
+}
+function importCardsFromFile() {
+  const file = document.getElementById("ncFile").files[0];
+  const msg = document.getElementById("importMsg");
+  if (!file) { msg.style.color = "var(--warn)"; msg.textContent = "파일을 선택해주세요."; return; }
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const arr = JSON.parse(e.target.result);
+      if (!Array.isArray(arr)) throw new Error("배열이 아닙니다");
+      let added = 0;
+      arr.forEach(c => {
+        if (c.title && c.koreanFlow && c.fullScript) {
+          userCards.push({
+            cat: c.cat || "opi", title: c.title, koreanFlow: c.koreanFlow,
+            hint: c.hint || "가져온 카드", keyEnglish: c.keyEnglish || "",
+            fullScript: c.fullScript, keywords: Array.isArray(c.keywords) ? c.keywords : [],
+            _user: true,
+          });
+          added++;
+        }
+      });
+      saveUserCards(); renderPills();
+      msg.style.color = "var(--success)";
+      msg.textContent = `✅ ${added}개의 카드를 가져왔습니다!`;
+      setTimeout(() => setCardTab("list"), 800);
+    } catch (err) {
+      msg.style.color = "var(--error)";
+      msg.textContent = "❌ JSON 형식이 올바르지 않습니다: " + err.message;
+    }
+  };
+  reader.readAsText(file);
+}
+function renderMyCardList() {
+  const el = document.getElementById("myCardList");
+  if (!userCards.length) { el.innerHTML = `<div style="text-align:center; color:var(--dim); padding:30px;">아직 추가한 카드가 없습니다.</div>`; return; }
+  el.innerHTML = userCards.map((c, i) => `
+    <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; padding:11px 14px; background:var(--surface2); border:1px solid var(--border); border-radius:10px; margin-bottom:8px;">
+      <div style="min-width:0;">
+        <div style="font-weight:600; font-size:14px;">${escapeHtml(c.title)}</div>
+        <div style="font-size:12px; color:var(--dim); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${escapeHtml(c.koreanFlow)}</div>
+      </div>
+      <button class="btn" style="font-size:12px; padding:5px 10px; flex-shrink:0; color:var(--error); border-color:var(--error);" onclick="deleteUserCard(${i})">삭제</button>
+    </div>`).join("");
+}
+function deleteUserCard(i) {
+  if (!confirm(`'${userCards[i].title}' 카드를 삭제할까요?`)) return;
+  userCards.splice(i, 1);
+  saveUserCards(); renderMyCardList(); renderPills();
+  if (currentCat === "my") { cardIdx = 0; showCard(); }
+}
+function exportMyCards() {
+  if (!userCards.length) { alert("내보낼 카드가 없습니다."); return; }
+  const clean = userCards.map(({ _user, ...rest }) => rest);
+  const blob = new Blob([JSON.stringify(clean, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = "opic_my_cards.json"; a.click();
+  URL.revokeObjectURL(url);
+}
+function escapeHtml(s) { return String(s).replace(/[&<>"]/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[c])); }
+
+function switchTab(name) {
+  const tabs = ["cards", "speaking", "roleplay"];
+  document.querySelectorAll(".tab").forEach((t, i) => t.classList.toggle("active", tabs[i] === name));
+  document.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
+  document.getElementById("panel-" + name).classList.add("active");
+}
+
+loadState(); renderPills(); showCard(); updateConfigStatus(); newSpeakQ();
+</script>
+</body>
+</html>
