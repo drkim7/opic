@@ -109,6 +109,14 @@
   .card-key { font-size: 15px; color: var(--accent3); line-height: 1.6; margin-bottom: 16px; font-weight: 500; }
   .card-script { font-size: 13px; color: #c8c8e0; line-height: 1.7; overflow-y: auto; max-height: 130px; }
   .flip-hint { text-align: center; font-size: 12px; color: var(--dim); margin-bottom: 16px; }
+  .mustuse-box { background: linear-gradient(135deg, rgba(255,215,0,0.06), rgba(255,170,0,0.03)); border: 1px solid rgba(255,215,0,0.3); border-radius: 14px; margin-bottom: 16px; overflow: hidden; }
+  .mustuse-head { display: flex; align-items: center; justify-content: space-between; padding: 13px 16px; cursor: pointer; font-size: 14px; font-weight: 700; color: var(--gold); }
+  .mustuse-count { font-size: 11px; background: var(--gold); color: #000; border-radius: 8px; padding: 1px 7px; margin-left: 4px; }
+  .mustuse-list { padding: 0 16px 14px; }
+  .mustuse-item { padding: 10px 0; border-top: 1px solid rgba(255,215,0,0.12); }
+  .mustuse-item:first-child { border-top: none; }
+  .mustuse-en { font-size: 14px; font-weight: 600; color: var(--text); line-height: 1.5; }
+  .mustuse-ko { font-size: 12px; color: var(--dim); margin-top: 3px; line-height: 1.4; }
   .recall-row { display: flex; gap: 8px; margin-bottom: 16px; }
   .recall-btn {
     flex: 1; padding: 11px; border-radius: 10px; font-family: inherit; font-size: 13px;
@@ -234,6 +242,15 @@
       </div>
     </div>
     <div class="flip-hint">💡 카드를 누르면 국문 흐름 ↔ 영어 스크립트가 뒤집힙니다</div>
+
+    <div class="mustuse-box" id="mustUseBox">
+      <div class="mustuse-head" onclick="toggleMustUse()">
+        <span>⭐ 이 주제 필수 표현 <span id="mustUseCount" class="mustuse-count"></span></span>
+        <span id="mustUseToggle" style="font-size:13px; color:var(--dim);">▼ 펼치기</span>
+      </div>
+      <div class="mustuse-list" id="mustUseList" style="display:none;"></div>
+    </div>
+
     <div class="recall-row">
       <button class="recall-btn ok" onclick="markRecall('ok')">✅ 바로 말함</button>
       <button class="recall-btn mid" onclick="markRecall('mid')">⚠️ 버벅임</button>
@@ -385,6 +402,7 @@
       <div class="field"><label>영어 핵심문장</label><textarea id="ncKey" style="min-height:60px;" placeholder="가장 중요한 1~2문장"></textarea></div>
       <div class="field"><label>전체 스크립트 *</label><textarea id="ncScript" style="min-height:100px;" placeholder="전체 영어 답변"></textarea></div>
       <div class="field"><label>핵심 키워드 (쉼표로 구분, 로컬 비교에 사용)</label><input id="ncKeywords" placeholder="golf course, Zoom meeting, couldn't find"><div style="font-size:11px; color:var(--warn); margin-top:5px;">💡 키워드를 입력하면 비교 정확도가 높아집니다. 비워두면 스크립트에서 자동 추출합니다.</div></div>
+      <div class="field"><label>⭐ 필수 표현 (한 줄에 하나씩, "영어 = 한글뜻" 형식)</label><textarea id="ncMustUse" style="min-height:80px;" placeholder="When it comes to ~ = ~에 관해서는&#10;What I find convenient is ~ = 내가 편하다고 느끼는 건 ~"></textarea><div style="font-size:11px; color:var(--dim); margin-top:5px;">선택 사항. 이 주제에서 꼭 써야 할 패턴 표현을 적어두면 카드 아래에 표시됩니다.</div></div>
       <div style="display:flex; gap:10px;">
         <button class="btn" style="flex:1;" onclick="closeCardManager()">닫기</button>
         <button class="btn btn-primary" style="flex:1;" onclick="addCardFromForm()">카드 추가</button>
@@ -402,7 +420,10 @@
     "hint": "경험을 시간순으로 묘사",
     "keyEnglish": "It was the most memorable trip.",
     "fullScript": "Last spring, I visited Jeju...",
-    "keywords": ["Jeju", "sunrise", "peaceful", "memorable"]
+    "keywords": ["Jeju", "sunrise", "peaceful", "memorable"],
+    "mustUse": [
+      { "en": "It was the most ~ trip", "ko": "가장 ~한 여행이었어요" }
+    ]
   }
 ]</pre>
       <div class="field">
@@ -435,35 +456,1389 @@ const DEFAULT_CARDS = [
     hint: "아이를 안심시키고 정보를 물은 뒤 관리사무소로 데려가는 흐름",
     keyEnglish: "Are you okay? Can you tell me your name? Let's go to the information center together.",
     fullScript: "Hi there, are you okay? Don't worry, I'll help you find your parents. Can you tell me your name and how old you are? Do you remember where you last saw your mom or dad? What were they wearing today? Okay, let's go to the information center together — they can make an announcement to find your parents.",
-    keywords: ["okay", "name", "last saw", "wearing", "information center"] },
+    keywords: ["okay", "name", "last saw", "wearing", "information center"],
+    mustUse: [
+      { en: "Don't worry, I'll help you ~", ko: "걱정 마, 내가 ~하게 도와줄게 (안심시키기)" },
+      { en: "Can you tell me ~?", ko: "~를 말해줄 수 있니? (정보 묻기)" },
+      { en: "Do you remember where ~?", ko: "~한 곳 기억나니? (장소 확인)" },
+      { en: "Let's go to ~ together", ko: "같이 ~로 가자 (행동 제안)" },
+    ] },
   { cat: "rp", set: "w2", title: "2-2 신고",
     koreanFlow: "긴급 신고 → 민호 정보 → 부모 못 찾음 → 부모 특징 → 방송 요청",
     hint: "상황 설명, 아이 정보, 부모 찾기 방송 요청",
     keyEnglish: "I found a lost child. Could you please make an announcement to find his parents?",
     fullScript: "Excuse me, I need to report something urgent. I found a lost child here. His name is Minho and he's about seven years old. We've looked around but we can't find his parents. His mother is wearing a red jacket and his father has glasses. Could you please make an announcement over the speaker to help find his parents?",
-    keywords: ["report", "lost child", "Minho", "can't find", "announcement"] },
+    keywords: ["report", "lost child", "Minho", "can't find", "announcement"],
+    mustUse: [
+      { en: "I need to report ~", ko: "~를 신고해야 해요 (상황 알리기)" },
+      { en: "We can't find ~", ko: "~를 찾을 수가 없어요 (문제 설명)" },
+      { en: "He/She is wearing ~", ko: "그/그녀는 ~를 입고 있어요 (특징 묘사)" },
+      { en: "Could you please make an announcement?", ko: "방송 좀 해주시겠어요? (정중한 요청)" },
+    ] },
   { cat: "exp", set: "w2", title: "2-3 분실 경험",
     koreanFlow: "골프장 → 줌 회의 → 이어폰 케이스 없음 → 찾아봄 → 못 찾음 → 새로 삼",
     hint: "장소 → 문제 발생 → 찾으려는 노력 → 결과",
     keyEnglish: "I looked around, but I couldn't find it. In the end, I had to buy a new one.",
     fullScript: "I once lost my AirPods case at a golf course. I had a Zoom meeting right after playing golf, so I was in a hurry. When I opened my bag, the case was gone. I looked around the locker room and the parking lot, but I couldn't find it. In the end, I had to buy a new one.",
-    keywords: ["golf course", "Zoom meeting", "AirPods case", "looked around", "buy a new one"] },
+    keywords: ["golf course", "Zoom meeting", "AirPods case", "looked around", "buy a new one"],
+    mustUse: [
+      { en: "I once lost ~", ko: "예전에 ~를 잃어버린 적 있어요 (경험 도입)" },
+      { en: "When I opened ~, it was gone", ko: "~를 열어보니 사라졌어요 (문제 발생)" },
+      { en: "I looked around, but I couldn't find it", ko: "찾아봤지만 못 찾았어요 (노력+결과)" },
+      { en: "In the end, I had to ~", ko: "결국 ~할 수밖에 없었어요 (마무리)" },
+    ] },
   { cat: "opi", set: "w2", title: "2-4 AI 변화",
     koreanFlow: "예전엔 단순 기능 → 지금은 AI로 다양화 → 업무에서 사용 → 개인 비서처럼",
     hint: "AI agent 하나의 주제로 기술 변화를 설명 (One Main Point)",
     keyEnglish: "AI has changed technology by making AI agents more practical and useful in daily life.",
     fullScript: "When it comes to AI technology, I think AI agents have changed the way people use technology. In the past, apps only had simple functions, but now AI can handle many things at once. What I find really convenient is that they can summarize long documents or organize my schedule, almost like a personal assistant. So I think AI agents are one of the most practical changes brought by AI technology.",
-    keywords: ["AI agents", "in the past", "convenient", "personal assistant", "practical changes"] },
+    keywords: ["AI agents", "in the past", "convenient", "personal assistant", "practical changes"],
+    mustUse: [
+      { en: "When it comes to ~", ko: "~에 관해서는 (Intro 주제 고정)" },
+      { en: "In the past ~, but now ~", ko: "예전엔 ~했지만 지금은 ~ (변화 대조)" },
+      { en: "What I find really convenient is ~", ko: "내가 정말 편하다고 느끼는 건 ~ (개인 의견)" },
+      { en: "So I think ~ is one of the most ~", ko: "그래서 ~가 가장 ~한 것 중 하나라고 생각해요 (Outro)" },
+    ] },
   { cat: "opi", set: "w2", title: "2-5 기술 이슈",
     koreanFlow: "프라이버시 → 데이터 수집 → 해킹 위험 → 오용 → 통제권 문제",
     hint: "AI의 가장 큰 문제를 privacy 하나로 잡고 끝까지 유지 (One Main Point)",
     keyEnglish: "I think the biggest issue with AI is privacy, because our personal data could be leaked.",
     fullScript: "In my opinion, the biggest issue related to AI technology is privacy. AI systems collect a lot of personal data, like what we say and where we go. I feel really nervous about this because that data could be leaked to hackers or misused by companies. What worries me the most is that we lose control over our own information. So I think privacy is the most serious problem when it comes to AI.",
-    keywords: ["privacy", "personal data", "leaked", "hackers", "control"] },
+    keywords: ["privacy", "personal data", "leaked", "hackers", "control"],
+    mustUse: [
+      { en: "In my opinion, the biggest issue is ~", ko: "제 생각에 가장 큰 문제는 ~ (Intro 의견 선언)" },
+      { en: "I feel really nervous about ~", ko: "저는 ~가 정말 불안해요 (감정 표현)" },
+      { en: "What worries me the most is ~", ko: "가장 걱정되는 건 ~ (강조)" },
+      { en: "So I think ~ is the most serious ~", ko: "그래서 ~가 가장 심각한 ~라고 생각해요 (Outro)" },
+    ] },,
+  { cat: "desc", set: "exam", title: "🎵 music — 묘사/라이브경험",
+    koreanFlow: "한국 록 좋아함 → Silica Gel → 실험적·철학적 가사 → 밤 운전하며 들음 → 다른 세계 느낌",
+    hint: "A 묘사: 한 가지로 좁히고 감정으로 끝내기. 라이브 경험은 E형(반전+감정 한 방)",
+    keyEnglish: "I'm really into Korean rock these days. It feels like being transported to another world.",
+    fullScript: "I'm really into Korean rock these days. My favorite band is Silica Gel — their songs are experimental and the lyrics are even philosophical. I usually play them when I'm driving alone at night, and it feels like being transported to another world. (라이브 60초) I once ran into a busking show at the Santa Monica Pier in LA. I'd just gone for a beer and the sunset, but a live band started playing — the drums and guitar blended perfectly with the sunset, and people stopped to listen one by one. I'd been homesick that day, but I felt strangely comforted. That's when it hit me — sometimes music is real medicine for the mind.",
+    keywords: ["Korean rock", "Silica Gel", "driving alone at night", "another world", "Santa Monica"],
+    mustUse: [
+      { en: "I'm really into ~ these days", ko: "요즘 ~에 푹 빠져있어요 (묘사 도입)" },
+      { en: "I usually play them when ~", ko: "주로 ~할 때 들어요 (루틴 연결)" },
+      { en: "I once ran into ~", ko: "우연히 ~를 마주친 적 있어요 (memorable 도입)" },
+      { en: "That's when it hit me — ~", ko: "그때 깨달았어요 — (감정 한 방)" }
+    ] },
+  { cat: "desc", set: "exam", title: "🏠 house — 집/최애 방",
+    koreanFlow: "교외·산 근처 조용 → 방 4개 → 미니멀·밝은 벽지 → 최애 안방 extra-king → 넷플릭스 보다 잠드는 루틴",
+    hint: "A 묘사: 나열 금지, 한 가지(안방)+감정·루틴 한 줄로 마무리",
+    keyEnglish: "My favorite is the master bedroom — perfect for Netflix. That's my favorite routine.",
+    fullScript: "My place is in a quiet suburban area with mountains nearby. It has four rooms, and I'm a minimalist so there isn't much furniture. My favorite is the master bedroom — an extra-king bed, perfect for Netflix. After work, I love lying there and drifting off. That's my favorite routine.",
+    keywords: ["quiet suburban", "four rooms", "minimalist", "master bedroom", "Netflix"],
+    mustUse: [
+      { en: "My place is in a ~ area", ko: "우리 집은 ~한 지역에 있어요 (위치)" },
+      { en: "My favorite is ~", ko: "제가 가장 좋아하는 건 ~ (하나로 좁히기)" },
+      { en: "After work, I love ~ing", ko: "퇴근 후 ~하는 걸 좋아해요 (루틴+감정)" },
+      { en: "That's my favorite routine", ko: "그게 제 최애 루틴이에요 (마무리)" }
+    ] },
+  { cat: "desc", set: "exam", title: "🛋️ home vacation — 집콕 휴가",
+    koreanFlow: "프로젝트로 지침 → 여행보다 집에서 충전 → 아내와 드라마 정주행+배달 → 일 생각 안 하는 게 진짜 휴식",
+    hint: "B 루틴 + G 이슈(휴가 중요성): 아묻따 #12와 연결",
+    keyEnglish: "Not thinking about work at all is exactly the rest I need.",
+    fullScript: "For vacations, I often just stay home. After a long project I'm drained, so my wife and I binge-watch dramas and order in a lot. It's not exciting, but not thinking about work at all is exactly the rest I need.",
+    keywords: ["stay home", "drained", "binge-watch", "order in", "rest"],
+    mustUse: [
+      { en: "For vacations, I often just ~", ko: "휴가 때는 보통 그냥 ~해요 (도입)" },
+      { en: "After a long project I'm drained", ko: "긴 프로젝트 후엔 지쳐있어요 (이유)" },
+      { en: "It's not exciting, but ~", ko: "신나진 않지만 ~ (반전+의미)" },
+      { en: "~ is exactly the rest I need", ko: "~가 바로 내게 필요한 휴식이에요 (마무리)" }
+    ] },
+  { cat: "exp", set: "exam", title: "✈️ travel — 어릴 적 중국 여행",
+    koreanFlow: "첫 해외=어릴 때 중국 → 가족 10명 단체 → 만리장성 실물에 압도 → 가팔라서 금방 지침 → 자금성",
+    hint: "C 과거경험: When I was ~ 시점 → 상황 → 감정 → 의미. 아묻따 #6 연결",
+    keyEnglish: "The Great Wall blew me away; in person it stretched endlessly.",
+    fullScript: "My first trip abroad was to China in elementary school — about ten of us on a family tour. The Great Wall blew me away; I'd only seen it in books, but in person it stretched endlessly, and the climb was so steep I got tired fast.",
+    keywords: ["first trip abroad", "China", "family tour", "Great Wall", "steep"],
+    mustUse: [
+      { en: "My first trip abroad was to ~", ko: "첫 해외여행은 ~였어요 (시점 도입)" },
+      { en: "~ blew me away", ko: "~에 압도당했어요 (감정)" },
+      { en: "I'd only seen it in books, but in person ~", ko: "책으로만 봤는데 실물은 ~ (대조)" },
+      { en: "the ~ was so steep I got tired fast", ko: "너무 가팔라서 금방 지쳤어요 (디테일)" }
+    ] },
+  { cat: "exp", set: "exam", title: "⛺ camping — 캠핑/폭우 에피소드",
+    koreanFlow: "텐트·랜턴·의자·고기 필수 → 도시 벗어나 불멍 매력 → 밤 폭우에 텐트 정리 대소동 → 웃긴 추억",
+    hint: "A 묘사 + E memorable: 평범→반전(폭우)→감정. 아묻따 #11 연결",
+    keyEnglish: "The best part is escaping the city and staring at the campfire.",
+    fullScript: "When I camp, the essentials are a tent, a lantern, chairs, and of course meat to grill. The best part is escaping the city and staring at the campfire. One time it suddenly poured at night and we scrambled to pack up — chaos, but one of my funniest camping memories.",
+    keywords: ["tent", "lantern", "campfire", "poured", "funniest memories"],
+    mustUse: [
+      { en: "the essentials are ~", ko: "필수품은 ~예요 (챙기는 것)" },
+      { en: "The best part is ~ing", ko: "가장 좋은 건 ~하는 거예요 (감정 핵심)" },
+      { en: "One time it suddenly ~", ko: "한번은 갑자기 ~ (반전 도입)" },
+      { en: "chaos, but one of my funniest ~ memories", ko: "난리였지만 가장 웃긴 추억 (마무리)" }
+    ] },
+  { cat: "opi", set: "exam", title: "🥗 health — 스트레스/회복 (만능)",
+    koreanFlow: "가장 큰 건 스트레스 → 2년 전 야식→체중↑·불면 → 며칠 쉬며 당·염분 줄임 → 회복+교훈",
+    hint: "G 이슈 만능: 아묻따 #12 — 인트로·결론만 질문 따라 교체, 몸통 고정",
+    keyEnglish: "I learned that releasing stress and allowing recovery is what protects your health.",
+    fullScript: "The biggest health problem is stress. Two years ago I was overwhelmed with work, started late-night snacking, gained weight fast, and developed severe insomnia. I took a few days off and gave myself real rest — I cut sugar, salt, and greasy food, ate fresh produce, and relaxed. My energy came back, I slept deeply, and my mood brightened. I learned that releasing stress and allowing recovery is what protects your health.",
+    keywords: ["stress", "late-night snacking", "insomnia", "days off", "recovery"],
+    mustUse: [
+      { en: "The biggest ~ problem is ~", ko: "가장 큰 ~ 문제는 ~ (Intro 의견 고정)" },
+      { en: "I was overwhelmed with work", ko: "일에 짓눌려 있었어요 (상황)" },
+      { en: "I took a few days off and ~", ko: "며칠 쉬면서 ~했어요 (해결 행동)" },
+      { en: "I learned that ~", ko: "~라는 걸 배웠어요 (Outro 교훈)" }
+    ] },
+  { cat: "desc", set: "exam", title: "🌐 internet — 용도/변화",
+    koreanFlow: "뉴스·유튜브·쇼핑·업무 리서치 → 예전엔 PC, 지금 거의 폰 → 없으면 하루도 못 버팀",
+    hint: "A 묘사 + F 비교(PC→폰). 먹통 경험은 아묻따 #9 연결",
+    keyEnglish: "I couldn't get through a single day without it.",
+    fullScript: "I use the internet for almost everything — news, YouTube, shopping, and work research. I used to go online mainly on a PC, but now it's almost all on my phone. Honestly, I couldn't get through a single day without it.",
+    keywords: ["news", "YouTube", "work research", "PC", "phone"],
+    mustUse: [
+      { en: "I use ~ for almost everything", ko: "~를 거의 모든 일에 써요 (도입)" },
+      { en: "I used to ~, but now ~", ko: "예전엔 ~했지만 지금은 ~ (F형 비교 핵심)" },
+      { en: "Honestly, I couldn't ~ without it", ko: "솔직히 그것 없인 ~ 못해요 (마무리 강조)" }
+    ] },
+  { cat: "desc", set: "exam", title: "🌳 park — 한강공원",
+    koreanFlow: "집 근처 한강공원 → 산책·자전거·돗자리 → 주말 커피 들고 → 노을 보며 멍 때리기",
+    hint: "A 묘사: 활동 나열 후 '내 최애 한 가지+감정'으로 좁혀 마무리",
+    keyEnglish: "My favorite thing is sitting by the river at sunset and clearing my head.",
+    fullScript: "There's a Han River park near my home. People walk, bike, or lay out a picnic mat. On weekends I grab a coffee and just people-watch. My favorite thing is sitting by the river at sunset and clearing my head — the most relaxing part of my week.",
+    keywords: ["Han River park", "walk", "picnic", "sunset", "clearing my head"],
+    mustUse: [
+      { en: "There's a ~ near my home", ko: "집 근처에 ~가 있어요 (위치 도입)" },
+      { en: "On weekends I grab a ~ and just ~", ko: "주말엔 ~ 들고 그냥 ~해요 (루틴)" },
+      { en: "My favorite thing is ~ing", ko: "가장 좋아하는 건 ~ (하나로 좁히기)" },
+      { en: "the most relaxing part of my week", ko: "한 주 중 가장 힐링되는 시간 (감정 마무리)" }
+    ] },
+  { cat: "opi", set: "exam", title: "🤖 tech — AI/스마트홈 변화",
+    koreanFlow: "AI·스마트홈으로 폰으로 가전 제어 → GPS·번역앱으로 여행 쉬워짐 → AI 챗봇 뉴스 자주 봄",
+    hint: "G 이슈(14~15번): 현상 한 줄 → 구체 예시 → 내 의견 마무리",
+    keyEnglish: "Technology has changed daily life a lot, mostly through AI and smart homes.",
+    fullScript: "Technology has changed daily life a lot, mostly through AI and smart homes — I can control my appliances from my phone. GPS and translation apps made traveling abroad so much easier. Lately I keep seeing news about AI chatbots; it makes me wonder how far it'll go.",
+    keywords: ["AI", "smart homes", "control appliances", "translation apps", "AI chatbots"],
+    mustUse: [
+      { en: "~ has changed daily life a lot, mostly through ~", ko: "~가 일상을 크게 바꿨어요, 주로 ~를 통해 (Intro)" },
+      { en: "~ made ~ so much easier", ko: "~ 덕분에 ~가 훨씬 쉬워졌어요 (구체 변화)" },
+      { en: "Lately I keep seeing news about ~", ko: "요즘 ~ 뉴스를 자주 봐요 (최신 이슈)" },
+      { en: "it makes me wonder how far it'll go", ko: "어디까지 갈지 궁금해져요 (의견 마무리)" }
+    ] },
+  { cat: "desc", set: "exam", title: "🏨 hotel — 호캉스/무료 업그레이드",
+    koreanFlow: "깨끗·서비스 빠름·시티뷰 선호 → 기념일 호캉스 수영장·룸서비스 → 늦은 체크인에 무료 업글",
+    hint: "A 묘사 + E memorable(무료 업그레이드 반전). 아묻따 #1·#8 연결",
+    keyEnglish: "They upgraded our room for free — it made the whole anniversary feel special.",
+    fullScript: "Korean hotels are clean and the service is fast, and I prefer a city view. Recently my wife and I did an anniversary staycation — the best part was a free upgrade after a late check-in. That little surprise made the whole trip special.",
+    keywords: ["clean", "city view", "anniversary", "staycation", "upgraded for free"],
+    mustUse: [
+      { en: "When I pick a ~, I look for ~", ko: "~를 고를 땐 ~를 봐요 (기준 묘사)" },
+      { en: "my wife and I had an anniversary ~", ko: "아내와 기념일 ~를 했어요 (경험 도입)" },
+      { en: "the staff upgraded our ~ for free", ko: "직원이 무료로 업그레이드해줬어요 (반전)" },
+      { en: "It made the whole ~ feel special", ko: "덕분에 모든 게 특별해졌어요 (감정 마무리)" }
+    ] },
+  { cat: "desc", set: "exam", title: "🏖️ beach — 해운대",
+    koreanFlow: "해운대 → 회·해산물 → 수영보다 모래사장·노을 → 파도 소리에 머리 비움",
+    hint: "A 묘사: 활동보다 '내가 좋아하는 한 가지+감정'. 아묻따 #3 연결",
+    keyEnglish: "The sound of the waves completely clears my mind.",
+    fullScript: "My favorite beach is Haeundae in Busan — cool in summer, and the seafood is amazing. I'm not much of a swimmer, so I relax on the sand and watch the sunset. The sound of the waves completely clears my mind.",
+    keywords: ["Haeundae", "seafood", "not a swimmer", "sunset", "waves"],
+    mustUse: [
+      { en: "My favorite ~ is ~", ko: "제가 가장 좋아하는 ~는 ~ (하나로 좁히기)" },
+      { en: "I'm not much of a ~", ko: "저는 ~를 잘하는 편은 아니에요 (솔직 디테일)" },
+      { en: "~ completely clears my mind", ko: "~가 머리를 완전히 비워줘요 (감정 마무리)" }
+    ] },
+  { cat: "desc", set: "exam", title: "💇 hair shop — 단골 미용실",
+    koreanFlow: "단골 Juno, 디자이너가 취향 앎 → 커트+가끔 펌 → 새 스타일 도전했다 어색해 후회",
+    hint: "A 묘사+B 루틴+E 경험(과감한 스타일 후회담). 아묻따 #13 연결",
+    keyEnglish: "My stylist already knows what I like.",
+    fullScript: "I go to a regular salon near my home — my stylist already knows what I like. Usually I just get a cut, sometimes a perm. Once I tried a bold new style, but it felt so awkward I regretted it and went back. Lesson learned.",
+    keywords: ["regular salon", "stylist", "cut", "perm", "bold new style"],
+    mustUse: [
+      { en: "I go to a regular ~ near my home", ko: "집 근처 단골 ~에 가요 (도입)" },
+      { en: "Usually I just ~, sometimes ~", ko: "보통은 ~, 가끔 ~ (루틴)" },
+      { en: "Once I tried ~, but it felt so awkward", ko: "한번 ~ 도전했는데 너무 어색했어요 (반전)" },
+      { en: "Lesson learned", ko: "교훈 얻었죠 (마무리 한 방)" }
+    ] },
+  { cat: "desc", set: "exam", title: "🎬 movie — Project Hail Mary",
+    koreanFlow: "SF 좋아함 → Project Hail Mary → 외계인 Rocky와 종 넘은 우정 → 거의 울 뻔, 해피엔딩",
+    hint: "A 묘사: 줄거리보다 '내가 좋았던 한 가지(우정)+감정'. 아묻따 #9 연결",
+    keyEnglish: "It was so emotional I almost cried at the end.",
+    fullScript: "I recently watched a sci-fi movie, Project Hail Mary. It's about an astronaut saving Earth, but what I loved was his friendship with an alien named Rocky. It sounds strange, but it was so emotional I almost cried at the end.",
+    keywords: ["sci-fi", "Project Hail Mary", "astronaut", "friendship", "almost cried"],
+    mustUse: [
+      { en: "What I loved was ~", ko: "제가 정말 좋았던 건 ~ (하나로 좁히기)" },
+      { en: "It sounds strange, but ~", ko: "이상하게 들리겠지만 ~ (감정 강조 전환)" },
+      { en: "I almost cried at the end", ko: "마지막에 거의 울 뻔했어요 (감정 한 방)" }
+    ] },
+  { cat: "desc", set: "exam", title: "👗 fashion — 핏·소재 중시",
+    koreanFlow: "한국 트렌디·미니멀 → 나는 온라인·베이직 → (변화) 로고 중시 → 핏·소재 중시",
+    hint: "A 묘사+F 비교: Back then→But now 구조. 아묻따 #9 연결",
+    keyEnglish: "People used to care about brand logos, but now it's more about the fit and fabric.",
+    fullScript: "Koreans are trend-conscious, and clean minimal styles are popular. I shop online a lot and prefer simple basics. One thing that's changed: people used to care about brand logos, but now it's more about the fit and fabric.",
+    keywords: ["trend-conscious", "minimal", "online", "basics", "fit and fabric"],
+    mustUse: [
+      { en: "One thing that's changed: ~", ko: "달라진 점 하나는 ~ (F형 비교 도입)" },
+      { en: "People used to ~, but now ~", ko: "예전엔 ~했지만 지금은 ~ (비교 핵심)" },
+      { en: "I prefer simple ~", ko: "저는 심플한 ~를 선호해요 (내 취향)" }
+    ] },
+  { cat: "desc", set: "exam", title: "📱 phone — 카메라·모바일결제",
+    koreanFlow: "카메라·모바일 결제 최다 → 통화보다 메신저·유튜브·뱅킹 → 옛 폰은 절반도 못함",
+    hint: "A 묘사+F 비교. 롤플(새 폰 결함)은 별도 rp 카드. 아묻따 #9·#10",
+    keyEnglish: "My whole life runs through it now.",
+    fullScript: "The features I use most are the camera and mobile payments — beyond calls, it's mostly messaging, YouTube, and banking. My old phone could barely do half of what this one does; my whole life runs through it now.",
+    keywords: ["camera", "mobile payments", "messaging", "banking", "old phone"],
+    mustUse: [
+      { en: "The features I use most are ~", ko: "가장 많이 쓰는 기능은 ~ (도입)" },
+      { en: "My old ~ could barely do half of ~", ko: "옛 ~는 절반도 못했어요 (비교)" },
+      { en: "My whole life runs through it", ko: "제 삶 전체가 이걸로 돌아가요 (마무리 강조)" }
+    ] },
+  { cat: "desc", set: "exam", title: "📹 video — 유튜브 알고리즘",
+    koreanFlow: "유튜브 다큐·운동 → 일할 땐 강의·튜토리얼 → 어제 알고리즘에 빠져 늦게 잠",
+    hint: "B 루틴+D 최근경험('어제 한 일' 단골). 아묻따 #1 연결",
+    keyEnglish: "I fell down a YouTube rabbit hole — the algorithm knows me too well.",
+    fullScript: "On YouTube I mostly watch documentaries and workout videos, and lectures for work. Last night I fell down a YouTube rabbit hole — one recommendation led to another and I stayed up too late. The algorithm knows me too well.",
+    keywords: ["documentaries", "workout", "lectures", "rabbit hole", "algorithm"],
+    mustUse: [
+      { en: "I mostly watch ~", ko: "주로 ~를 봐요 (루틴)" },
+      { en: "I fell down a ~ rabbit hole", ko: "~의 늪에 빠졌어요 (반전 표현)" },
+      { en: "one recommendation led to another", ko: "추천이 추천을 불렀어요 (디테일)" },
+      { en: "The algorithm knows me too well", ko: "알고리즘이 날 너무 잘 알아요 (유머 마무리)" }
+    ] },
+  { cat: "desc", set: "exam", title: "🎊 holiday — 설·추석",
+    koreanFlow: "설·추석 차례·성묘 → 전 부치고 큰 식사 → (변화) 명절에 해외여행 가는 가족↑",
+    hint: "A 묘사+F 비교. 아묻따 #11 연결",
+    keyEnglish: "It's the only time the whole family is together.",
+    fullScript: "On holidays like Lunar New Year and Chuseok, families gather for ancestral rites and big meals. One change is that more families travel abroad now. I still prefer the traditional gathering — it's the only time the whole family is together.",
+    keywords: ["Lunar New Year", "Chuseok", "ancestral rites", "travel abroad", "whole family"],
+    mustUse: [
+      { en: "On holidays like ~, families gather for ~", ko: "~같은 명절엔 가족이 모여 ~해요 (묘사)" },
+      { en: "One change is that ~", ko: "한 가지 변화는 ~ (비교)" },
+      { en: "I still prefer ~", ko: "그래도 저는 ~가 좋아요 (내 의견 마무리)" }
+    ] },
+  { cat: "opi", set: "exam", title: "♻️ recycling — 분리수거 변화",
+    koreanFlow: "분리수거 엄격(플라스틱·캔·종이·음식물) → 시민의식↑ → 일부 아파트 앱·QR 관리",
+    hint: "F 비교+G 이슈(14번 단골). 아묻따 #15 연결",
+    keyEnglish: "Some buildings now manage it through apps or QR codes.",
+    fullScript: "Korea has strict recycling rules — we separate plastic, cans, paper, and food waste. People have become much more aware, and some buildings now manage it through apps or QR codes. It's a bit of a hassle, but a good habit.",
+    keywords: ["strict recycling", "separate", "aware", "apps", "QR codes"],
+    mustUse: [
+      { en: "~ has strict ~ rules", ko: "~는 ~ 규칙이 엄격해요 (현상)" },
+      { en: "People have become much more aware", ko: "사람들 의식이 많이 높아졌어요 (변화)" },
+      { en: "It's a bit of a hassle, but a good habit", ko: "번거롭지만 좋은 습관이죠 (양면+의견)" }
+    ] },
+  { cat: "exp", set: "exam", title: "🍔 delivery — 배달 실수 경험",
+    koreanFlow: "바빠서 배달 자주 → 늦고 잘못 옴 → 고객센터 연락 → 환불·재배송 → 요즘 건강식 배달도",
+    hint: "J 경험(배달 문제 단골). 아묻따 #14 연결",
+    keyEnglish: "I contacted support, and they refunded me quickly.",
+    fullScript: "I order delivery a lot because I'm busy. Once my order came almost an hour late and was the wrong dish. I contacted support, and they refunded me quickly. These days you can even get healthy meals delivered.",
+    keywords: ["order delivery", "late", "wrong dish", "support", "refunded"],
+    mustUse: [
+      { en: "Once my order came ~ late and was ~", ko: "한번은 주문이 늦고 잘못 왔어요 (문제)" },
+      { en: "I contacted support", ko: "고객센터에 연락했어요 (행동)" },
+      { en: "they refunded me quickly", ko: "빠르게 환불해줬어요 (해결)" },
+      { en: "These days you can even ~", ko: "요즘은 ~까지 가능해요 (트렌드 마무리)" }
+    ] },
+  { cat: "opi", set: "exam", title: "🏭 industry — 반도체·AI",
+    koreanFlow: "반도체·IT 핵심(금융권이라 관심) → 3년 전보다 AI 급성장 → 신제품 기대 이하 실망 여론",
+    hint: "A 묘사+F 비교+G 이슈. 아묻따 #7 연결",
+    keyEnglish: "Compared to three years ago, AI fields have grown explosively.",
+    fullScript: "Semiconductors and IT are Korea's core industries, and I follow them since I work in finance. Compared to three years ago, AI fields have grown explosively. Recently a major company's new product disappointed people — it shows how high hopes have gotten.",
+    keywords: ["semiconductors", "IT", "finance", "AI", "disappointed"],
+    mustUse: [
+      { en: "~ are Korea's core industries", ko: "~가 한국의 핵심 산업이에요 (현상)" },
+      { en: "Compared to ~ years ago, ~ have grown explosively", ko: "~년 전보다 ~가 폭발적으로 성장 (비교)" },
+      { en: "it shows how high hopes have gotten", ko: "기대가 그만큼 높아졌단 거죠 (해석 마무리)" }
+    ] },
+  { cat: "opi", set: "exam", title: "🏢 workplace — 재택·AI직군",
+    koreanFlow: "금융권 개방형 오피스 → 재택·하이브리드↑·화상회의 일상 → AI직군 인기",
+    hint: "A 묘사+F 비교+G 이슈(14번)",
+    keyEnglish: "Remote and hybrid work have grown, so video calls are routine now.",
+    fullScript: "I work in a finance office with an open-plan layout. The biggest change is that remote and hybrid work have grown, so video calls are routine now. And because of AI, data and AI roles have become incredibly popular.",
+    keywords: ["finance office", "open-plan", "remote", "video calls", "AI roles"],
+    mustUse: [
+      { en: "The biggest change is that ~", ko: "가장 큰 변화는 ~ (F형 핵심)" },
+      { en: "~ are routine now", ko: "~가 이제 일상이에요 (현재 상태)" },
+      { en: "because of AI, ~ have become incredibly popular", ko: "AI 덕분에 ~가 엄청 인기예요 (트렌드)" }
+    ] },
+  { cat: "desc", set: "exam", title: "🗺️ geography — 삼면 바다",
+    koreanFlow: "삼면 바다(동해 깊어 수영) → 산 많아 등산 → 일본 화산·온천 이국적",
+    hint: "A 묘사+F 비교. 아묻따 #6 연결",
+    keyEnglish: "Korea is surrounded by sea on three sides.",
+    fullScript: "Korea is surrounded by sea on three sides — the East Sea is deep and great for swimming. We have lots of mountains, so hiking is popular. Our closest neighbor, Japan, feels exotic with its volcanoes and hot springs.",
+    keywords: ["three sides", "East Sea", "mountains", "hiking", "volcanoes"],
+    mustUse: [
+      { en: "~ is surrounded by ~ on three sides", ko: "~는 삼면이 ~로 둘러싸여 있어요 (지형)" },
+      { en: "We have lots of ~, so ~ is popular", ko: "~가 많아서 ~가 인기예요 (연결)" },
+      { en: "~ feels exotic with its ~", ko: "~는 ~ 때문에 이국적이에요 (비교 대상)" }
+    ] },
+  { cat: "desc", set: "exam", title: "🔌 home appliance — 스타일러",
+    koreanFlow: "스타일러 극찬 → 냄새·먼지·고양이털 제거 → 회식 후 담배냄새 싹",
+    hint: "F 비교+G 이슈(유용한 가전). 아묻따 #4 연결",
+    keyEnglish: "It removes odors and dust you can't get rid of otherwise.",
+    fullScript: "One device people rave about is the styler. It removes odors and dust you can't get rid of otherwise — after a company dinner my clothes used to reek of smoke, but it clears it completely. My wife loves it for cat hair too.",
+    keywords: ["styler", "odors", "dust", "smoke", "cat hair"],
+    mustUse: [
+      { en: "One device people rave about is ~", ko: "사람들이 극찬하는 기기는 ~ (도입)" },
+      { en: "my clothes used to reek of ~", ko: "옷에서 ~ 냄새가 진동했어요 (Before)" },
+      { en: "it clears it completely", ko: "완전히 없애줘요 (After+감탄)" }
+    ] },
+  { cat: "desc", set: "exam", title: "🪑 furniture — 침대·모듈가구",
+    koreanFlow: "큰 침대·편한 소파 → (변화) 무거운 원목 → 가볍고 모듈형",
+    hint: "A 묘사+F 비교. 오배송 롤플은 rp 카드. 아묻따 #5 연결",
+    keyEnglish: "It used to be heavy dark wood, but now it's lighter and more modular.",
+    fullScript: "My favorite piece is my big bed, and a comfortable sofa is a must. Furniture has changed — it used to be heavy dark wood, but now it's lighter and more modular.",
+    keywords: ["big bed", "sofa", "heavy wood", "lighter", "modular"],
+    mustUse: [
+      { en: "My favorite piece is ~", ko: "가장 아끼는 가구는 ~ (하나로 좁히기)" },
+      { en: "~ is a must", ko: "~는 필수예요 (강조)" },
+      { en: "It used to be ~, but now it's ~", ko: "예전엔 ~였는데 지금은 ~ (F형 비교)" }
+    ] },
+  { cat: "opi", set: "exam", title: "☀️ weather — 길어진 여름",
+    koreanFlow: "사계절 → 여름 길고 더움·장마 불규칙 → 선선한 가을 등산 제일 좋아함",
+    hint: "F 비교+G 이슈(기후 변화 뉴스). 아묻따 #2 연결",
+    keyEnglish: "Lately summers are longer and hotter, and the rainy season is less predictable.",
+    fullScript: "Korea has four seasons, but lately summers are longer and hotter, and the rainy season is less predictable. My favorite is autumn — the crisp air is perfect for hiking.",
+    keywords: ["four seasons", "longer", "hotter", "rainy season", "autumn"],
+    mustUse: [
+      { en: "~ has four seasons, but lately ~", ko: "사계절이 있지만 요즘은 ~ (변화 도입)" },
+      { en: "~ is less predictable", ko: "~가 예측이 어려워졌어요 (이슈)" },
+      { en: "the crisp air is perfect for ~", ko: "선선한 공기가 ~에 딱이에요 (취향 마무리)" }
+    ] },
+  { cat: "exp", set: "exam", title: "🏥 clinic — 치과 공포 극복",
+    koreanFlow: "앱 예약 동네 의원 → 어릴 때 치과 무서워 울음 → 검진 별일 없어 안심 → 지금은 정기검진",
+    hint: "A 묘사+C·E 경험(어릴 적 의사 경험 단골). 아묻따 #15 연결",
+    keyEnglish: "As a kid I was so scared of the dentist I'd cry.",
+    fullScript: "I usually book through an app and visit a local clinic. As a kid I was so scared of the dentist I'd cry. Once I went in worried about a checkup, but it turned out fine and I was so relieved. Now I go for regular checkups.",
+    keywords: ["book through an app", "local clinic", "scared", "dentist", "relieved"],
+    mustUse: [
+      { en: "As a kid I was so scared of ~ I'd cry", ko: "어릴 때 ~가 무서워 울었어요 (C형 도입)" },
+      { en: "it turned out fine and I was so relieved", ko: "별일 아니어서 정말 안심했어요 (반전+감정)" },
+      { en: "Now I go for regular ~", ko: "지금은 정기적으로 ~해요 (현재 연결)" }
+    ] },
+  { cat: "desc", set: "exam", title: "👨‍👩‍👧 friends — 정반대 두 친구",
+    koreanFlow: "외향적 vs 차분한 두 친구, 둘 다 의리 → 부동산·재테크 얘기 → 결국 옛 추억",
+    hint: "A 묘사(2명 소개·비교 단골 문제)",
+    keyEnglish: "One outgoing, one calm, but both incredibly loyal.",
+    fullScript: "I have two close friends who are opposites — one outgoing, one calm, but both incredibly loyal. We usually start talking about real estate and investing, since I'm in finance, but always end up reminiscing about the old days.",
+    keywords: ["opposites", "outgoing", "calm", "loyal", "reminiscing"],
+    mustUse: [
+      { en: "I have two close friends who are opposites", ko: "정반대인 친한 친구 둘이 있어요 (비교 도입)" },
+      { en: "one ~, one ~, but both ~", ko: "한 명은 ~, 한 명은 ~, 둘 다 ~ (대조 구조)" },
+      { en: "always end up reminiscing about ~", ko: "결국엔 ~ 추억 얘기로 끝나요 (마무리)" }
+    ] },
+  { cat: "desc", set: "exam", title: "🕐 free time — 혼자 충전",
+    koreanFlow: "책·역사 다큐·드라이브하며 음악 → (변화) 어릴 땐 밖에서 친구와, 지금은 집에서 혼자 충전",
+    hint: "A 묘사+F 비교. 아묻따 #11 연결",
+    keyEnglish: "You have to rest on purpose these days, or you burn out.",
+    fullScript: "In my free time I read, watch history documentaries, or drive around listening to music. As a kid I spent it outside with friends, but now I recharge alone at home. You have to rest on purpose these days, or you burn out.",
+    keywords: ["read", "documentaries", "drive", "recharge alone", "burn out"],
+    mustUse: [
+      { en: "As a kid I spent it ~, but now I ~", ko: "어릴 땐 ~했지만 지금은 ~ (비교)" },
+      { en: "I recharge alone at home", ko: "집에서 혼자 충전해요 (현재 루틴)" },
+      { en: "You have to rest on purpose, or you burn out", ko: "일부러 쉬지 않으면 번아웃 와요 (의견 한 방)" }
+    ] },
+  { cat: "desc", set: "exam", title: "🚇 transportation — 지하철",
+    koreanFlow: "지하철 깨끗·정확·앱 확인 → 교통카드 → 모바일 결제 → 출퇴근 혼잡이 문제",
+    hint: "A 묘사+F 비교. 아묻따 #2 연결",
+    keyEnglish: "It's gone from plastic cards to mobile payments.",
+    fullScript: "Seoul's subway is clean and punctual, and I check it live on an app. It's gone from plastic cards to mobile payments. The one problem is rush-hour crowding — flexible hours or biking could help.",
+    keywords: ["subway", "punctual", "app", "mobile payments", "rush-hour"],
+    mustUse: [
+      { en: "~ is clean and punctual", ko: "~는 깨끗하고 정확해요 (묘사)" },
+      { en: "It's gone from ~ to ~", ko: "~에서 ~로 바뀌었어요 (변화 압축)" },
+      { en: "The one problem is ~", ko: "한 가지 문제는 ~ (이슈+해결 제안)" }
+    ] },
+  { cat: "opi", set: "exam", title: "🏘️ community — 동네 축제",
+    koreanFlow: "동네잔치 → 플리마켓·페스티벌 → SNS 홍보로 참여↑ → 소음·교통 불만 있지만 동네 모이는 건 긍정",
+    hint: "F 비교+G 이슈(양면 짚기). 아묻따 #11 연결",
+    keyEnglish: "They can cause noise and traffic, but the upside is they bring the neighborhood together.",
+    fullScript: "Community events have changed — they used to be simple neighborhood feasts, but now they're flea markets and festivals promoted on social media, so far more people show up. They can cause noise and traffic, but the upside is they bring the neighborhood together.",
+    keywords: ["neighborhood feasts", "flea markets", "social media", "noise", "together"],
+    mustUse: [
+      { en: "~ used to be ~, but now they're ~", ko: "예전엔 ~였는데 지금은 ~ (비교)" },
+      { en: "They can cause ~, but the upside is ~", ko: "~ 문제도 있지만 장점은 ~ (양면 짚기)" },
+      { en: "bring the neighborhood together", ko: "동네를 하나로 모아줘요 (긍정 마무리)" }
+    ] },
+  { cat: "desc", set: "exam", title: "💪 gym — 월수금 루틴",
+    koreanFlow: "사무실 옆 헬스장 → 월수금 웨이트·화목 조깅 → 살쪄서+아버지 조언으로 시작 → 기다려지는 루틴",
+    hint: "A 묘사+C 경험(시작 계기 단골). 아묻따 #12 연결",
+    keyEnglish: "Now it's a routine I look forward to.",
+    fullScript: "There's a gym next to my office. I lift on Mondays, Wednesdays, and Fridays, and jog on Tuesdays and Thursdays. I started because I'd gained a little weight and my father kept telling me to work out. Now it's a routine I look forward to.",
+    keywords: ["gym", "lift", "jog", "gained weight", "routine"],
+    mustUse: [
+      { en: "I lift on ~, and jog on ~", ko: "~엔 웨이트, ~엔 조깅해요 (구체 루틴)" },
+      { en: "I started because ~", ko: "~ 때문에 시작했어요 (C형 계기)" },
+      { en: "Now it's a routine I look forward to", ko: "이젠 기다려지는 루틴이에요 (감정 마무리)" }
+    ] },
+  { cat: "exp", set: "exam", title: "🧹 responsibility — 분리수거 깜빡",
+    koreanFlow: "나 설거지·쓰레기, 아내 빨래 → 어릴 땐 내 방 청소 → 바빠서 분리수거 일주일 깜빡 → 미안, 알림 설정",
+    hint: "B 루틴+J 경험(책임 못 다한 경험 단골). 아묻따 #15 연결",
+    keyEnglish: "I felt bad, so now I set a reminder.",
+    fullScript: "In our home we split chores — I do the dishes and trash, my wife does laundry. Once I was so busy I forgot the recycling for a week and my wife had to deal with it. I felt bad, so now I set a reminder.",
+    keywords: ["split chores", "dishes", "laundry", "forgot", "reminder"],
+    mustUse: [
+      { en: "In our home we split chores", ko: "우리 집은 집안일을 나눠요 (도입)" },
+      { en: "Once I was so busy I forgot ~", ko: "한번은 너무 바빠 ~를 깜빡했어요 (실수)" },
+      { en: "I felt bad, so now I ~", ko: "미안해서 이제 ~해요 (교훈+행동)" }
+    ] },
+  { cat: "rp", set: "exam", title: "🎧 RP: MP3 (11·12·13)",
+    koreanFlow: "11: 어디서삼→가격→배터리→추천? / 12: 사과→화면깨짐·안켜짐→수리비/새것/서비스센터 / 13: 고장 경험(#4)",
+    hint: "11=질문3~4개, 12=사과→문제→대안3, 13=This reminds me of~로 아묻따 연결",
+    keyEnglish: "I'm really sorry, but I dropped your MP3 player. I can pay for the repair, or I'll buy you a new one.",
+    fullScript: "(11) Where did you buy it? How much was it? How long does the battery last? Would you recommend it to me? Thanks, I might get one too! (12) I'm really sorry, but I dropped your MP3 player. The screen is cracked and it won't turn on. I can pay for the repair. Or I'll buy you a new one. I can take it to the service center today. Again, I'm so sorry. (13) This reminds me of a time something of mine broke.",
+    keywords: ["where did you buy", "battery", "dropped", "cracked", "service center"],
+    mustUse: [
+      { en: "Would you recommend it to me?", ko: "저한테도 추천하시겠어요? (11 마무리 질문)" },
+      { en: "I'm really sorry, but I ~", ko: "정말 죄송한데 제가 ~했어요 (12 사과 도입)" },
+      { en: "I can ~. Or I'll ~.", ko: "~할게요. 아니면 ~할게요 (대안 연결)" },
+      { en: "This reminds me of a time ~", ko: "~했던 때가 떠올라요 (13 도입 고정)" }
+    ] },
+  { cat: "rp", set: "exam", title: "🎉 RP: party (11·12·13)",
+    koreanFlow: "11: 몇명→뭐가져갈까→드레스코드→몇시 / 12: 못감 사과→가족 아픔→다음주 연기/선물/영상통화 / 13: 못 간 경험(#2)",
+    hint: "12번 대안 3개 필수: reschedule → 대체 방식 → 다른 옵션",
+    keyEnglish: "I'm afraid I can't make it tonight. Could we reschedule for next weekend?",
+    fullScript: "(11) How many people are coming? Should I bring anything, like drinks or a dish? Is there a dress code? What time should I arrive? Sounds great, see you then! (12) I'm afraid I can't make it tonight. A family member suddenly got sick, so I have to stay home. Could we reschedule for next weekend? I can send a gift or food instead. Let's video-call so I can say hi. I'm really sorry, especially on short notice. (13) This reminds me of a time I couldn't make it to an important gathering.",
+    keywords: ["how many people", "dress code", "can't make it", "reschedule", "short notice"],
+    mustUse: [
+      { en: "Should I bring anything, like ~?", ko: "~ 같은 거 가져갈까요? (11 질문)" },
+      { en: "I'm afraid I can't make it", ko: "못 갈 것 같아요 (12 사과 도입)" },
+      { en: "Could we reschedule for ~?", ko: "~로 미룰 수 있을까요? (대안1)" },
+      { en: "especially on short notice", ko: "갑작스레 말씀드려 더 죄송해요 (재사과)" }
+    ] },
+  { cat: "rp", set: "exam", title: "🏨 RP: hotel/택시 분실 (11·12·13)",
+    koreanFlow: "11: 명소→해변 거리→맛집→택시 호출 / 12: 가방 운전석 뒤→갈색 가죽·삼성로고→확인/택배/택시 왕복비 / 13: 분실 경험(#3)",
+    hint: "12번은 분실물 '구체 묘사'가 핵심 (색·재질·로고)",
+    keyEnglish: "I think I left my bag behind the driver's seat. It's a brown leather bag with a Samsung logo.",
+    fullScript: "(11) Are there any must-go places or landmarks nearby? I heard there's a famous beach — how far, can I walk? Could you recommend a restaurant with a signature dish? Could you call a cab for me? How kind you are — thank you! (12) I took your taxi to my hotel around 7 p.m. I think I left my bag behind the driver's seat. It's a brown leather bag, business card inside, Samsung logo. Could you check the car? Could you send it by courier? Or by taxi? I'll pay the round-trip fare. Thank god, what a relief! (13) Let me tell you about a really bad experience when I lost my...",
+    keywords: ["must-go places", "left my bag", "brown leather", "courier", "round-trip fare"],
+    mustUse: [
+      { en: "Are there any must-go places nearby?", ko: "근처에 꼭 가볼 곳 있나요? (11)" },
+      { en: "I think I left my ~ behind ~", ko: "~ 뒤에 ~를 두고 내린 것 같아요 (12 문제)" },
+      { en: "It's a ~ with a ~ logo", ko: "~로고가 있는 ~예요 (구체 묘사)" },
+      { en: "I'll pay the round-trip fare", ko: "왕복 요금 제가 낼게요 (대안 성의)" }
+    ] },
+  { cat: "rp", set: "exam", title: "✈️ RP: 렌터카/환불 (11·12·13)",
+    koreanFlow: "11: 일·주 요금→보험 포함?→한국+국제면허 OK?→반납·연료 / 12: 투어 취소→환불정책·수수료→일정변경→양도 / 13: 기대 이하 구매(#7)",
+    hint: "렌터카 11번은 '뉴욕 1주일 차 빌리기' 단골",
+    keyEnglish: "I have a Korean license and an international permit — is that enough?",
+    fullScript: "(11) How much per day, or is there a weekly rate? Does it include insurance? I have a Korean license and an international permit — is that enough? Where do I return it, and do I refill the tank? Thanks! (12) I booked a tour package under DH for next week. Something came up at work, I need to cancel. What's your refund policy — is there a fee? If no full refund, can I reschedule? Or transfer it to someone else? Thank you. (13) I once paid for something that didn't meet my expectations...",
+    keywords: ["weekly rate", "insurance", "international permit", "refund policy", "transfer"],
+    mustUse: [
+      { en: "Is there a weekly rate?", ko: "주 단위 요금 있나요? (가격 질문)" },
+      { en: "Does it include insurance?", ko: "보험 포함인가요? (필수 확인)" },
+      { en: "Something came up at work", ko: "회사에 일이 생겼어요 (취소 사유)" },
+      { en: "What's your refund policy?", ko: "환불 정책이 어떻게 되나요? (대안1)" }
+    ] },
+  { cat: "rp", set: "exam", title: "🏥 RP: 영양사 약속 (11·12·13)",
+    koreanFlow: "11: 혈당·과일?→간헐적단식·저탄고지?→방문 가능?→영업시간 / 12: 야근→다른 날/전화상담/다른 영양사 / 13: 약속 못 지킴(#15·#2)",
+    hint: "appointment 변경 12번의 대안 3단: 일정변경→대체방식→대체인물",
+    keyEnglish: "My boss asked me to work late, I can't make it. Could we reschedule to another day?",
+    fullScript: "(11) You said fruit doesn't spike blood sugar — could you explain more? How do intermittent fasting and a low-carb diet actually work? Can I visit in person? What time do you close? Great, I'll come by tomorrow. (12) This is DH, I'm supposed to meet you at 6 p.m. My boss asked me to work late, I can't make it. Could we reschedule to another day? Could we do a quick phone consultation? Or could you refer me to another nutritionist? Sorry for the trouble.",
+    keywords: ["blood sugar", "intermittent fasting", "work late", "reschedule", "phone consultation"],
+    mustUse: [
+      { en: "Could you explain more?", ko: "좀 더 설명해주시겠어요? (11 심화 질문)" },
+      { en: "I'm supposed to meet you at ~", ko: "~에 뵙기로 했는데요 (12 확인)" },
+      { en: "Could we do a quick phone ~?", ko: "전화로 간단히 ~ 가능할까요? (대안2)" },
+      { en: "Sorry for the trouble", ko: "번거롭게 해서 죄송해요 (마무리)" }
+    ] },
+  { cat: "rp", set: "exam", title: "🛒 RP: 가게/지갑 (11·12·13)",
+    koreanFlow: "11: 새 가게 영업시간→위치→뭐 파나→오픈 프로모션? / 12: 창가 앉았었음→지갑 두고 옴→확인/보관/저녁에 픽업 / 13: 분실·새 가게 발견(#3·#9)",
+    hint: "food store 전화 문의 단골. 12번은 위치 먼저 말하고 부탁",
+    keyEnglish: "I visited earlier and sat by the window. I think I left my wallet there.",
+    fullScript: "(11) I heard you just opened — what are your hours? Where exactly are you located? What kind of products do you sell? Do you have any opening promotions? I'll stop by soon! (12) I visited earlier and sat by the window. I think I left my wallet there. Could you check if it's there? Could you hold it for me? I can come pick it up tonight. Thank you so much. (13) I recently stumbled upon a new store...",
+    keywords: ["just opened", "hours", "wallet", "hold it", "pick it up"],
+    mustUse: [
+      { en: "I heard you just opened", ko: "새로 오픈하셨다고 들었어요 (11 도입)" },
+      { en: "I visited earlier and sat by ~", ko: "아까 방문해서 ~에 앉았었어요 (위치 명시)" },
+      { en: "Could you hold it for me?", ko: "보관해주실 수 있나요? (대안2)" },
+      { en: "I recently stumbled upon ~", ko: "최근 우연히 ~를 발견했어요 (13 도입)" }
+    ] },
+  { cat: "rp", set: "exam", title: "🎬 RP: 티켓 오류 (11·12·13)",
+    koreanFlow: "11: 시작시간→좌석→가격→할인? / 12: 7시 2장 예매→좌석 안 붙음+5시로 표기→수정/환불/날짜변경 / 13: 오류로 못 간 경험(#9·#2)",
+    hint: "movie·performance 공용. 12번 문제 2개 동시 제시(좌석+시간)",
+    keyEnglish: "The seats aren't together, and the time shows 5 p.m. Could you fix it?",
+    fullScript: "(11) What time does the show start? What seats are available? How much are they? Are there any discounts? I'll book two, thanks! (12) I booked two tickets for the 7 p.m. show. The seats aren't together, and the time shows 5 p.m. Could you fix it — two seats together at 7? If not, could I get a refund? Or change to another date? Thank you.",
+    keywords: ["what time", "seats available", "aren't together", "refund", "another date"],
+    mustUse: [
+      { en: "What seats are available?", ko: "어떤 좌석 남아있나요? (11)" },
+      { en: "I booked two tickets for the ~ show", ko: "~ 공연 2장 예매했는데요 (12 확인)" },
+      { en: "The seats aren't together", ko: "좌석이 안 붙어있어요 (문제)" },
+      { en: "If not, could I get a refund?", ko: "안 되면 환불 가능할까요? (대안2)" }
+    ] },
+  { cat: "rp", set: "exam", title: "📱 RP: 새 폰 결함 (11·12·13)",
+    koreanFlow: "11: 어떤 모델→배터리→카메라→추천? / 12: 일주일 전 구매→과열·배터리 빨리 닳음→보증기간 교환/수리/절차 문의 / 13: 폰·결제 문제(#9·#10)",
+    hint: "12번 키워드: under warranty(보증기간) — 교환 요구의 근거",
+    keyEnglish: "It keeps overheating and the battery drains fast — I think it's defective.",
+    fullScript: "(11) Which model did you get? How's the battery? How's the camera? Would you recommend it? I'm thinking of upgrading too. (12) I bought this phone a week ago. It keeps overheating and the battery drains fast — I think it's defective. It's under warranty — I'd like an exchange. Or a repair if exchange isn't possible. Could you tell me how to start? Thanks for your help.",
+    keywords: ["which model", "overheating", "battery drains", "under warranty", "exchange"],
+    mustUse: [
+      { en: "How's the battery?", ko: "배터리는 어때요? (11 핵심 질문)" },
+      { en: "It keeps ~ing and ~", ko: "계속 ~하고 ~해요 (증상 설명)" },
+      { en: "It's under warranty — I'd like an exchange", ko: "보증기간이라 교환 원해요 (근거+요구)" },
+      { en: "Could you tell me how to start?", ko: "어떻게 시작하면 되나요? (절차 질문)" }
+    ] },
+  { cat: "rp", set: "exam", title: "🌐 RP: 인터넷 먹통 (11·12·13)",
+    koreanFlow: "11: 웹사이트 뭐하는 곳→무료?→가입 필요?→모바일 되나? / 12: 1시간 전 끊김→재부팅에도 안 됨→해결법/기사 방문/재택이라 급함 / 13: 먹통 경험(#9)",
+    hint: "12번 포인트: '재택근무라 급하다'로 긴급성 강조",
+    keyEnglish: "My internet went down about an hour ago. I work from home, so I need it fast.",
+    fullScript: "(11) What's the website about? Is it free to use? Do I need to sign up? Does it work on mobile? I'll check it out, thanks! (12) My internet went down about an hour ago. No connection at all, even after restarting the router. Could you walk me through a fix? Or send a technician today? I work from home, so I need it fast — what's the soonest? Thank you.",
+    keywords: ["free to use", "sign up", "went down", "restarting the router", "technician"],
+    mustUse: [
+      { en: "Do I need to sign up?", ko: "가입해야 하나요? (11)" },
+      { en: "My internet went down about ~ ago", ko: "~ 전부터 인터넷이 끊겼어요 (문제+시점)" },
+      { en: "even after restarting the router", ko: "공유기 재부팅해도 안 돼요 (시도한 것)" },
+      { en: "what's the soonest?", ko: "가장 빠른 게 언제죠? (긴급성)" }
+    ] },
+  { cat: "rp", set: "exam", title: "🏦 RP: 은행 계좌·카드 (11·12·13)",
+    koreanFlow: "11: 계좌 개설 서류→월 수수료→계좌 종류→온라인 가능? / 12: ATM에서 카드 먹통→재발급/임시방법/소요기간 / 13: 해외 ATM 카드 막힘(#10)",
+    hint: "13번 인트로: This reminds me of a time my card got blocked at an ATM abroad",
+    keyEnglish: "My card suddenly stopped working at the ATM. Could you reissue it?",
+    fullScript: "(11) I'd like to open a new account — what documents do I need? Are there any monthly fees? What account types do you offer? Can I do it online? Thank you. (12) My card suddenly stopped working at the ATM. It won't read at all. Could you reissue it? Is there a quick fix in the meantime? How long does reissue take? Thanks for sorting this out. (13) This reminds me of a time my card got blocked at an ATM abroad...",
+    keywords: ["open a new account", "monthly fees", "stopped working", "reissue", "ATM abroad"],
+    mustUse: [
+      { en: "What documents do I need?", ko: "어떤 서류가 필요하죠? (11)" },
+      { en: "My card suddenly stopped working", ko: "카드가 갑자기 안 돼요 (문제)" },
+      { en: "Is there a quick fix in the meantime?", ko: "그동안 임시 방법 있나요? (대안2)" },
+      { en: "Thanks for sorting this out", ko: "해결해주셔서 감사해요 (마무리)" }
+    ] },
+  { cat: "rp", set: "exam", title: "♻️ RP: 분리수거·소음 사과 (11·12·13)",
+    koreanFlow: "11: 음식물·플라스틱·캔 수거 요일→유리 별도?→수거 장소→대형 폐기물 규칙 / 12: 파티 후 소음·쓰레기 사과→바로 치움/다음엔 조용히/또 불편하면 말해달라 / 13: 재활용 사고(#15)",
+    hint: "12번이 특이: 내가 사과하는 입장(옆집 불만 대응)",
+    keyEnglish: "I'm sorry about the noise and trash after my party. I'll clean it up right away.",
+    fullScript: "(11) Which days do you collect food waste, plastic, and cans? Is there a separate spot for glass? Where's the collection area? Any rules for large items? Got it, thank you. (12) I'm sorry about the noise and trash after my party. I didn't realize it bothered you. I'll clean it up right away. I'll keep it down next time. Let me know if anything else is an issue. Sorry again. (13) I had real trouble while recycling once, when I was young.",
+    keywords: ["which days", "collect", "separate spot", "clean it up", "keep it down"],
+    mustUse: [
+      { en: "Which days do you collect ~?", ko: "~ 수거 요일이 언제죠? (11)" },
+      { en: "I didn't realize it bothered you", ko: "불편하신 줄 몰랐어요 (사과 공감)" },
+      { en: "I'll keep it down next time", ko: "다음엔 조용히 할게요 (대안2)" },
+      { en: "Let me know if anything else is an issue", ko: "또 불편하면 말씀해주세요 (열린 마무리)" }
+    ] },
+  { cat: "rp", set: "exam", title: "🏠 RP: 친척 집 열쇠 (11·12·13)",
+    koreanFlow: "11: 1102호 투숙객에 메시지→조카임·집 봐주는 중→스페어키 못 찾음→숨겨둔 곳? / 12: 못 들어감→전화 부탁/문 앞 대기/나중에 다시 / 13: 화분 물주기 깜빡(#15)",
+    hint: "호텔 프런트에 전화해 투숙 중인 친척에게 연결 요청하는 독특한 상황",
+    keyEnglish: "I'm watching their house, but I can't find the spare key.",
+    fullScript: "(11) Could you leave a message for the guest in room 1102? This is their nephew — I'm watching their house. I can't find the spare key — could you ask where it is? Is there a hidden one? It's a bit urgent, thank you. (12) I was supposed to house-sit but can't get in. Ask them to call me back. I can wait at the door. Or come back later if needed. (13) This reminds me of a time I promised to water a friend's plants but forgot for days.",
+    keywords: ["leave a message", "nephew", "spare key", "house-sit", "call me back"],
+    mustUse: [
+      { en: "Could you leave a message for ~?", ko: "~에게 메시지 남겨주시겠어요? (요청)" },
+      { en: "This is their nephew", ko: "저는 그분 조카예요 (신원 밝히기)" },
+      { en: "I was supposed to ~ but can't ~", ko: "~하기로 했는데 ~를 못해요 (문제)" },
+      { en: "I promised to ~ but forgot for days", ko: "~하기로 약속했는데 며칠을 깜빡 (13 도입)" }
+    ] },
+  { cat: "rp", set: "exam", title: "🎤 RP: 인터뷰 (11·12·13)",
+    koreanFlow: "11: 어떻게 시작→가장 기억남는 순간→다음 계획→신인 조언 / 12: 기사 인용 오류 사과→정정 기사/정확본 발송/다음 호 공지 / 13: 유명인 우연히 만남(#13)",
+    hint: "유명인 인터뷰 11번: 시작→기억→미래→조언 4단 질문이 정석",
+    keyEnglish: "How did you first get started? What's been your most memorable moment?",
+    fullScript: "(11) How did you first get started? What's been your most memorable moment? What's next for you? Any advice for newcomers? Thank you for your time. (12) I'm sorry, there was a misunderstanding in the published article. One quote came out wrong. Could we run a correction? I can send the accurate version. We'll note it in the next issue. Apologies for the confusion. (13) I once ran into a celebrity by pure chance...",
+    keywords: ["get started", "memorable moment", "what's next", "correction", "by pure chance"],
+    mustUse: [
+      { en: "How did you first get started?", ko: "처음에 어떻게 시작하셨어요? (11-1)" },
+      { en: "What's next for you?", ko: "다음 계획은 뭔가요? (11-3)" },
+      { en: "Could we run a correction?", ko: "정정 기사 낼 수 있을까요? (대안1)" },
+      { en: "I once ran into ~ by pure chance", ko: "순전히 우연으로 ~를 만났어요 (13 도입)" }
+    ] },
+  { cat: "rp", set: "exam", title: "⛺ RP: 캠핑장 미아 (11·13)",
+    koreanFlow: "12번 사이트→6살쯤 빨간 재킷 남아 발견→방송 요청→실종 신고 확인→내가 데리고 있겠다 / 13: 첫 캠핑(#11)",
+    hint: "W2 미아 카드의 캠핑장 버전. 위치(사이트 번호)부터 말하기",
+    keyEnglish: "I'm at site 12 and found a lost boy, about six, in a red jacket.",
+    fullScript: "(11) I'm at site 12 and found a lost boy, about six, in a red jacket. Could you make an announcement? Could you check if anyone reported a missing child? I'll stay with him here. Thank you so much.",
+    keywords: ["site 12", "lost boy", "red jacket", "announcement", "missing child"],
+    mustUse: [
+      { en: "I'm at site ~ and found ~", ko: "~번 사이트인데 ~를 발견했어요 (위치+상황)" },
+      { en: "about six, in a red jacket", ko: "6살쯤, 빨간 재킷 (구체 묘사)" },
+      { en: "Could you check if anyone reported ~?", ko: "~ 신고 들어온 거 있는지 확인해주시겠어요?" },
+      { en: "I'll stay with him here", ko: "제가 여기서 데리고 있을게요 (책임)" }
+    ] },
+  { cat: "rp", set: "exam", title: "🪑 RP: 오배송·카드 두고옴 (12·13)",
+    koreanFlow: "가구12: 회색 시켰는데 갈색 옴→교환/부분환불/수거 일정 / 식당12: 1시간 전 창가→신용카드 두고 옴→확인/보관/저녁 픽업 / 13: 가구→#5, 식당→#8",
+    hint: "두 상황 모두 '주문/방문 정보 먼저 → 문제 → 대안 3개' 동일 골격",
+    keyEnglish: "The sofa you delivered is brown, but I ordered gray. Could I exchange it?",
+    fullScript: "(furniture 12) The sofa you delivered is brown, but I ordered gray. Could I exchange it? Or a partial refund? When can you pick it up? Thanks. (restaurant 12) I sat by the window about an hour ago. I think I left my credit card there. Could you check? Could you hold it? I'll come pick it up tonight.",
+    keywords: ["delivered is brown", "ordered gray", "exchange", "partial refund", "credit card"],
+    mustUse: [
+      { en: "The ~ you delivered is ~, but I ordered ~", ko: "배송된 건 ~인데 주문은 ~였어요 (오배송 핵심)" },
+      { en: "Or a partial refund?", ko: "아니면 부분 환불은요? (대안2)" },
+      { en: "When can you pick it up?", ko: "언제 수거 가능하세요? (대안3)" },
+      { en: "I'll come pick it up tonight", ko: "오늘 밤에 찾으러 갈게요 (식당 대안)" }
+    ] },
+  { cat: "rp", set: "exam", title: "🏖️🌳 RP: 폭염·공사 취소 (12·13)",
+    koreanFlow: "해변12: 주말 해변 계획→폭염 38도 예보 위험→다음주 연기/실내(아쿠아리움)/이른 아침만 / 공원12: 공사로 폐쇄→한 정거장 옆 공원/커피 산책/다음주 / 13: #3",
+    hint: "친구에게 계획 변경 제안하는 유형: 문제→대안 3개→What do you think?",
+    keyEnglish: "They're forecasting a heat wave. How about we postpone to next weekend?",
+    fullScript: "(beach 12) About our beach trip this weekend — they're forecasting a heat wave, like 38 degrees. It might be dangerous. How about we postpone to next weekend? Or do something indoors, like an aquarium? Or go early morning only? What do you think? (park 12) I was about to suggest the park, but it's closed for construction this week. How about the riverside park one stop away? Or grab a coffee and walk around? Or meet next week instead? What works for you?",
+    keywords: ["heat wave", "postpone", "indoors", "closed for construction", "riverside park"],
+    mustUse: [
+      { en: "They're forecasting a ~", ko: "~ 예보가 있어요 (문제 제시)" },
+      { en: "How about we postpone to ~?", ko: "~로 미루는 게 어때요? (대안1)" },
+      { en: "Or do something indoors, like ~?", ko: "아니면 실내에서 ~ 어때요? (대안2)" },
+      { en: "What do you think? / What works for you?", ko: "어떻게 생각해요? (제안 마무리 고정)" }
+    ] },
+  { cat: "desc", set: "day1", title: "⭐D1 집 묘사 — 안방/회복",
+    koreanFlow: "조용한 교외 아파트·산 근처 → 방3+거실, but 최애=안방 하나만 → extra-king·은은한 조명 → 퇴근 후 누워 영상 보다 잠듦 → 집=회복 공간",
+    hint: "A 묘사: 모든 방 나열 금지, 안방 하나로 좁히고 '회복' 감정으로 마무리. Day1 우선암기 1",
+    keyEnglish: "Home is not just a place to live. It's where I recharge.",
+    fullScript: "I live in an apartment in a quiet suburban area, and there are mountains nearby, so the neighborhood feels peaceful. My apartment has three bedrooms and a living room, but instead of describing every room, I'll focus on my favorite place — the master bedroom. It has an extra-king bed, soft lighting, and a very calm mood. After a long day at work, I usually lie down there, watch something on my tablet, and slowly fall asleep. It may sound simple, but that moment helps me recover from the day. To me, home is not just a place to live. It's where I recharge. That's why I really like my place.",
+    keywords: ["quiet suburban", "mountains nearby", "master bedroom", "extra-king bed", "recharge"],
+    mustUse: [
+      { en: "instead of describing every ~, I'll focus on ~", ko: "전부 묘사하는 대신 ~ 하나에 집중할게요 (좁히기 핵심)" },
+      { en: "After a long day at work, I usually ~", ko: "긴 하루 끝에 보통 ~해요 (루틴)" },
+      { en: "It may sound simple, but ~", ko: "단순하게 들리겠지만 ~ (감정 전환)" },
+      { en: "It's where I recharge", ko: "제가 충전하는 곳이에요 (마무리 한 방)" }
+    ] },
+  { cat: "desc", set: "day1", title: "D1 집에서 가족과 — 아내와 Netflix",
+    koreanFlow: "퇴근 후 아내와 → 특별할 건 없지만 좋아하는 루틴 → 거실/침실서 넷플릭스+배달 → 하루 얘기하며 이완 → 이게 집을 집답게 함",
+    hint: "B 루틴: '특별하진 않지만 의미있다' 구조. 회복 감정으로 마무리",
+    keyEnglish: "This simple routine is what makes home feel like home.",
+    fullScript: "At home, I usually spend time with my wife after work. We don't do anything special, but we have a small routine that I really like. Most evenings, we sit in the living room or lie down in the bedroom, turn on Netflix, and order delivery food. Korea's delivery service is amazing, so we're honestly a little spoiled. While watching a show, we talk about our day and slowly relax. It's not a fancy activity, but those quiet hours help me recover from work stress. For me, this simple routine is what makes home feel like home.",
+    keywords: ["after work", "wife", "Netflix", "delivery food", "relax"],
+    mustUse: [
+      { en: "We don't do anything special, but ~", ko: "특별한 건 안 하지만 ~ (루틴 도입)" },
+      { en: "we're honestly a little spoiled", ko: "솔직히 좀 호강하는 거죠 (가벼운 디테일)" },
+      { en: "It's not a fancy activity, but ~", ko: "화려한 건 아니지만 ~ (반전+의미)" },
+      { en: "what makes home feel like home", ko: "집을 집답게 만드는 것 (마무리)" }
+    ] },
+  { cat: "desc", set: "day1", title: "⭐D1 옛집 vs 지금집 — 커뮤니티시설",
+    koreanFlow: "가장 큰 차이=커뮤니티 시설 → 옛집은 주거동만, 비올 때 우산 쓰고 외부 상가 → 지금은 단지 내 헬스장·지하통로로 안 젖고 쇼핑 → 핵심=편의성",
+    hint: "F 비교: 'one major way'로 한 가지 축만. Back then→But now. Day1 우선암기 2",
+    keyEnglish: "The biggest change is convenience.",
+    fullScript: "My old apartment and my current apartment are different in one major way: the community facilities. In my old apartment, there were just apartment buildings. That was it. So whenever I needed to buy something or go to the gym, I had to walk to a shopping area outside the complex. It was not too far, but it was still inconvenient. Especially when it rained, I had to take an umbrella and walk outside, which was pretty annoying. But my current apartment is much more convenient. There is a community center inside the complex, so the gym is basically right below my home. Also, some stores and coffee shops are connected through an underground passage, so I can buy coffee without really getting wet on rainy days. So for me, the biggest change is convenience. My old place had memories, but my current place makes daily life much easier.",
+    keywords: ["community facilities", "walk to a shopping area", "when it rained", "underground passage", "convenience"],
+    mustUse: [
+      { en: "are different in one major way: ~", ko: "한 가지 큰 점에서 달라요: ~ (비교 축 고정)" },
+      { en: "That was it", ko: "그게 다였어요 (강조)" },
+      { en: "Especially when it rained, ~", ko: "특히 비 올 때 ~ (구체 불편)" },
+      { en: "My old place had memories, but my current place ~", ko: "옛집엔 추억이, 지금집은 ~ (균형 마무리)" }
+    ] },
+  { cat: "opi", set: "day1", title: "D1 Housing issue — 입지 불균형",
+    koreanFlow: "집값·렌트가 큰 이슈 → 핵심은 '총량'이 아니라 '입지' → 정부는 짓지만 사람들은 도심·학군·교통 원함 → 인기지역 수요>공급, 비인기지역엔 빈집 → 진짜 문제=짓는 곳과 원하는 곳의 불일치",
+    hint: "G 이슈(14~15번): One Main Point=location imbalance. 하나로 끝까지. Day1 우선암기 후보",
+    keyEnglish: "The real issue is the imbalance between where homes are built and where people actually want to live.",
+    fullScript: "Housing is a big issue in Korea, especially housing prices and rent. In my opinion, the problem is not just the total number of homes. The bigger problem is location. The government keeps building more apartments, but people don't want just any apartment. They want homes near downtown, good schools, and good transportation. So in those popular areas, demand is much higher than supply, and prices keep going up. Meanwhile, some new apartments are built in areas where fewer people want to live. So I think the real issue is the imbalance between where homes are built and where people actually want to live. It's a difficult problem, and I don't think there is a simple solution.",
+    keywords: ["housing prices", "not just the total number", "location", "demand higher than supply", "imbalance"],
+    mustUse: [
+      { en: "The problem is not just ~. The bigger problem is ~", ko: "문제는 ~만이 아니라 ~예요 (Main Point 고정)" },
+      { en: "people don't want just any ~", ko: "사람들은 아무 ~나 원하지 않아요 (핵심 통찰)" },
+      { en: "demand is much higher than supply", ko: "수요가 공급보다 훨씬 많아요 (원인)" },
+      { en: "I don't think there is a simple solution", ko: "간단한 해결책은 없다고 봐요 (현실적 마무리)" }
+    ] },
+  { cat: "desc", set: "day1", title: "⭐D1 좋아하는 음악 — Hearts2Hearts",
+    koreanFlow: "요즘 K-pop 빠짐, Hearts2Hearts → 가장 좋은 건 '에너지' → 밝고 중독성, 가사 외우기 쉬움 → 칼군무 영상도 좋아함 → 젊은 에너지에 기분 좋아짐",
+    hint: "A 묘사: '에너지' 하나로 좁히고 감정 마무리. Day1 우선암기 3",
+    keyEnglish: "What I like most about them is their energy.",
+    fullScript: "These days, I'm really into K-pop, and one group I like is Hearts2Hearts. What I like most about them is their energy. Their songs are bright and catchy, and the lyrics are easy to remember. Some parts are so addictive that they stay in my head for the whole day. I also like watching their performance videos. Their choreography is very synchronized, almost like everyone is moving as one person. That kind of sharp performance is really impressive. When I watch them, I can feel a lot of youthful energy. It just puts me in a good mood. So yeah, these days, I enjoy Hearts2Hearts because their music feels catchy, energetic, and fun.",
+    keywords: ["into K-pop", "Hearts2Hearts", "catchy", "synchronized choreography", "youthful energy"],
+    mustUse: [
+      { en: "What I like most about them is ~", ko: "제가 가장 좋아하는 건 ~ (하나로 좁히기)" },
+      { en: "so addictive that they stay in my head", ko: "너무 중독성 있어 머릿속에 맴돌아요 (디테일)" },
+      { en: "almost like everyone is moving as one person", ko: "마치 한 사람처럼 움직여요 (칼군무 묘사)" },
+      { en: "It just puts me in a good mood", ko: "그냥 기분이 좋아져요 (감정 마무리)" }
+    ] },
+  { cat: "desc", set: "day1", title: "D1 언제 음악 듣나 — 운동/반복작업",
+    koreanFlow: "에너지 필요할 때 들음 → 대표=운동, 비트가 한 세트 더 하게 함 → 음악 있을 때 운동 더 잘됨 → 파일 정리·청소 같은 반복작업도 → 음악=에너지원",
+    hint: "B 루틴: 대표 상황(운동) 하나 깊게+보조(반복작업). 의미로 마무리",
+    keyEnglish: "Music is not just entertainment. It gives me energy and helps me keep going.",
+    fullScript: "I usually listen to K-pop when I need energy. The best example is when I work out. When I'm at the gym, I play energetic K-pop songs because they help me push myself harder. If I'm doing weight training, a catchy beat makes me feel like I can do one more set. Honestly, I think I exercise better with music than without it. I also listen to K-pop when I do simple, repetitive tasks, like organizing files or cleaning my room. The music keeps me awake and makes boring tasks feel less boring. So for me, music is not just entertainment. It gives me energy and helps me keep going.",
+    keywords: ["when I need energy", "work out", "one more set", "repetitive tasks", "keep going"],
+    mustUse: [
+      { en: "The best example is when ~", ko: "가장 좋은 예는 ~할 때예요 (대표 상황)" },
+      { en: "makes me feel like I can do one more ~", ko: "~ 한 번 더 할 수 있을 것 같아요 (효과)" },
+      { en: "makes boring tasks feel less boring", ko: "지루한 일을 덜 지루하게 해줘요 (보조 효과)" },
+      { en: "It gives me energy and helps me keep going", ko: "에너지를 주고 계속 나아가게 해요 (마무리)" }
+    ] },
+  { cat: "desc", set: "day1", title: "D1 음악 취향 변화 — 부르던→에너지받는",
+    koreanFlow: "많이 변함 → 예전엔 직접 부르는 음악, 고음·샤우팅 록 좋아함 → 지금은 고음 안 되고 록이 시끄럽게 느껴짐 → 에너지 주는 K-pop·팝 → '부르고 싶은 음악→에너지 받는 음악'으로",
+    hint: "F 비교: When I was younger→But these days. 한 축(부르기→듣기)으로 압축",
+    keyEnglish: "My taste changed from music I wanted to sing to music that gives me energy.",
+    fullScript: "My music taste has changed quite a bit. When I was younger, I liked music that I could sing myself. I was especially into rock music with high notes and strong shouting parts. I enjoyed trying to sing those songs, even though they were difficult. Back then, powerful vocals were the most exciting part for me. But these days, I don't sing as much as before. To be honest, I can't hit high notes the way I used to, and some rock songs feel a little too loud now. So now I enjoy energetic K-pop or pop songs more. I like catchy melodies, bright sounds, and performance videos with synchronized choreography. They give me energy without making me tired. I guess my taste changed from music I wanted to sing to music that gives me energy.",
+    keywords: ["changed quite a bit", "sing myself", "high notes", "too loud now", "gives me energy"],
+    mustUse: [
+      { en: "When I was younger, I liked ~", ko: "어릴 땐 ~를 좋아했어요 (과거)" },
+      { en: "I can't hit high notes the way I used to", ko: "예전처럼 고음이 안 돼요 (변화 이유)" },
+      { en: "some ~ feel a little too loud now", ko: "이제 ~가 좀 시끄럽게 느껴져요 (현재 감각)" },
+      { en: "my taste changed from ~ to ~", ko: "취향이 ~에서 ~로 바뀌었어요 (압축 마무리)" }
+    ] },
+  { cat: "exp", set: "day1", title: "⭐D1 라이브 음악 — Santa Monica/Hotel California",
+    koreanFlow: "유학 시절 산타모니카 피어 → 노을·맥주 보러 갔는데 → 버스킹이 Hotel California 연주 → 바다 옆 라이브는 완전 다름 → 노을·맥주·익숙한 멜로디가 딱 맞음 → 잊을 수 없음",
+    hint: "E memorable: 평범(노을·맥주)→반전(즉흥 라이브)→감정 한 방. Day1 우선암기 4",
+    keyEnglish: "It wasn't a big concert, but that made it even more special.",
+    fullScript: "The most memorable live music I heard was at the Santa Monica Pier in LA, when I was studying there. I went there just to watch the sunset and have a beer. Then, out of nowhere, a street musician started playing Hotel California. I already knew the song, but hearing it live by the ocean felt completely different. The guitar sound matched the sunset so well. I was drinking beer, watching the sky turn orange, and listening to that familiar melody. The whole mood felt very romantic and cinematic. It wasn't a big concert or a famous performance, but that made it even more special. It felt natural and unexpected. I still remember that moment because the music, the sunset, and the beer all came together perfectly.",
+    keywords: ["Santa Monica Pier", "sunset and a beer", "out of nowhere", "Hotel California", "came together perfectly"],
+    mustUse: [
+      { en: "The most memorable ~ I heard was ~", ko: "가장 기억에 남는 ~는 ~ (E형 도입)" },
+      { en: "Then, out of nowhere, ~", ko: "그런데 갑자기 ~ (반전 신호)" },
+      { en: "hearing it live by the ocean felt completely different", ko: "바다 옆 라이브는 완전히 달랐어요 (감각)" },
+      { en: "that made it even more special", ko: "그래서 더 특별했어요 (감정 마무리)" }
+    ] },
+  { cat: "desc", set: "day2", title: "D2-1 내 직장 묘사 — 개방형 오피스",
+    koreanFlow: "금융·서울 → open-plan, 벽·개인실 적음 → 책상 가까워 회의 없이 바로 해결 → fast-paced·협업적 → 바쁘지만 활기, 그게 좋음",
+    hint: "A 묘사: 한 가지(개방형 분위기)로 좁히고 '활기' 감정 마무리. (블록A)",
+    keyEnglish: "That open, lively environment is a big part of why I like my job.",
+    fullScript: "I work in finance, in an open-plan office in Seoul. There aren't many walls or private rooms — most of us sit together in one big space. Because the desks are close, we can talk and solve problems quickly, without scheduling a meeting for every little thing. The atmosphere is fast-paced and pretty collaborative, so it can get busy, but I actually enjoy that kind of energy. It keeps me focused and makes the day go by faster. For me, that open, lively environment is a big part of why I like my job.",
+    keywords: ["finance", "open-plan office", "desks are close", "fast-paced", "lively environment"],
+    mustUse: [
+      { en: "There aren't many ~ — most of us ~", ko: "~가 별로 없고 대부분 ~해요 (묘사 도입)" },
+      { en: "without scheduling a meeting for every little thing", ko: "사소한 것마다 회의 안 잡고 (장점 디테일)" },
+      { en: "I actually enjoy that kind of energy", ko: "저는 그 활기가 오히려 좋아요 (감정)" },
+      { en: "a big part of why I like my job", ko: "제가 일을 좋아하는 큰 이유예요 (마무리)" }
+    ] },
+  { cat: "desc", set: "day2", title: "D2-2 직장 과거 vs 현재 — 하이브리드",
+    koreanFlow: "예전: 매일 출근·대면회의·종이문서 → 지금: 하이브리드·화상회의·클라우드 → 대체로 긍정(효율) but 경계 흐려짐 → 더 유연·디지털하지만 경계 필요",
+    hint: "F 비교: In the past→But these days. 양면(장점+downside) 짚고 마무리. (블록A)",
+    keyEnglish: "The workplace has become more flexible and digital, but people also need better boundaries.",
+    fullScript: "Workplaces in Korea have changed a lot in just a few years. In the past, people usually commuted to the office every day, had face-to-face meetings, and handled a lot of paper documents. But these days, things are more flexible. Hybrid work has become more common, video calls are normal, and most documents are stored in the cloud instead of printed out. I think this change is mostly positive, because people can work more efficiently. But there's also a downside — the line between work and home can get blurry. So overall, the workplace has become more flexible and digital, but people also need better boundaries.",
+    keywords: ["commuted every day", "face-to-face", "hybrid work", "stored in the cloud", "blurry"],
+    mustUse: [
+      { en: "In the past, people usually ~", ko: "예전엔 사람들이 보통 ~했어요 (과거)" },
+      { en: "But these days, things are more ~", ko: "하지만 요즘은 더 ~해요 (현재)" },
+      { en: "But there's also a downside — ~", ko: "하지만 단점도 있어요 — ~ (양면 짚기)" },
+      { en: "people also need better boundaries", ko: "사람들에게 더 나은 경계가 필요해요 (마무리)" }
+    ] },
+  { cat: "opi", set: "day2", title: "D2-3 기술이 바꾼 직장 — AI",
+    koreanFlow: "하나 꼽으면 AI → 보고서·리서치에 써서 시간 대폭 절약 → 반나절→한시간 → 속도보다, 반복작업 대신 '생각·결정'에 집중 가능 → 예전으로 못 돌아감",
+    hint: "한 가지+감정: AI 하나로. 속도가 아니라 '사고에 집중'이 핵심. (블록A). #4 EV·#10 AI뉴스와 색 분리",
+    keyEnglish: "I can spend my energy on actual thinking and decisions, instead of repetitive tasks.",
+    fullScript: "If I had to pick one thing that changed my work the most, it would be AI. These days, I use AI tools to draft reports and do research, and they save me an incredible amount of time. Something that used to take me half a day can now take about an hour. What I appreciate most isn't just the speed, though — it's that I can spend my energy on actual thinking and decisions, instead of repetitive, boring tasks. It genuinely changed how I work, and now I can't really imagine going back to the old way.",
+    keywords: ["pick one thing", "draft reports", "half a day", "actual thinking", "going back"],
+    mustUse: [
+      { en: "If I had to pick one thing, it would be ~", ko: "하나만 꼽자면 ~예요 (One Main Point 고정)" },
+      { en: "used to take me half a day can now take ~", ko: "반나절 걸리던 게 이제 ~ (구체 효과)" },
+      { en: "What I appreciate most isn't just ~, though", ko: "제가 가장 좋은 건 ~만이 아니에요 (전환)" },
+      { en: "can't imagine going back to the old way", ko: "예전 방식으론 못 돌아가요 (마무리)" }
+    ] },
+  { cat: "opi", set: "day2", title: "⭐D2-4 유망산업 — EV/배터리",
+    koreanFlow: "내가 보는 유망산업=전기차·배터리 → 대기오염·연료비·기후로 중요↑, 자율주행 매력 → 3년 전엔 특별(비싸고 충전소 적음) → 지금 주류, 현대·LG엔솔·삼성SDI 투자 → 미래기술 아닌 일상이 됨",
+    hint: "G+F: 한 산업(EV)으로 좁히고 3년전→지금 변화 축. 산업은 EV로(AI 금지). 블록B 우선",
+    keyEnglish: "EVs are no longer just a future idea — they're becoming part of normal life.",
+    fullScript: "One promising industry I follow in Korea is the electric vehicle and battery industry. I think it's promising because transportation is changing fast — people care more about air pollution, fuel costs, and climate change, so EVs are becoming more important. There's also the appeal of new technology, like self-driving features. Three years ago, EVs still felt a little special; they were expensive, charging stations weren't everywhere, and people weren't sure about battery performance. But now the industry has gone mainstream. Companies like Hyundai, LG Energy Solution, and Samsung SDI are investing heavily, and charging infrastructure keeps improving. So the biggest change is that EVs are no longer just a future idea — they're becoming part of normal life.",
+    keywords: ["electric vehicle", "air pollution", "self-driving", "gone mainstream", "normal life"],
+    mustUse: [
+      { en: "One promising industry I follow is ~", ko: "제가 주목하는 유망 산업은 ~ (Intro 고정)" },
+      { en: "Three years ago, ~ still felt a little special", ko: "3년 전만 해도 ~는 특별했어요 (과거)" },
+      { en: "But now the industry has gone mainstream", ko: "하지만 이제 주류가 됐어요 (변화)" },
+      { en: "no longer just a future idea", ko: "더는 미래의 얘기가 아니에요 (마무리)" }
+    ] },
+  { cat: "opi", set: "day2", title: "⭐D2-5 유망기업 — 현대차",
+    koreanFlow: "EV 유망기업=현대차 → IONIQ에 대거 투자 → 단순 차가 아니라 청정 모빌리티로 전환 → 혜택1 일자리·연구(배터리·SW·충전), 혜택2 도시 오염↓·화석연료↓ → 완벽친 않지만 청정미래 기여",
+    hint: "G 이슈: 회사 하나+benefits 2개+지구 기여. 단점도 한 줄 인정해 균형. 블록B",
+    keyEnglish: "Hyundai is contributing to a cleaner future by making EVs more practical and affordable.",
+    fullScript: "A promising company in the EV industry is Hyundai Motor. Hyundai has invested a lot in electric vehicles, especially the IONIQ series. I think it's promising because it isn't just making cars — it's trying to move from gasoline cars to cleaner mobility. The benefits are pretty clear. First, it creates new jobs and research in batteries, software, and charging systems. Second, if more people drive EVs, cities can reduce air pollution and rely less on fossil fuel. Of course, EVs aren't perfect, since battery production has its own environmental issues. But overall, I think Hyundai is contributing to a cleaner future by making EVs more practical and affordable. That's why I see it as a promising company.",
+    keywords: ["Hyundai Motor", "IONIQ", "cleaner mobility", "new jobs", "reduce air pollution"],
+    mustUse: [
+      { en: "it isn't just ~ — it's trying to ~", ko: "단순히 ~가 아니라 ~하려는 거예요 (핵심)" },
+      { en: "The benefits are pretty clear. First ~ Second ~", ko: "혜택은 분명해요. 첫째~ 둘째~ (구조)" },
+      { en: "Of course, ~ aren't perfect, since ~", ko: "물론 ~가 완벽하진 않아요, ~ (균형)" },
+      { en: "contributing to a cleaner future", ko: "더 깨끗한 미래에 기여해요 (마무리)" }
+    ] },
+  { cat: "opi", set: "day2", title: "⭐D2-6 젊은이 선호 회사 — 대기업 vs 공기업",
+    koreanFlow: "대기업(삼성·현대) or 공기업 선호 → 대기업: 연봉·복지·시설·자기계발, 이름값 → 공기업: 연봉은 덜해도 안정·복지·연금 → 결국 '고연봉·성장 vs 안정·보장' 사이 선택",
+    hint: "F 대조: 두 선택지 균형 비교 후 '둘 중 선택'으로 압축. 블록B",
+    keyEnglish: "Young people choose between high salary and growth, or stability and long-term security.",
+    fullScript: "These days, many young people in Korea want to work for either big enterprises or public enterprises. For big enterprises, Samsung and Hyundai are good examples. Young people like them because they offer competitive salaries, strong welfare benefits, nice facilities, and many opportunities for self-improvement. A famous company name also looks good on their career path. The other popular choice is public enterprises. The salary may not be as high, but they offer strong job stability, good welfare, and a pension after retirement, which is very attractive when the economy feels uncertain. So young people usually choose between two things — high salary and growth at big companies, or stability and long-term security at public ones.",
+    keywords: ["big enterprises", "public enterprises", "competitive salaries", "job stability", "pension"],
+    mustUse: [
+      { en: "want to work for either ~ or ~", ko: "~ 아니면 ~에서 일하고 싶어해요 (두 선택지)" },
+      { en: "The other popular choice is ~", ko: "또 다른 인기 선택은 ~ (전환)" },
+      { en: "very attractive when the economy feels uncertain", ko: "경제가 불안할 때 매력적이죠 (이유)" },
+      { en: "choose between ~ or ~", ko: "~와 ~ 사이에서 선택해요 (압축 마무리)" }
+    ] },
+  { cat: "exp", set: "day2", title: "⭐D2-7 직업 위한 노력 — 영어·LA석사",
+    koreanFlow: "금융 커리어 위해 다년간 노력 → ①영어(보고서·시장정보가 영어) → ②LA 석사로 글로벌 시장 노출·시야 확장 → ③금융 프로젝트로 경험 단계적 → ④최근 AI 도구로 우위 → 시간 걸렸지만 준비가 빛을 봄",
+    hint: "C 경험: First~ Also~ On top of that~ 단계 나열 후 'paid off' 마무리. 블록B. (MBA면 master's→MBA)",
+    keyEnglish: "It took time and patience, but looking back, all that preparation paid off.",
+    fullScript: "To build my career in finance, I had to put in a lot of effort over the years. First, I worked hard on my English, because finance is very global — a lot of reports, meetings, and market information are in English. I also studied abroad for my master's in LA, which gave me real exposure to global markets and a broader perspective. On top of that, I built relevant experience step by step, working on finance-related projects. More recently, I started practicing AI tools for research and report writing, which gave me an extra edge, since finance is becoming more data-driven. It took time and patience, but looking back, all that preparation paid off.",
+    keywords: ["build my career", "worked hard on my English", "master's in LA", "step by step", "paid off"],
+    mustUse: [
+      { en: "I had to put in a lot of effort over the years", ko: "수년간 많은 노력을 들였어요 (도입)" },
+      { en: "First ~ I also ~ On top of that ~", ko: "먼저~ 또~ 게다가~ (단계 나열)" },
+      { en: "which gave me an extra edge", ko: "덕분에 추가 강점이 생겼어요 (효과)" },
+      { en: "looking back, all that preparation paid off", ko: "돌아보니 그 준비가 빛을 봤어요 (마무리)" }
+    ] },
+  { cat: "opi", set: "day2", title: "⭐D2-8 미래 직업 준비 과정 — 구조는 같되 기준↑",
+    koreanFlow: "두 단계: ①일반 교육(대학·전공·자격증·어학) ②입사 후 사내 교육·선배에게 실무 → 구조는 거의 그대로 → 5년간 한 변화: 입사 전부터 실무역량(데이터·AI·인턴) 기대 → 'job-ready' 기준이 높아짐",
+    hint: "F+G: 구조 설명 후 'one change'로 변화 한 가지. 블록B",
+    keyEnglish: "The structure is similar, but the bar for being 'job-ready' has gotten higher.",
+    fullScript: "In Korea, the way people prepare for future work has two basic steps, and honestly, the overall structure hasn't changed that much. First, people get general education — most go to university, study their major, and earn certificates or language scores, since English still matters, especially for big companies. Then, after joining a company, they get specific job training and learn practical skills from senior employees. That part is pretty much the same as before. But if I had to point to one change over the past five years, it's that companies now expect young workers to already have some practical skills before they join — things like data analysis, AI tools, and internship experience. So the structure is similar, but the bar for being job-ready has gotten higher.",
+    keywords: ["two basic steps", "general education", "job training", "one change", "bar has gotten higher"],
+    mustUse: [
+      { en: "the overall structure hasn't changed that much", ko: "전체 구조는 크게 안 변했어요 (전제)" },
+      { en: "That part is pretty much the same as before", ko: "그 부분은 예전과 거의 같아요 (구조 유지)" },
+      { en: "if I had to point to one change, it's that ~", ko: "한 가지 변화를 꼽자면 ~ (변화 도입)" },
+      { en: "the bar for being job-ready has gotten higher", ko: "'준비된 인재' 기준이 높아졌어요 (마무리)" }
+    ] },
+  { cat: "exp", set: "day2", title: "D2-9 새 기술 적용 어려움→극복 — AI 프롬프트",
+    koreanFlow: "처음 AI 쓸 때 좌절 → 가장 큰 난관=좋은 프롬프트 작성 → 모호·쓸모없는 답, 포기 직전 → 실제 업무(보고서·요약)로 계속 연습 → 어느 순간 click → 이젠 없으면 일 못함 → 새 기술은 인내 뒤 보상",
+    hint: "C/E 경험: 좌절→포기 직전→반전(클릭)→교훈. 한 가지+감정. 블록C",
+    keyEnglish: "New technology takes patience before it pays off.",
+    fullScript: "When I first started using AI tools at work, it was honestly frustrating. The biggest challenge was writing good prompts. I kept getting vague or useless answers, and at one point I almost gave up and went back to doing everything manually. But instead of quitting, I decided to keep practicing on real tasks, like drafting reports and summarizing research. Slowly, I learned how to give clearer instructions, and at some point it just clicked. Now it feels natural, and I honestly can't imagine working without it. That experience taught me that new technology takes patience before it pays off.",
+    keywords: ["frustrating", "writing good prompts", "almost gave up", "it just clicked", "patience"],
+    mustUse: [
+      { en: "The biggest challenge was ~ing", ko: "가장 큰 난관은 ~하는 거였어요 (문제)" },
+      { en: "at one point I almost gave up", ko: "한때는 거의 포기할 뻔했어요 (위기)" },
+      { en: "at some point it just clicked", ko: "어느 순간 딱 이해됐어요 (반전)" },
+      { en: "~ takes patience before it pays off", ko: "~는 보상받기까지 인내가 필요해요 (교훈)" }
+    ] },
+  { cat: "opi", set: "day2", title: "D2-10 기술 뉴스 — AI 양면",
+    koreanFlow: "요즘 기술뉴스 대부분 AI, 특히 챗봇 → 금융권이라 리서치·분석·보고서 활용에 관심, 사람보다 빠름 → but 우려: 실수·과의존·일자리 → 신나면서도 약간 무섭 → 뒤처지지 않되 신중히 사용",
+    hint: "G 이슈(뉴스+느낌+우려): 양면 균형 후 '신중히'로. 블록C. #4 EV와 색 분리",
+    keyEnglish: "I see AI as both exciting and a little scary, so we need to use it carefully.",
+    fullScript: "Lately, most of the technology news I see is about AI, especially AI chatbots. Since I work in finance, I'm especially interested in how AI is being used for research, data analysis, and report writing — it's amazing, because it can process information much faster than people. But at the same time, I think there are some concerns. AI can make mistakes, and people may rely on it too much. Some people also worry that it could replace certain jobs. So I see AI as both exciting and a little scary. That's why I try to stay updated — I don't want to fall behind, but I also think we need to use it carefully.",
+    keywords: ["technology news", "faster than people", "make mistakes", "rely on it too much", "stay updated"],
+    mustUse: [
+      { en: "most of the ~ news I see is about ~", ko: "제가 보는 ~ 뉴스 대부분은 ~ (도입)" },
+      { en: "But at the same time, there are some concerns", ko: "하지만 동시에 우려도 있어요 (전환)" },
+      { en: "I see ~ as both exciting and a little scary", ko: "~가 신나면서도 좀 무서워요 (양면 핵심)" },
+      { en: "I don't want to fall behind, but ~ carefully", ko: "뒤처지긴 싫지만 신중히 ~ (마무리)" }
+    ] },
+  { cat: "desc", set: "day3", title: "⭐D3-1 캠핑 준비 — 날씨→옷",
+    koreanFlow: "폰으로 날씨·예약, but 가장 중요한 건 옷 → 야외라 밤 날씨 급변, 옷 잘못 챙기면 다 불편 → 예보 확인: 추우면 레이어, 비 오면 우비·방수화 → 여분 한 벌 더 → 잘 입으면 텐트·식사·불멍 다 즐김",
+    hint: "A 준비: '옷' 하나로 좁힘. It may sound simple but~ 으로 의미 부여. Day3 1순위",
+    keyEnglish: "Preparing is really about the clothes; if I'm comfortable, the whole trip becomes much more enjoyable.",
+    fullScript: "When I prepare for a camping trip, I usually use my phone to check the weather and make a reservation, but honestly, the most important part is packing the right clothes. Camping is outdoors, so the weather can change a lot, especially at night, and if I bring the wrong clothes, the whole trip becomes uncomfortable. So I check the forecast carefully. If it looks cold at night, I pack extra layers, like a hoodie or a light jacket. If it might rain, I bring a rain jacket and waterproof shoes. I also pack one more outfit than I think I need, just in case. It may sound simple, but when I'm dressed right, I can fully relax and enjoy everything — setting up the tent, eating outside, and sitting by the campfire. So for me, preparing is really about the clothes; if I'm comfortable, the whole trip becomes much more enjoyable.",
+    keywords: ["check the weather", "most important part", "extra layers", "waterproof shoes", "comfortable"],
+    mustUse: [
+      { en: "the most important part is ~ing", ko: "가장 중요한 건 ~하는 거예요 (좁히기)" },
+      { en: "If it looks cold ~, I pack ~. If it might rain, I bring ~", ko: "추우면~, 비 오면~ (조건 나열)" },
+      { en: "just in case", ko: "혹시 몰라서요 (대비)" },
+      { en: "if I'm comfortable, the whole trip becomes ~", ko: "편하면 여행 전체가 ~ (마무리)" }
+    ] },
+  { cat: "desc", set: "day3", title: "D3-2 캠핑 챙기는 것 — 불멍",
+    koreanFlow: "필수: 텐트·랜턴·접이식 의자·침낭 → 고기(한국인은 바베큐가 최고) → but 가장 기대되는 건 불멍 → 바쁜 한 주 뒤 불 보며 아무것도 안 함 → 폰·일·도시소음 없이 머리 비움",
+    hint: "A 묘사: 챙길 것 나열 후 '불멍' 하나로 좁혀 감정 마무리",
+    keyEnglish: "I'm really preparing for that one quiet moment by the fire.",
+    fullScript: "When I go camping, there are a few essentials I never forget. I usually bring a tent, a lantern, folding chairs, and a good sleeping bag, since nights can get cold. I also bring meat to grill, because for Koreans, barbecue is almost the best part of camping. But honestly, the thing I look forward to most is the campfire. After a busy week, I love sitting by the fire at night, staring at the flames, and doing absolutely nothing. There's no phone, no work, and no city noise, so it really helps me clear my head. So when I pack for camping, I'm really preparing for that one quiet moment by the fire.",
+    keywords: ["essentials", "tent", "sleeping bag", "campfire", "clear my head"],
+    mustUse: [
+      { en: "there are a few essentials I never forget", ko: "절대 안 빠뜨리는 필수품이 있어요 (도입)" },
+      { en: "the thing I look forward to most is ~", ko: "가장 기대되는 건 ~ (좁히기)" },
+      { en: "doing absolutely nothing", ko: "정말 아무것도 안 해요 (불멍 묘사)" },
+      { en: "preparing for that one quiet moment", ko: "그 조용한 순간을 준비하는 거예요 (마무리)" }
+    ] },
+  { cat: "desc", set: "day3", title: "D3-3 캠핑 음식 — 라면",
+    koreanFlow: "거의 항상 라면 → 이유는 단순: 쉽게 조리, 야외선 복잡한 거 싫음 → 이유 모르겠지만 밖에서 먹으면 훨씬 맛있음 → 텐트 치고 돌아다닌 뒤 따뜻한 라면이 위로 → 단순하지만 경험을 더 좋게",
+    hint: "A 묘사: simple is the best. 단순함이 곧 매력인 구조",
+    keyEnglish: "It's simple, but it makes the whole experience better.",
+    fullScript: "When I go camping, I almost always bring ramen. The main reason is simple — ramen is easy to cook, and that really matters when I'm outdoors, because I don't want to deal with anything complicated at a campsite. Also, I don't know why, but ramen just tastes so much better when I eat it outside. Maybe it's the fresh air, or maybe it's the whole camping vibe. After setting up the tent and walking around, I usually get pretty tired, and at that moment, a warm bowl of ramen feels incredibly comforting. So for me, ramen is a must-have camping food. It's simple, but it makes the whole experience better.",
+    keywords: ["almost always bring ramen", "easy to cook", "tastes better outside", "comforting", "must-have"],
+    mustUse: [
+      { en: "The main reason is simple — ~", ko: "이유는 단순해요 — ~ (이유 도입)" },
+      { en: "I don't know why, but ~", ko: "이유는 모르겠지만 ~ (솔직한 감상)" },
+      { en: "feels incredibly comforting", ko: "정말 위로가 돼요 (감정)" },
+      { en: "It's simple, but it makes the whole experience better", ko: "단순하지만 경험을 더 낫게 해요 (마무리)" }
+    ] },
+  { cat: "exp", set: "day3", title: "D3-4 최근 캠핑 경험 — 강가",
+    koreanFlow: "한 달 전 친구들과 → 서울서 2시간 강가 캠핑장 → 도착해 텐트·의자·바로 고기 구움(배고파서) → 밤에 불·술·별 아래 수다 → 와이파이·일정 없어 완전 이완 → 집 올 땐 완전 충전",
+    hint: "D 최근경험: 시간순(도착→밤→귀가). 'recharged'로 마무리",
+    keyEnglish: "That simple trip reminded me why I love camping.",
+    fullScript: "The most recent time I went camping was about a month ago, with a few close friends. We booked a campsite near a river, about two hours from Seoul. After we arrived, we set up the tent, laid out our chairs, and started grilling meat right away, because we were starving. The best part came at night. We lit a campfire, had a few drinks, and talked for hours under the stars. There was no Wi-Fi and no schedule, so we completely relaxed — I felt like I'd finally escaped from work and the city. By the time I got home, I felt totally recharged. That simple trip reminded me why I love camping.",
+    keywords: ["about a month ago", "near a river", "grilling meat", "under the stars", "totally recharged"],
+    mustUse: [
+      { en: "The most recent time I ~ was about ~ ago", ko: "가장 최근에 ~한 건 ~ 전이에요 (D형 도입)" },
+      { en: "right away, because we were starving", ko: "배고파서 바로요 (생생한 디테일)" },
+      { en: "The best part came at night", ko: "가장 좋은 건 밤이었어요 (하이라이트)" },
+      { en: "By the time I got home, I felt totally recharged", ko: "집에 올 땐 완전 충전됐어요 (마무리)" }
+    ] },
+  { cat: "exp", set: "day3", title: "D3-5 기억나는 캠핑 — 첫 캠핑+축제",
+    koreanFlow: "가장 기억=집 근처 첫 캠핑 → 기대 안 했는데 옆에서 작은 동네 축제 → 고기 굽다 라이브음악 들림, 푸드트럭·이웃들 → 가서 길거리음식 먹고 불빛 아래 밴드 들음 → 화려한 게 아니라 동네가 함께 즐기는 따뜻함 → 잊지 못함",
+    hint: "E memorable(아묻따 #11): 평범한 첫 캠핑→반전(축제)→따뜻한 감정. Day3 2순위",
+    keyEnglish: "For a first camping trip, it couldn't have been better.",
+    fullScript: "The most memorable camping experience was actually my very first one, at a site close to my home. I didn't expect much, but that night there happened to be a small local festival right next to the campsite. While we were grilling, we suddenly heard live music — a free outdoor concert with food trucks and lots of neighbors gathered around. So we wandered over, ate some street food, and listened to the band under the lights. What made it special wasn't anything fancy; it was that warm, friendly feeling of the whole neighborhood enjoying the night together. For a first camping trip, it couldn't have been better, and I still remember how happy and relaxed I felt.",
+    keywords: ["my very first one", "local festival", "heard live music", "food trucks", "warm friendly feeling"],
+    mustUse: [
+      { en: "I didn't expect much, but ~", ko: "기대 안 했는데 ~ (반전 신호)" },
+      { en: "there happened to be ~", ko: "마침 ~가 있었어요 (우연)" },
+      { en: "What made it special wasn't anything fancy; it was ~", ko: "특별했던 건 화려함이 아니라 ~ (감정 핵심)" },
+      { en: "it couldn't have been better", ko: "더할 나위 없었어요 (마무리)" }
+    ] },
+  { cat: "rp", set: "day3", title: "⭐D3-6 RP 슬리핑백 구매문의 (대화형)",
+    koreanFlow: "인사+상황 → Q1 사이즈(키 큼)→반응 → Q2 가격·세일→반응 → Q3 보온온도→반응 → Q4 방수→반응 → Q5 환불정책 → 마무리",
+    hint: "질문형 대화: 각 질문 뒤 'Oh, ~? Got it' 반응 끼우기. Day3 1순위",
+    keyEnglish: "What sizes do you carry? I'm a bit tall, so I need a longer one.",
+    fullScript: "Hi, I'm planning to buy a sleeping bag for a camping trip, and I have a few questions — do you have a minute? First, what sizes do you carry? I'm a bit tall, so I need a longer one. ... Oh, you have a longer size? That sounds good. Second, how much is it, and is there any sale going on right now? ... Okay, got it, that's within my budget. Third, how warm is it — what temperature is it rated for? ... Oh, it's fine for cold nights too? Great. Also, is it waterproof, in case it rains during my trip? ... Okay, that makes sense. And last, what's your return policy, in case it doesn't fit me well? ... Perfect, that's everything I needed. Thank you so much!",
+    keywords: ["what sizes", "how much", "temperature", "waterproof", "return policy"],
+    mustUse: [
+      { en: "I have a few questions — do you have a minute?", ko: "질문 몇 개 있는데 시간 되세요? (대화형 도입)" },
+      { en: "Oh, ~? That sounds good. / Got it.", ko: "오 ~요? 좋네요 (반응 끼우기 핵심)" },
+      { en: "~, in case it ~", ko: "~할 경우를 대비해 (질문 이유)" },
+      { en: "that's everything I needed", ko: "그게 제가 필요한 전부예요 (마무리)" }
+    ] },
+  { cat: "rp", set: "day3", title: "⭐D3-7 RP 슬리핑백 하자 (대화형·대안체인)",
+    koreanFlow: "사과 → (현재완료) 구멍+지퍼 고장 발견 → 같은 모델 교환? → 품절이라고 한 척 → 그럼 환불? → 며칠 걸린다 한 척 → 그럼 주말 전 비슷한 모델로 → 감사",
+    hint: "문제형 대화: 상대가 No 한 척 받아치며 대안 체인. 문제는 현재완료. Day3 1순위",
+    keyEnglish: "Could I exchange it? Oh, out of stock? Then could I get a refund?",
+    fullScript: "Hi, I'm sorry, but there's a problem with the sleeping bag I bought yesterday. When I opened it at home, I found a small hole near the bottom, and the zipper has stopped working smoothly — it keeps getting stuck. I'm pretty disappointed, since it's brand new and I need it for my camping trip this weekend. Could I exchange it for the same model? ... Oh, you don't have the same model in stock right now? I see. Then could I get a refund instead? ... Oh, the refund takes a few days? Hmm, I understand. In that case, could you send me a similar model before this weekend? It doesn't have to be exactly the same one, as long as it's warm enough and not damaged. ... That would really help. Thank you for checking — I appreciate it.",
+    keywords: ["there's a problem", "the zipper has stopped working", "exchange", "refund", "similar model"],
+    mustUse: [
+      { en: "the zipper has stopped working / I found a hole", ko: "지퍼가 고장났어요 / 구멍 발견 (현재완료 문제)" },
+      { en: "Could I exchange it for the same model?", ko: "같은 모델로 교환될까요? (대안1)" },
+      { en: "Then could I get a refund instead?", ko: "그럼 대신 환불될까요? (No 받고 대안2)" },
+      { en: "In that case, could you send me a similar ~?", ko: "그렇다면 비슷한 걸로 보내주실 수 있나요? (대안3)" }
+    ] },
+  { cat: "exp", set: "day3", title: "D3-8 산 물건 하자 경험 (similar exp)",
+    koreanFlow: "이거 비슷한 경험 떠오름 → 온라인 침낭 주문(그 주말 캠핑) → 도착해 열어보니 지퍼 옆 찢김+지퍼 걸림 → 며칠 안 남아 짜증 → 고객센터 연락·사진 전송 → 같은 모델 품절, 비슷한 거 익일배송 → 딱 맞게 도착 → 받자마자 확인하는 법 배움",
+    hint: "E 경험(#7·#10 13번 자리): This reminds me of~ 로 도입",
+    keyEnglish: "After that, I learned to check products as soon as they arrive.",
+    fullScript: "This actually reminds me of a similar experience I had. A while ago, I'd ordered a sleeping bag online for a camping trip that weekend. I was excited when it arrived, but as soon as I opened it, I noticed a small tear near the zipper, and the zipper kept getting stuck. I was really annoyed, because I needed it in just a few days. So I contacted customer service right away, explained the problem, and sent a photo. They told me the same model was out of stock, but they offered to ship a similar one overnight. I was a little worried, but it arrived just in time and worked perfectly for the trip. After that, I learned to check products as soon as they arrive, especially before an important plan.",
+    keywords: ["ordered online", "a small tear", "contacted customer service", "ship overnight", "just in time"],
+    mustUse: [
+      { en: "This actually reminds me of a similar experience", ko: "비슷한 경험이 떠올라요 (13번 자리 도입)" },
+      { en: "as soon as I opened it, I noticed ~", ko: "열자마자 ~를 발견했어요 (문제)" },
+      { en: "I contacted customer service right away", ko: "바로 고객센터에 연락했어요 (행동)" },
+      { en: "it arrived just in time", ko: "딱 맞게 도착했어요 (해결)" }
+    ] },
+  { cat: "rp", set: "day3", title: "D3-9 RP MP3 구매문의 (대화형·친구)",
+    koreanFlow: "친구가 새 MP3 샀다 들음, 나도 살까 → Q1 어디서?(온라인?배송빠름?)→반응 → Q2 가격·값어치→반응 → Q3 배터리→반응 → Q4 음질·저장용량→추천? → 고마움",
+    hint: "질문형 대화: 친구 톤. 각 질문 뒤 반응 끼우기. Day3 3순위",
+    keyEnglish: "Would you recommend it? Your advice really helps!",
+    fullScript: "Hey, I heard you just got a new MP3 player, and I'm thinking of buying one too. Can I ask you a few questions? First, where did you buy it — online or at a store? ... Oh, online? Got it. Was the delivery fast? ... Okay, nice. Second, how much was it, and was it worth the price? ... Oh, that's not bad at all. Third, how long does the battery last on one charge? ... Wow, that's longer than I expected. Also, how's the sound quality, and how many songs can it hold? ... Okay, that sounds great. And finally, would you recommend it? ... Perfect. Thanks — your advice really helps!",
+    keywords: ["where did you buy", "worth the price", "battery last", "sound quality", "recommend"],
+    mustUse: [
+      { en: "I'm thinking of buying one too", ko: "저도 하나 살까 해서요 (대화 도입)" },
+      { en: "Was it worth the price?", ko: "가격값 했어요? (가치 질문)" },
+      { en: "Wow, that's longer than I expected", ko: "와, 예상보다 길어요 (반응)" },
+      { en: "your advice really helps", ko: "조언 정말 도움돼요 (마무리)" }
+    ] },
+  { cat: "rp", set: "day3", title: "D3-10 RP MP3 고장알림 (대화형·대안체인)",
+    koreanFlow: "사과 → (현재완료) 떨어뜨려 화면 깨지고 안 켜짐 → 수리비 낼까? → 수리 가능할지 모른다 한 척 → 서비스센터 먼저 문의 → 못 고치면 새것 사줄게 → 괜찮아? → 재사과",
+    hint: "문제형 대화: 빌린 물건 고장. 현재완료(I've dropped it). Day3 3순위",
+    keyEnglish: "Can I pay for the repair? If they can't fix it, I'll just buy you a brand-new one.",
+    fullScript: "Hey, I'm really sorry, but there's a problem with your MP3 player. I borrowed it yesterday, and I've accidentally dropped it — now the screen is cracked, and it won't turn on. I feel terrible, because I know it was important to you. Can I take it to a repair shop and pay for the repair? ... Oh, you're not sure if it can even be repaired? I understand. Then let me take it to the official service center first and ask what they can do. ... And if they say it can't be fixed, I'll just buy you a brand-new one. Does that sound okay? ... Again, I'm really sorry. I'll take care of it as soon as possible.",
+    keywords: ["I've accidentally dropped it", "screen is cracked", "pay for the repair", "service center", "brand-new one"],
+    mustUse: [
+      { en: "I've accidentally dropped it", ko: "실수로 떨어뜨렸어요 (현재완료 문제)" },
+      { en: "I feel terrible, because ~", ko: "~라서 정말 죄송해요 (감정)" },
+      { en: "Can I pay for the repair?", ko: "수리비 제가 낼까요? (대안1)" },
+      { en: "if they say it can't be fixed, I'll just buy you ~", ko: "못 고치면 새로 사줄게요 (대안2)" }
+    ] },
+  { cat: "exp", set: "day3", title: "D3-11 기기 고장 경험 (similar exp)",
+    koreanFlow: "폰 비슷한 경험 → 업무 중 화면 갑자기 까맣게 → 파일 생각에 당황 → 재부팅 여러 번 소용없음 → 다음날 서비스센터, 부품 헐거움이라며 빨리 고침+백업 도움 → 안도 → 이후 정기 백업 → 한 기기에 의존 말자",
+    hint: "E 경험(13번 자리): 패닉→해결→교훈. This reminds me of~",
+    keyEnglish: "It taught me not to rely on one device too much.",
+    fullScript: "This reminds me of a similar experience I had with my phone. One day, I was using it for work when the screen suddenly went completely black. At first I panicked, because all my files, messages, and work notes were on it. I tried restarting it several times, but nothing worked. So the next day, I took it to a service center, and the staff said it was probably just a loose part. I was worried it would take days, but luckily they fixed it pretty quickly and helped me back up my data. I was so relieved. After that, I started backing up my phone regularly. It was stressful at the time, but it taught me not to rely on one device too much.",
+    keywords: ["went completely black", "panicked", "restarting", "loose part", "back up"],
+    mustUse: [
+      { en: "This reminds me of a similar experience", ko: "비슷한 경험이 떠올라요 (도입)" },
+      { en: "the screen suddenly went completely black", ko: "화면이 갑자기 까매졌어요 (문제)" },
+      { en: "At first I panicked, because ~", ko: "처음엔 ~ 때문에 당황했어요 (감정)" },
+      { en: "it taught me not to rely on ~ too much", ko: "~에 너무 의존하지 말라는 교훈 (마무리)" }
+    ] },
+  { cat: "desc", set: "day4", title: "⭐D4-1 자주 가는 병원 의사 묘사",
+    koreanFlow: "집 근처 의원, 믿는 의사 → 가장 좋은 건 차분하고 명확 → 대기실 꽉 차도 서두르지 않음 → 증상 걱정될 때 쉬운 말로 설명, 불안 대신 안심하고 나옴 → 진짜 들어줌 → 그래서 계속 감",
+    hint: "A 묘사: 시설 나열 금지, '차분히 설명→믿음' 한 가지. Day4 1순위",
+    keyEnglish: "He actually listens. That's why I keep going back to the same clinic.",
+    fullScript: "There's a small clinic near my home that I usually go to, and the doctor there is someone I really trust. The thing I appreciate most about him is how calm and clear he is. He never rushes, even when the waiting room is full. Whenever I'm worried about a symptom, he explains exactly what's going on in simple words, so I always leave feeling reassured instead of anxious. A lot of doctors make you feel like just another patient, but he actually listens. That's the main reason I keep going back to the same clinic instead of switching around.",
+    keywords: ["clinic near my home", "calm and clear", "never rushes", "reassured instead of anxious", "actually listens"],
+    mustUse: [
+      { en: "The thing I appreciate most about him is ~", ko: "가장 좋은 점은 ~ (좁히기)" },
+      { en: "He never rushes, even when ~", ko: "~해도 서두르지 않아요 (특징)" },
+      { en: "I always leave feeling reassured instead of anxious", ko: "불안 대신 안심하고 나와요 (감정)" },
+      { en: "he actually listens", ko: "진짜로 들어줘요 (핵심 마무리)" }
+    ] },
+  { cat: "exp", set: "day4", title: "D4-2 병원 memorable — 검진 안도",
+    koreanFlow: "몇 년 전 검진 → 뭔가 이상한 느낌, 뭔가 잘못된 줄 확신 → 대기실서 긴장 → 결과는 그냥 스트레스+수면부족 → 큰 안도, 어깨 짐 내려감 → 이후 정기검진",
+    hint: "E 경험(짧게 OK): 긴장→반전(괜찮음)→안도. #7과 stress 겹치면 이건 '검진 안도'로",
+    keyEnglish: "I was so relieved, almost like a weight lifted off my shoulders.",
+    fullScript: "One memorable experience was a checkup a couple of years ago. I felt something was wrong, so I was really nervous going in — but it turned out to be just stress and lack of sleep. I was so relieved, almost like a weight lifted off my shoulders. Since then, I've tried to get regular checkups instead of waiting until I'm scared.",
+    keywords: ["a checkup", "felt something was wrong", "just stress", "so relieved", "regular checkups"],
+    mustUse: [
+      { en: "I was really nervous going in", ko: "들어갈 때 정말 긴장했어요 (감정)" },
+      { en: "but it turned out to be just ~", ko: "그런데 알고 보니 그냥 ~ (반전)" },
+      { en: "like a weight lifted off my shoulders", ko: "어깨 짐이 내려간 것처럼 (안도 표현)" },
+      { en: "Since then, I've tried to ~", ko: "그 후로 ~하려 해요 (교훈)" }
+    ] },
+  { cat: "exp", set: "day4", title: "D4-3 어릴 때 병원 — 치과 공포",
+    koreanFlow: "어릴 땐 병원=공포, 특히 치과 → 장비 소리만 들어도 도망치고 싶음 → 한번은 손대기도 전에 울음 → 친절·인내심 의사가 진정시킴 → 돌아보니 그때 의사가 그리 무섭지 않다 느낌 시작",
+    hint: "C 경험(아묻따 #15 손 다친 일로 대체 가능): 공포→진정→인식변화. Day4 2순위(dentist만)",
+    keyEnglish: "That's when I started to feel that doctors aren't so scary after all.",
+    fullScript: "When I was a child, going to the hospital was honestly terrifying — especially the dentist. Just the sound of the equipment made me want to run, and one time I was so scared that I started crying before the doctor even touched me. But he was really patient and kind, so I slowly calmed down. Looking back, that's when I started to feel that doctors aren't so scary after all.",
+    keywords: ["as a child", "terrifying", "sound of the equipment", "started crying", "patient and kind"],
+    mustUse: [
+      { en: "going to the hospital was honestly terrifying", ko: "병원 가는 게 정말 무서웠어요 (C형 도입)" },
+      { en: "made me want to run", ko: "도망치고 싶었어요 (감정)" },
+      { en: "I started crying before the doctor even touched me", ko: "손대기도 전에 울었어요 (생생)" },
+      { en: "that's when I started to feel ~", ko: "그때부터 ~ 느끼기 시작했어요 (인식 변화)" }
+    ] },
+  { cat: "desc", set: "day4", title: "⭐D4-4 건강한 사람 — 아버지",
+    koreanFlow: "가장 건강한 사람=아버지, 엄청난 자기관리 → 새벽4시 기상, 동네 산(야외운동기구) 1시간+ → 당·기름진 음식 피하고 10년 금주 → 나보다 근육질 → 매일 운동+엄격한 식단이 비결 → 롤모델",
+    hint: "A 묘사(인물): 구체 습관 나열 후 '롤모델'로. Day4 1순위",
+    keyEnglish: "He's a real role model for me when it comes to health.",
+    fullScript: "The healthiest person I know is my father — he's incredibly disciplined. He wakes up at 4 a.m. and hikes the mountain near our home, where there's a small outdoor gym, and works out for over an hour. He's also careful about food; he avoids sugar and greasy meals, and he hasn't touched alcohol in over ten years. Honestly, he's more muscular than I am, even now. Between his daily exercise and his strict diet, that's how he stays in such great shape. He's a real role model for me when it comes to health.",
+    keywords: ["healthiest person", "incredibly disciplined", "wakes up at 4 a.m.", "hasn't touched alcohol", "role model"],
+    mustUse: [
+      { en: "The healthiest person I know is ~", ko: "제가 아는 가장 건강한 사람은 ~ (도입)" },
+      { en: "he's incredibly disciplined", ko: "엄청나게 자기관리를 해요 (핵심 특징)" },
+      { en: "he hasn't touched alcohol in over ten years", ko: "10년 넘게 금주했어요 (강한 디테일)" },
+      { en: "He's a real role model for me", ko: "제겐 진짜 롤모델이에요 (마무리)" }
+    ] },
+  { cat: "desc", set: "day4", title: "⭐D4-5 건강 위해 하는 일 — 현재시제+영양제",
+    koreanFlow: "몇 가지 단순 습관 → 사무실 근처 헬스장 주3회(웨이트+유산소) → 매일 비타민·영양제(비타민C·오메가3) → 작아 보여도 '나를 챙긴다'는 안정감 → 채소 늘리고 당 줄임 → 극단적이진 않지만 꾸준한 작은 습관이 도움",
+    hint: "B 루틴: 반드시 현재시제+영양제(선생님 포인트). Day4 1순위",
+    keyEnglish: "Those small, steady habits help me feel healthier and more energetic.",
+    fullScript: "To stay healthy, I try to keep a few simple habits. I go to the gym near my office about three times a week, mostly to lift and do some cardio. I also take vitamins and supplements every day — things like vitamin C and omega-3. It might sound small, but having that daily routine gives me a kind of peace of mind, like I'm really taking care of myself. As for food, I try to eat more vegetables and cut down on sugar and greasy food. I'm not extreme about it, but those small, steady habits help me feel healthier and more energetic.",
+    keywords: ["a few simple habits", "three times a week", "take vitamins and supplements", "peace of mind", "small steady habits"],
+    mustUse: [
+      { en: "I try to keep a few simple habits", ko: "몇 가지 단순한 습관을 지켜요 (도입)" },
+      { en: "I also take vitamins and supplements every day", ko: "매일 비타민·영양제를 먹어요 (필수 포인트)" },
+      { en: "gives me a kind of peace of mind", ko: "일종의 안정감을 줘요 (감정)" },
+      { en: "I'm not extreme about it, but ~", ko: "극단적이진 않지만 ~ (균형)" }
+    ] },
+  { cat: "opi", set: "day4", title: "⭐D4-6 세대별 건강관 비교",
+    koreanFlow: "건강한 사람 개념이 세대별로 변함 → 부모 세대: 담배·술 안 하고 몸 튼튼, 하루종일 일할 체력 → 지금: 몸+마음 둘 다, 워라밸·스트레스 관리·영양제·헬스 → 초점이 몸→마음까지 확장 → 내 생각엔 현대 관점이 더 균형적·건강함",
+    hint: "F 비교+G: 예전(몸)↔지금(몸+마음). 내 의견으로 마무리. Day4 1순위",
+    keyEnglish: "Real health isn't only about the body — it's about feeling balanced in your whole life.",
+    fullScript: "I think the idea of a 'healthy person' has changed between generations. For my parents' generation, a healthy person mostly meant someone who didn't smoke or drink and was physically tough — strong enough to work hard all day. These days, we care about both physical and mental health. People talk about work-life balance, managing stress, taking supplements, and going to the gym. So the focus has expanded from just the body to the mind as well. Personally, I think the modern view is healthier overall, because real health isn't only about the body — it's about feeling balanced in your whole life.",
+    keywords: ["changed between generations", "physically tough", "both physical and mental", "work-life balance", "balanced"],
+    mustUse: [
+      { en: "has changed between generations", ko: "세대 간에 변했어요 (비교 도입)" },
+      { en: "For my parents' generation, ~ mostly meant ~", ko: "부모 세대엔 주로 ~를 뜻했어요 (과거)" },
+      { en: "the focus has expanded from ~ to ~", ko: "초점이 ~에서 ~로 확장됐어요 (변화)" },
+      { en: "feeling balanced in your whole life", ko: "삶 전체가 균형잡힌 것 (의견 마무리)" }
+    ] },
+  { cat: "opi", set: "day4", title: "⭐D4-7 건강 문제→해결 — 스트레스",
+    koreanFlow: "가장 큰 건 스트레스 → 2년 전 과로, 매일 야식으로 나쁘게 대처 → 급격히 체중↑·피로·불면 → 바뀌어야 함 깨달음 → 며칠 쉬며 진짜 휴식+건강식 → 에너지 회복·숙면·기분 밝아짐 → 휴식은 사치 아닌 필수",
+    hint: "G 이슈(아묻따 #12 만능): stress→나빠짐→휴식→회복→교훈 고정. Day4 1순위. #2와 stress 겹치면 분배",
+    keyEnglish: "That experience taught me that rest isn't a luxury; it's necessary.",
+    fullScript: "If I think about health problems, the biggest one for me is stress. About two years ago, I was overwhelmed with work, and I coped in a bad way — late-night snacking almost every night. I gained weight fast, felt exhausted, and even developed insomnia. At some point I realized something had to change. So I took a few days off, gave myself real rest, and started eating healthier — more fresh food and less junk. Slowly, my energy came back, I slept deeply again, and my mood brightened. That experience taught me that rest isn't a luxury; it's necessary. Now I try to manage my stress before it ever gets that bad again.",
+    keywords: ["the biggest one is stress", "overwhelmed with work", "late-night snacking", "took a few days off", "rest isn't a luxury"],
+    mustUse: [
+      { en: "the biggest one for me is stress", ko: "제겐 가장 큰 건 스트레스예요 (Main Point 고정)" },
+      { en: "I coped in a bad way — ~", ko: "나쁘게 대처했어요 — ~ (악화)" },
+      { en: "At some point I realized something had to change", ko: "바뀌어야 함을 깨달았어요 (전환)" },
+      { en: "rest isn't a luxury; it's necessary", ko: "휴식은 사치가 아니라 필수예요 (교훈)" }
+    ] },
+  { cat: "desc", set: "day4", title: "D4-8 친구 두 명 비교",
+    koreanFlow: "정반대 친한 친구 둘 → 하나는 외향·에너지(여행 계획·웃김), 하나는 차분·사려깊음(잘 듣고 최고의 조언) → 성격 정반대지만 둘 다 의리 → 한 명은 재미, 한 명은 평온 → 균형",
+    hint: "A 묘사(2인 대조): one~ the other~ 구조. Day4 3순위",
+    keyEnglish: "One brings the fun, and the other brings the calm.",
+    fullScript: "I have two close friends who are total opposites. One is really outgoing and full of energy — he's the one who plans every trip and keeps the group laughing. The other is calm and thoughtful; he listens more than he talks, and he gives the best advice when I have a problem. Even though their personalities are completely different, they're both incredibly loyal, and that's what I value most. I think having both kinds of friends keeps my life balanced — one brings the fun, and the other brings the calm.",
+    keywords: ["total opposites", "outgoing and full of energy", "calm and thoughtful", "incredibly loyal", "keeps my life balanced"],
+    mustUse: [
+      { en: "I have two close friends who are total opposites", ko: "정반대인 친한 친구 둘 (대조 도입)" },
+      { en: "One is ~. The other is ~", ko: "하나는~ 다른 하나는~ (대조 구조)" },
+      { en: "they're both incredibly loyal", ko: "둘 다 정말 의리 있어요 (공통점)" },
+      { en: "one brings the fun, and the other brings the calm", ko: "하나는 재미, 하나는 평온 (마무리)" }
+    ] },
+  { cat: "desc", set: "day4", title: "D4-9 친구와 최근 대화 주제",
+    koreanFlow: "모이면 부동산·투자 얘기로 시작(금융권이라 의견 물음) → 집값·경제 한참 토론 → 그러다 옛 추억(학창시절·여행)으로 흘러감 → 실용+추억 섞임이 좋음 → 그게 만나고 싶은 이유",
+    hint: "B 묘사: 실용(부동산)+추억의 믹스. Day4 3순위",
+    keyEnglish: "We talk about serious stuff, but we always end the night laughing about the past.",
+    fullScript: "When my friends and I get together these days, we usually start by talking about real estate and investing. Since I work in finance, they often ask me for my opinion, and we end up debating housing prices and the economy for a while. But after that, we always drift into old memories — funny stories from our school days, trips we took, things like that. I really like that mix; we talk about serious, practical stuff, but we always end the night laughing about the past. That balance is why I look forward to seeing them.",
+    keywords: ["get together", "real estate and investing", "debating housing prices", "drift into old memories", "that mix"],
+    mustUse: [
+      { en: "we usually start by talking about ~", ko: "보통 ~ 얘기로 시작해요 (도입)" },
+      { en: "they often ask me for my opinion", ko: "제 의견을 자주 물어봐요 (역할)" },
+      { en: "we always drift into old memories", ko: "늘 옛 추억으로 흘러가요 (전환)" },
+      { en: "That balance is why I look forward to ~", ko: "그 균형이 ~를 기대하는 이유예요 (마무리)" }
+    ] },
+  { cat: "exp", set: "day5", title: "⭐D5-1 날씨로 약속 못 감 — 결혼식",
+    koreanFlow: "친구 결혼식 가고팠음 → 한 주 내내 폭우 예보 → 일찍 출발했지만 도로 침수·교통지옥 → 못 갈 걸 깨달음, 패닉+죄책감 → 전화로 거듭 사과, 다행히 이해 → 나중에 따로 축하 → 교훈: 악천후엔 지하철",
+    hint: "C 경험(아묻따 #2): 상황→문제→감정→수습→교훈. #2(태풍여행)와 다른 사건으로. Day5 1순위",
+    keyEnglish: "That day taught me to just take the subway when the weather looks bad.",
+    fullScript: "Let me tell you about a time I couldn't make it to something important because of the weather. A couple of years ago, one of my close friends was getting married, and I really wanted to be there. But the forecast had been warning about heavy rain all week. I left home earlier than usual, hoping I'd still make it. At first the drive was okay, but soon it poured so hard I could barely see the road. The traffic was a nightmare, and the more time passed, the more I realized I wasn't going to make it. I felt a mix of panic and guilt, because I hated letting my friend down on such a big day. In the end, I called him and apologized over and over, and thankfully he understood. We celebrated together later, but I still remember how stuck and stressed I felt. That day taught me to just take the subway when the weather looks bad.",
+    keywords: ["getting married", "warning about heavy rain", "traffic was a nightmare", "panic and guilt", "take the subway"],
+    mustUse: [
+      { en: "Let me tell you about a time I couldn't ~", ko: "~ 못 했던 때를 얘기할게요 (C형 도입)" },
+      { en: "it poured so hard I could barely see ~", ko: "비가 너무 와서 ~도 안 보였어요 (생생)" },
+      { en: "I felt a mix of panic and guilt", ko: "패닉과 죄책감이 섞였어요 (감정)" },
+      { en: "That day taught me to ~", ko: "그날 ~하라는 교훈을 얻었어요 (마무리)" }
+    ] },
+  { cat: "exp", set: "day5", title: "⭐D5-2 여행 취소·연기 — 태풍",
+    koreanFlow: "친구들과 주말여행 계획 → 며칠 전 태풍 북상 뉴스 → 한참 고민 끝 연기(안전 우선, 갇혀있긴 싫음) → 실망했지만 2주 뒤 재예약 → 그때 날씨 완벽, 오히려 더 좋았음 → 위험한 날씨에 여행은 안 됨",
+    hint: "C 경험(아묻따 #2): #1(결혼식)과 다른 사건. 연기 결정→결과 호전. Day5 1순위",
+    keyEnglish: "Postponing was the right call — it's never worth risking a trip in dangerous weather.",
+    fullScript: "There was a time my travel plans got canceled because of the weather. I'd planned a weekend trip with friends, but a few days before, the news kept warning about a typhoon heading toward the area. We debated for a while, but in the end we decided to postpone, because safety comes first, and nobody wants to spend a whole trip stuck indoors. I was pretty disappointed, since I'd been looking forward to it. But we rebooked for a couple of weeks later, and honestly, the weather was perfect then, so the trip turned out even better. Looking back, postponing was the right call — it's never worth risking a trip in dangerous weather.",
+    keywords: ["travel plans got canceled", "a typhoon heading", "decided to postpone", "safety comes first", "turned out even better"],
+    mustUse: [
+      { en: "the news kept warning about ~", ko: "뉴스가 계속 ~를 경고했어요 (문제)" },
+      { en: "we decided to postpone, because safety comes first", ko: "안전이 우선이라 연기했어요 (결정)" },
+      { en: "the trip turned out even better", ko: "여행이 오히려 더 좋았어요 (반전 결과)" },
+      { en: "postponing was the right call", ko: "연기가 옳은 선택이었어요 (교훈)" }
+    ] },
+  { cat: "exp", set: "day5", title: "D5-3 기억나는 여행 — 중국 가족여행",
+    koreanFlow: "가장 기억=첫 해외, 10살쯤 중국, 온 가족 → 책으로만 보던 명소 실물 → 만리장성 압도, 산 넘어 끝없이·계단 가팔라 금방 지침 → 자금성 금빛 지붕·끝없는 붉은 벽 → 역사가 실감남 → 지금도 역사적 장소 좋아함",
+    hint: "E 경험(아묻따 #6): 명소 두 곳+감각 묘사. Day5 2순위",
+    keyEnglish: "Seeing those places in person made history feel real to me.",
+    fullScript: "The most memorable trip I've taken was my first trip abroad, to China, when I was about ten years old — my whole family went. What I remember most is seeing famous landmarks I'd only seen in books. The Great Wall completely blew me away; in person, it stretched endlessly across the mountains, and the steps were so steep that I got tired quickly. The Forbidden City was just as stunning, with its golden roofs and endless red walls. As a kid, I couldn't fully understand the history, but seeing those places in person made history feel real to me. Because of that trip, I still love visiting historic places whenever I travel somewhere new.",
+    keywords: ["first trip abroad", "only seen in books", "blew me away", "golden roofs", "history feel real"],
+    mustUse: [
+      { en: "What I remember most is ~", ko: "가장 기억나는 건 ~ (도입)" },
+      { en: "~ completely blew me away", ko: "~에 완전히 압도됐어요 (감정)" },
+      { en: "in person, it stretched endlessly", ko: "실물은 끝없이 펼쳐졌어요 (감각)" },
+      { en: "made history feel real to me", ko: "역사가 실감났어요 (의미 마무리)" }
+    ] },
+  { cat: "exp", set: "day5", title: "⭐D5-4 여행지 분실 — 파리 소매치기",
+    koreanFlow: "파리 붐비는 지하철 → 지갑 꺼내려니 사라짐, 소매치기 → 카드·신분증 생각에 패닉 → but 다 망치지 않으려 침착 → 앱으로 카드 즉시 정지, 경찰 신고 → 급한 일 처리 후 남은 여행 안 망치기로 → 교훈: 앞주머니·지퍼백",
+    hint: "E 경험(아묻따 #3 변형): 패닉→침착 대응→교훈. Day5 1순위",
+    keyEnglish: "Always keep your valuables in a front pocket or a zipped bag.",
+    fullScript: "One unforgettable travel experience was when I got pickpocketed in Paris. I was on a crowded metro near a famous tourist spot, and when I reached for my wallet, it was just gone. For a second I froze — my cards and ID were all inside. I felt that sinking, panicked feeling. But instead of letting it ruin everything, I tried to stay calm. I immediately canceled my cards through the app and reported it at a nearby police station. It was stressful, but once I'd handled the urgent things, I decided not to let it spoil the rest of my trip. Looking back, it taught me an important lesson — when traveling, always keep your valuables in a front pocket or a zipped bag, especially in crowded places.",
+    keywords: ["got pickpocketed in Paris", "crowded metro", "it was just gone", "stay calm", "front pocket"],
+    mustUse: [
+      { en: "when I reached for my ~, it was just gone", ko: "~를 꺼내려니 사라졌어요 (문제)" },
+      { en: "For a second I froze", ko: "순간 얼어붙었어요 (감정)" },
+      { en: "instead of letting it ruin everything, I tried to stay calm", ko: "다 망치지 않으려 침착했어요 (대응)" },
+      { en: "it taught me an important lesson — ~", ko: "중요한 교훈을 얻었어요 — ~ (마무리)" }
+    ] },
+  { cat: "rp", set: "day5", title: "D5-5 RP 파티 준비문의 (대화형)",
+    koreanFlow: "초대 고마움 → Q1 몇 명?→반응 → Q2 뭐 가져갈까(술/음식)?→반응 → Q3 드레스코드?→반응 → Q4 몇 시·주소 → 기대",
+    hint: "질문형 대화: 반응 끼우기. Day5 2순위",
+    keyEnglish: "Should I bring anything — maybe some drinks or a dish?",
+    fullScript: "Hey, thanks for inviting me to your party! I'm really looking forward to it, but I have a few questions. First, how many people are coming? ... Oh, around ten? Nice, that's a good size. Second, should I bring anything — maybe some drinks or a dish? ... Oh, just drinks? Got it. Third, is there a dress code, or can I just come casual? ... Okay, casual works for me. And last, what time should I arrive, and can you text me the address? ... Perfect. Thanks again — I can't wait!",
+    keywords: ["thanks for inviting", "how many people", "bring anything", "dress code", "text me the address"],
+    mustUse: [
+      { en: "thanks for inviting me to ~", ko: "~에 초대해줘서 고마워 (도입)" },
+      { en: "Oh, around ten? Nice", ko: "오 열 명쯤? 좋네 (반응)" },
+      { en: "is there a dress code, or can I just come casual?", ko: "드레스코드 있어, 아님 캐주얼? (질문)" },
+      { en: "I can't wait!", ko: "너무 기대돼! (마무리)" }
+    ] },
+  { cat: "rp", set: "day5", title: "⭐D5-6 RP 파티 가다 차 고장 (대화형)",
+    koreanFlow: "사과+비상상황 → (현재완료) 가는 길에 차 고장 → 안전하게 갓길, 견인 기다리는 중 → 얼마나 걸릴지 모름 → 곧 온다 한 척 → 솔직히 많이 늦거나 못 갈 수도 → 못 가면 다른 날 만날까? → 꼭 보상할게",
+    hint: "문제형 대화: 차고장→연기 제안. 현재완료(has broken down). Day5 1순위",
+    keyEnglish: "My car has suddenly broken down on the road. Could we maybe meet another day instead?",
+    fullScript: "Hey, I'm so sorry, but I have a bit of an emergency. I'm on my way to your party, but my car has suddenly broken down on the road. Don't worry, I've pulled over safely, and I'm waiting for roadside assistance right now. The problem is, I don't know how long it'll take. ... Oh, you think they might come soon? I hope so. But honestly, I might be really late, or I might not make it at all tonight. ... If I can't make it, could we maybe meet another day instead? I'd hate to miss seeing everyone. ... Thanks for understanding. I'll definitely make it up to you. Again, I'm really sorry.",
+    keywords: ["a bit of an emergency", "has suddenly broken down", "pulled over safely", "might not make it", "make it up to you"],
+    mustUse: [
+      { en: "my car has suddenly broken down", ko: "차가 갑자기 고장났어요 (현재완료 문제)" },
+      { en: "I've pulled over safely", ko: "안전하게 갓길에 댔어요 (안심)" },
+      { en: "could we maybe meet another day instead?", ko: "대신 다른 날 만날까요? (대안)" },
+      { en: "I'll definitely make it up to you", ko: "꼭 보상할게요 (마무리)" }
+    ] },
+  { cat: "rp", set: "day5", title: "D5-7 RP 약속 문의 — 영양사 (대화형)",
+    koreanFlow: "영양사 예약하려 함 → Q1 이번 주 빈 자리?→반응 → Q2 상담 시간?→반응 → Q3 검진 결과·식단 기록 가져갈까?→반응 → Q4 변경 쉬운가? → 목요일 오후로 확정",
+    hint: "질문형 대화: 반응 끼우기. Day5 2순위",
+    keyEnglish: "Should I bring anything — maybe my recent health checkup results?",
+    fullScript: "Hi, I'd like to make an appointment with a nutritionist, and I have a few quick questions. First, do you have any openings this week? ... Oh, Thursday afternoon is open? That could work. Second, how long does a session usually take? ... Okay, about an hour, good to know. Third, should I bring anything — maybe my recent health checkup results, or a record of what I eat? ... Got it, I'll prepare those. And last, if something comes up, is it easy to reschedule? ... Great, that's reassuring. Then let's go with Thursday afternoon. Thank you so much!",
+    keywords: ["make an appointment", "openings this week", "how long does a session", "health checkup results", "easy to reschedule"],
+    mustUse: [
+      { en: "I'd like to make an appointment with ~", ko: "~ 예약하고 싶어요 (도입)" },
+      { en: "Oh, Thursday afternoon is open? That could work", ko: "오 목요일 오후 비어요? 괜찮네요 (반응)" },
+      { en: "is it easy to reschedule?", ko: "변경하기 쉬운가요? (질문)" },
+      { en: "Then let's go with ~", ko: "그럼 ~로 할게요 (확정 마무리)" }
+    ] },
+  { cat: "rp", set: "day5", title: "⭐D5-8 RP 약속 변경 (대화형·대안체인)",
+    koreanFlow: "DH인데 오늘 6시 약속 → 사과, 상사가 야근 시킴 못 감 → 변경 가능? → 내일 꽉 찼다 한 척 → 그럼 주말(토요일 오전)? → 그것도 빡빡한 척 → 그럼 전화상담으로? → 좋다, 그걸로 → 유연함 감사·재사과",
+    hint: "문제형 대화: 6시 안됨→내일 안됨→주말→전화상담 체인. Day5 1순위",
+    keyEnglish: "Could we possibly reschedule? Would a short phone consultation be possible instead?",
+    fullScript: "Hi, this is DH — I have an appointment with the nutritionist at 6 p.m. today. I'm really sorry, but something has come up at work; my boss just asked me to stay late, so I don't think I can make it. Could we possibly reschedule? ... Oh, tomorrow is fully booked? I see. Then would the weekend work, maybe Saturday morning? ... Hmm, that's tight too. In that case, would a short phone consultation be possible instead, just to cover the basics? ... Okay, that sounds good — let's do that. Thank you so much for being flexible, and again, I'm sorry for the trouble.",
+    keywords: ["this is DH", "something has come up", "reschedule", "Saturday morning", "phone consultation"],
+    mustUse: [
+      { en: "something has come up at work", ko: "회사에 일이 생겼어요 (사유)" },
+      { en: "Could we possibly reschedule?", ko: "혹시 변경 가능할까요? (대안1)" },
+      { en: "Then would the weekend work, maybe ~?", ko: "그럼 주말은요, ~ 어때요? (대안2)" },
+      { en: "would a short phone consultation be possible instead?", ko: "대신 짧은 전화상담 가능할까요? (대안3)" }
+    ] },
+  { cat: "desc", set: "day6", title: "⭐D6-1 hair salon 묘사 — 사무실 근처/실력",
+    koreanFlow: "사무실 근처 Juno Hair, 퇴근 후 들르기 좋음 → 깨끗·잘 관리, 직원 친절 → 환영받는 느낌 → but 핵심: 미용사 실력 좋아 매번 편함 → 몇 달 전 첫 방문에 만족해 단골 됨 → 화려하진 않지만 편안함·믿음이 비결",
+    hint: "A 묘사: near office+실력 한 가지. Day6 1순위",
+    keyEnglish: "That comfort and trust are exactly why I keep going back.",
+    fullScript: "I'm going to talk about the hair shop I often go to — it's a Juno Hair branch near my office, so it's really easy to drop by after work. It's clean and well-maintained, and the staff is very kind and friendly, so whenever I go there, I feel welcomed and well-treated. But what I like the most is that the hairdresser is so skilled that I feel completely comfortable every time I get my hair cut. When I first visited a few months ago, I was so satisfied that I became a regular, and now I go there regularly. It's not a fancy place, but that comfort and trust are exactly why I keep going back.",
+    keywords: ["near my office", "clean and well-maintained", "hairdresser is so skilled", "became a regular", "comfort and trust"],
+    mustUse: [
+      { en: "it's really easy to drop by after work", ko: "퇴근 후 들르기 좋아요 (위치 장점)" },
+      { en: "I feel welcomed and well-treated", ko: "환영받는 느낌이에요 (분위기)" },
+      { en: "what I like the most is that ~", ko: "가장 좋은 건 ~ (좁히기)" },
+      { en: "that comfort and trust are exactly why ~", ko: "그 편안함과 믿음이 바로 ~ 이유예요 (마무리)" }
+    ] },
+  { cat: "desc", set: "day6", title: "D6-2 hair salon 하는 것 — 순서",
+    koreanFlow: "들어가면 접수에 이름(온라인 예약) → 대기하며 폰 → 미용사에게 스타일 말함(짧게, 이미 앎) → 30분 컷 → 머리 감겨줌 → '맘에 들어요!' → 상쾌하게 나옴",
+    hint: "B 묘사: 시간 순서. 마지막 refreshed 감정. Day6 2순위",
+    keyEnglish: "Walking out with a fresh haircut always makes me feel refreshed.",
+    fullScript: "When I walk in, I usually tell the receptionist my name, since I normally make an appointment online. Then they ask me to wait in the waiting area until my hairdresser is ready, so I just surf the internet on my phone for a bit, because it doesn't take long. After that, I tell my hairdresser what kind of style I want, though our conversation is pretty short, because she already knows what I like. After about thirty minutes of cutting, she washes my hair, and it's done. She always asks if I like it, and I always say, 'It looks great!' Even when I'm busy, walking out with a fresh haircut always makes me feel refreshed.",
+    keywords: ["tell the receptionist my name", "appointment online", "she already knows", "thirty minutes", "refreshed"],
+    mustUse: [
+      { en: "When I walk in, I usually ~", ko: "들어가면 보통 ~해요 (순서 도입)" },
+      { en: "our conversation is pretty short, because she already knows ~", ko: "이미 알아서 대화는 짧아요 (단골 디테일)" },
+      { en: "I always say, 'It looks great!'", ko: "늘 '맘에 들어요!' 해요 (생생)" },
+      { en: "makes me feel refreshed", ko: "상쾌해져요 (감정 마무리)" }
+    ] },
+  { cat: "exp", set: "day6", title: "⭐D6-3 hair salon 기억 경험 — 발표 전날",
+    koreanFlow: "중요한 발표 전날 → 긴장돼서 컷하러 감 → 발표 얘기하니 미용사가 깔끔·샤프하게 신경 → 거울 보니 자신감↑, 준비된 느낌 → 다음날 그 작은 부스트가 도움 → 사소하지만 큰 차이",
+    hint: "E 경험(아묻따 #13 연예인 버전 대체 가능): 긴장→컷→자신감. Day6 1순위",
+    keyEnglish: "A good haircut at the right moment can change how you carry yourself.",
+    fullScript: "One memorable experience was the night before an important presentation at work. I was nervous, so I decided to get a haircut to feel more put-together. I told my stylist about the presentation, and he took extra care to make it look really clean and sharp. When I looked in the mirror, I actually felt more confident, like I was ready. The next day, walking into that meeting, that small boost really helped. It sounds minor, but a good haircut at the right moment can change how you carry yourself. I still remember how much more confident I felt that day.",
+    keywords: ["the night before an important presentation", "get a haircut", "clean and sharp", "felt more confident", "small boost"],
+    mustUse: [
+      { en: "the night before an important ~", ko: "중요한 ~ 전날 (E형 도입)" },
+      { en: "to feel more put-together", ko: "더 단정해 보이려고 (이유)" },
+      { en: "When I looked in the mirror, I actually felt ~", ko: "거울 보니 정말 ~ 느꼈어요 (감정)" },
+      { en: "It sounds minor, but ~", ko: "사소하게 들리지만 ~ (의미 마무리)" }
+    ] },
+  { cat: "desc", set: "day6", title: "⭐D6-4 자주 가는 beach 묘사",
+    koreanFlow: "집서 1.5시간 → 몇 달에 한 번, 친한 친구들과 → 바다 바로 옆, 길고 넓은 해안선·고운 모래 → 깨끗·잘 관리 → 편안·이완 → 도심서 멀어 안 붐빔 → 방해 없이 해안 산책 → 화려하진 않지만 그 순간이 남음",
+    hint: "A 묘사: 위치·거리·빈도·동행+한 가지(한적함). 돌려막기 표현 풀세트. Day6 1순위",
+    keyEnglish: "It's not anything fancy, but those quiet moments by the water always stay with me.",
+    fullScript: "One beach I really like is about an hour and a half from my home, so I usually go there once every few months with my close friends. The first thing you notice is that it's right next to the ocean, with a long, wide shoreline and soft sand. Everything is clean and well-maintained, so it feels really comfortable and relaxing. Since it's a bit far from downtown, it's never too crowded, and I love that — you can walk along the shore without any interruption. It's not anything fancy, but those quiet moments by the water always stay with me, and that's exactly why it's my favorite beach.",
+    keywords: ["an hour and a half", "right next to the ocean", "clean and well-maintained", "far from downtown", "stay with me"],
+    mustUse: [
+      { en: "about ~ from my home, I go there once every ~", ko: "집서 ~ 거리, ~마다 가요 (위치·빈도)" },
+      { en: "The first thing you notice is ~", ko: "가장 먼저 눈에 띄는 건 ~ (묘사 도입)" },
+      { en: "it's clean and well-maintained, so it feels comfortable and relaxing", ko: "깨끗·관리 잘돼 편안해요 (돌려막기)" },
+      { en: "those quiet moments always stay with me", ko: "그 조용한 순간이 남아요 (마무리)" }
+    ] },
+  { cat: "desc", set: "day6", title: "D6-5 beach 하는 활동",
+    koreanFlow: "느긋하게 → 먼저 해안 산책, 파도 소리 → 핵심은 음식, 그 지역 해산물 유명 → 친구들과 구운 생선·해물탕, 가끔 바베큐 → 저녁엔 노을·사진·바다뷰 → 남들은 수영·모래놀이, 나는 산책+해산물+노을이 리셋",
+    hint: "B 묘사: 남들 vs 나. 산책+해산물+노을 핵심. Day6 2순위",
+    keyEnglish: "Walking and eating fresh seafood by the sea is the perfect way to reset.",
+    fullScript: "When I go to the beach, I keep it pretty relaxed. I usually start with a long walk along the shore, listening to the waves. After that, the best part is the food — the area is known for fresh seafood, so my friends and I always grab something at a local restaurant, like grilled fish or seafood soup. Sometimes we even do a small barbeque together. In the evening, we just sit and watch the sunset, take a few photos, and enjoy the ocean view. Other people swim or play in the sand, but for me, walking and eating fresh seafood by the sea is the perfect way to reset.",
+    keywords: ["keep it pretty relaxed", "walk along the shore", "known for fresh seafood", "watch the sunset", "reset"],
+    mustUse: [
+      { en: "I keep it pretty relaxed", ko: "느긋하게 보내요 (도입)" },
+      { en: "the best part is the food", ko: "가장 좋은 건 음식이에요 (좁히기)" },
+      { en: "Other people ~, but for me, ~", ko: "남들은 ~, 저는 ~ (대조)" },
+      { en: "the perfect way to reset", ko: "완벽한 리셋 방법이에요 (마무리)" }
+    ] },
+  { cat: "exp", set: "day6", title: "⭐D6-6 beach memorable — LA Redondo 크랩하우스",
+    koreanFlow: "가장 기억=LA 석사 시절 레돈도비치 → 부둣가 해산물 식당 유명, 최애는 크랩하우스(직접 고르면 신선하게) → 나무망치로 직접 게 깨 먹는 재미 → 친구들과 껍질 깨며 엉망 만들고 웃음 → 시간 순삭 → 화려하진 않지만 그 행복한 오후가 남음",
+    hint: "E 경험: busking(음악)과 안 겹치게 '바다+게+친구들 웃음'. Day6 1순위",
+    keyEnglish: "That simple, happy afternoon by the ocean always stays with me.",
+    fullScript: "The most memorable beach experience I've had was at Redondo Beach, back when I was doing my master's in LA. It's known for its seafood restaurants right on the pier, and my favorite was a crab house where you pick what you want and they serve it fresh. The fun part was that they gave us a wooden hammer to crack the crab open ourselves and get to the delicious meat inside. My friends and I were laughing the whole time, cracking shells and making a mess. Honestly, time just flew because we were having so much fun. It wasn't anything fancy, but that simple, happy afternoon by the ocean always stays with me.",
+    keywords: ["Redondo Beach", "master's in LA", "crab house", "wooden hammer", "laughing the whole time"],
+    mustUse: [
+      { en: "back when I was doing my master's in LA", ko: "LA 석사 시절에 (시점 도입)" },
+      { en: "The fun part was that ~", ko: "재미있던 건 ~ (하이라이트)" },
+      { en: "time just flew because we were having so much fun", ko: "너무 즐거워 시간이 순삭됐어요 (감정)" },
+      { en: "that simple, happy afternoon always stays with me", ko: "그 단순하고 행복한 오후가 남아요 (마무리)" }
+    ] },
+  { cat: "exp", set: "day6", title: "⭐D6-7 movie 문제 경험 — 예매 시간 오류",
+    koreanFlow: "앱으로 예매했는데 시간 잘못 봄 → 도착하니 영화 이미 시작 → 기대했던 터라 당황 → 카운터에 상황 설명 → 직원이 친절히 1시간 뒤 다음 회차로 무료 변경 → 기다리며 커피 → 오히려 잘 풀림 → 이후 예매 직후 시간·관 재확인",
+    hint: "E 경험: 실수→직원 해결→교훈. Day6 1순위",
+    keyEnglish: "It taught me to slow down when I'm reserving things.",
+    fullScript: "Let me tell you about a problem I had at the movies. I'd booked tickets through an app, but somehow I got the time wrong — by the time we arrived, the movie had already started. I panicked a little, because we'd been looking forward to it. So I went to the counter and explained the situation to the staff. Luckily, they were really nice and moved us to the next showing about an hour later, at no extra charge. We grabbed a coffee while we waited, so it actually worked out fine. Since then, I always double-check the time and the theater right after I book. It taught me to slow down when I'm reserving things.",
+    keywords: ["booked tickets through an app", "got the time wrong", "already started", "next showing", "double-check"],
+    mustUse: [
+      { en: "somehow I got the time wrong", ko: "어쩌다 시간을 잘못 봤어요 (문제)" },
+      { en: "I panicked a little, because ~", ko: "~라서 좀 당황했어요 (감정)" },
+      { en: "moved us to the next showing at no extra charge", ko: "무료로 다음 회차로 바꿔줬어요 (해결)" },
+      { en: "Since then, I always double-check ~", ko: "그 후로 늘 ~를 재확인해요 (교훈)" }
+    ] },
+  { cat: "desc", set: "day6", title: "D6-8 movie 취향 — SF/현실 탈출",
+    koreanFlow: "가장 좋아하는 장르=SF, 특히 우주물 → 일상 너머 상상하게 함(먼 행성·미래·인류의 미래) → 스트레스 주간 뒤 완벽한 탈출, 2시간 현실 잊음 → 좋은 작품은 생각하게 함 → 며칠 머릿속에 남음 → SF는 오락 넘어 잠시 세상 밖으로",
+    hint: "A 묘사: 'sci-fi=현실 탈출' 한 가지. Project Hail Mary 대체 가능. Day6 2순위",
+    keyEnglish: "For me, sci-fi isn't just entertainment — it's a way to step outside my normal world.",
+    fullScript: "My favorite genre is science fiction, especially space stories. I love how they make me imagine things far beyond my everyday life — distant planets, the future, what humans might become. After a stressful week at work, a good sci-fi movie is the perfect escape; for two hours, I completely forget about reality. What I like most is that the good ones make me think, not just watch. Sometimes I keep thinking about the story for days afterward. So for me, sci-fi isn't just entertainment — it's a way to step outside my normal world for a little while.",
+    keywords: ["science fiction", "imagine things far beyond", "perfect escape", "make me think", "step outside my normal world"],
+    mustUse: [
+      { en: "My favorite genre is ~, especially ~", ko: "가장 좋아하는 장르는 ~, 특히 ~ (도입)" },
+      { en: "a good ~ is the perfect escape", ko: "좋은 ~는 완벽한 탈출이에요 (핵심)" },
+      { en: "the good ones make me think, not just watch", ko: "좋은 건 보게만 하지 않고 생각하게 해요 (포인트)" },
+      { en: "a way to step outside my normal world", ko: "일상 밖으로 나가는 방법 (마무리)" }
+    ] },
+  { cat: "desc", set: "day6", title: "⭐D6-9 집에서 보낸 vacation",
+    koreanFlow: "지난 휴가 아무 데도 안 감, 아내와 집 → 딱 필요했던 것 → 넷플릭스 많이·최애 배달·낮잠 → 계획·짐·교통 없음 → 여행은 피곤할 때도, 집은 진짜 휴식 → 끝엔 몸·마음 완충 → '집콕 휴가' 지루해 보여도 완벽",
+    hint: "B 묘사+G: 집 활동 재활용. 진짜 휴식 강조. Day6 1순위",
+    keyEnglish: "A 'home vacation' might sound boring, but for me, it was perfect.",
+    fullScript: "For my last vacation, I didn't go anywhere — I just stayed home with my wife, and honestly, it was exactly what I needed. We watched a lot of Netflix, ordered our favorite delivery food, and took long naps in the afternoon. There were no plans, no packing, and no traffic to deal with. Sometimes traveling can be tiring, so staying home felt like real rest for once. By the end, I felt completely recharged, both physically and mentally. So a 'home vacation' might sound boring to some people, but for me, it was perfect.",
+    keywords: ["didn't go anywhere", "stayed home", "no plans no packing", "real rest", "completely recharged"],
+    mustUse: [
+      { en: "it was exactly what I needed", ko: "딱 필요했던 거예요 (의미)" },
+      { en: "There were no plans, no packing, and no traffic", ko: "계획·짐·교통이 없었어요 (장점 나열)" },
+      { en: "staying home felt like real rest for once", ko: "집에 있는 게 진짜 휴식 같았어요 (핵심)" },
+      { en: "might sound boring, but for me, it was perfect", ko: "지루해 보여도 제겐 완벽했어요 (마무리)" }
+    ] },
+  { cat: "exp", set: "day6", title: "D6-10 집 vacation 기억나는 일",
+    koreanFlow: "나가려 계획했던 날 → 아침에 완전 지쳐서 깸 → 그냥 집에 있기로 → 종일 드라마+배달 소파에서 → 처음엔 하루 버리나 싶었지만 오히려 완충 → 가끔 아무것도 안 해도 괜찮음 깨달음, 휴식은 낭비 아님 → 아무것도 안 한 날이 최애 기억",
+    hint: "E 경험: 계획 무산→집콕→회복. '휴식은 낭비 아님' 교훈. Day6 2순위",
+    keyEnglish: "I realized it's okay to do nothing sometimes — rest isn't wasted time.",
+    fullScript: "One memorable home vacation day was when we'd actually planned to go out. But that morning, I woke up completely exhausted, so we decided to just stay in. We ended up watching dramas all day and eating delivery food on the couch. At first I thought I'd feel guilty for wasting the day, but instead I felt totally recharged. That day I realized it's okay to do nothing sometimes — rest isn't wasted time. It's funny that one of my favorite memories is a day when I did absolutely nothing, but that's exactly why I remember it.",
+    keywords: ["planned to go out", "woke up completely exhausted", "stay in", "felt totally recharged", "rest isn't wasted"],
+    mustUse: [
+      { en: "we'd actually planned to go out", ko: "원래 나가려 했어요 (도입)" },
+      { en: "At first I thought I'd feel guilty, but instead ~", ko: "처음엔 죄책감 들 줄, 오히려 ~ (반전)" },
+      { en: "it's okay to do nothing sometimes", ko: "가끔 아무것도 안 해도 괜찮아요 (교훈)" },
+      { en: "that's exactly why I remember it", ko: "그래서 더 기억나요 (마무리)" }
+    ] },
+  { cat: "desc", set: "day6", title: "⭐D6-11 국내여행 어디 가는지 — 강릉·속초",
+    koreanFlow: "국내여행은 주로 동해안, 강릉·속초 → 한 번에 다 있음: 해변·바다뷰·유명 커피·신선 해산물 → 서울서 2시간인데 바다 보면 멀리 온 느낌 → 해안 드라이브·물가 카페·휴식 → 짧고 쉬운 탈출엔 동해안이 1순위",
+    hint: "A 묘사: 동해안 한 곳+감정. 돌려막기. Day6 1순위",
+    keyEnglish: "For a short, easy escape, the east coast is always my first choice.",
+    fullScript: "When I travel inside Korea, I usually head to the east coast, places like Gangneung or Sokcho. I love them because you get everything in one trip — the beach, an ocean view, famous coffee shops, and really fresh seafood. The best part is that they're only a couple of hours from Seoul, but the moment I see the ocean, it feels like I'm far away from everything. I usually drive along the coast, stop at a cafe by the water, and just relax. So for a short, easy escape, the east coast is always my first choice.",
+    keywords: ["east coast", "Gangneung or Sokcho", "everything in one trip", "a couple of hours from Seoul", "short easy escape"],
+    mustUse: [
+      { en: "I usually head to ~, places like ~", ko: "보통 ~로 가요, ~ 같은 곳 (도입)" },
+      { en: "you get everything in one trip — ~", ko: "한 번에 다 있어요 — ~ (장점)" },
+      { en: "the moment I see the ocean, it feels like ~", ko: "바다 보는 순간 ~ 느낌 (감정)" },
+      { en: "the east coast is always my first choice", ko: "동해안이 늘 1순위예요 (마무리)" }
+    ] },
+  { cat: "exp", set: "day6", title: "D6-12 국내여행 기억 경험 — 우연한 바닷가 카페",
+    koreanFlow: "짧은 동해안 드라이브 → 빡빡한 계획 없이 → 우연히 바닷가 작은 카페 들름 → 유명·화려하진 않아도 조용·뷰 최고·커피 완벽 → 거의 한 시간 파도 보며 별말 없이 → 그 즉흥 정차가 여행의 백미 → 작고 예상 못한 순간이 더 기억남",
+    hint: "E 경험: 무계획→우연→평온. '작은 순간>큰 계획' 교훈. Day6 2순위",
+    keyEnglish: "The small, unexpected moments are often more memorable than the big, planned ones.",
+    fullScript: "One memorable domestic trip was a short drive along the east coast. We didn't have a strict plan, and at some point we randomly stopped at a small cafe right by the sea. It wasn't famous or fancy, but it was quiet, the view was amazing, and the coffee was perfect. We just sat there for almost an hour, watching the waves and not saying much. Looking back, that unplanned stop was the best part of the whole trip. It reminded me that the small, unexpected moments are often more memorable than the big, planned ones. That's why I love road trips along the coast.",
+    keywords: ["short drive", "didn't have a strict plan", "randomly stopped", "unplanned stop", "more memorable"],
+    mustUse: [
+      { en: "We didn't have a strict plan", ko: "빡빡한 계획이 없었어요 (도입)" },
+      { en: "at some point we randomly stopped at ~", ko: "어느 순간 우연히 ~에 들렀어요 (전개)" },
+      { en: "that unplanned stop was the best part", ko: "그 즉흥 정차가 백미였어요 (하이라이트)" },
+      { en: "small, unexpected moments are more memorable than ~", ko: "작고 예상 못한 순간이 더 기억나요 (교훈)" }
+    ] },
+  { cat: "opi", set: "day6", title: "D6-13 최근 본 건강 뉴스 — 수면·정신건강",
+    koreanFlow: "요즘 건강뉴스는 수면·정신건강 → 현대 직장인 수면 부족·고스트레스가 몸·마음에 영향이란 기사 → 주변에서 늘 봐서 공감 → 수면이 집중·기분·체중까지 영향 → 내 생각엔 운동+제대로 된 수면이 영양제보다 기본 → 요즘 수면 지키려 노력",
+    hint: "G 이슈(아묻따 #12 연결): 뉴스+내 느낌+의견. Day6 2순위",
+    keyEnglish: "Exercise and proper sleep are the real basics of health, more than any supplement.",
+    fullScript: "Lately, a lot of the health news I see is about sleep and mental health. There was a recent article saying that many modern workers don't sleep enough and deal with high levels of stress, which affects both their body and mind. It made sense to me, because I see it around me all the time. The article pointed out that good sleep affects almost everything — focus, mood, even weight. Personally, I think exercise and proper sleep are the real basics of health, more than any supplement. So these days, I try harder to protect my sleep instead of staying up late.",
+    keywords: ["sleep and mental health", "modern workers", "affects body and mind", "real basics of health", "protect my sleep"],
+    mustUse: [
+      { en: "a lot of the health news I see is about ~", ko: "요즘 건강뉴스는 대부분 ~ (도입)" },
+      { en: "It made sense to me, because ~", ko: "~라서 공감됐어요 (내 느낌)" },
+      { en: "Personally, I think ~ are the real basics", ko: "제 생각엔 ~가 진짜 기본이에요 (의견)" },
+      { en: "I try harder to protect my sleep", ko: "수면을 지키려 더 노력해요 (마무리)" }
+    ] },
+  { cat: "opi", set: "day6", title: "D6-14 최근 많이 얘기하는 이슈 — AI",
+    koreanFlow: "요즘 가장 많이 얘기하는 건 AI → 주변 다들 갑자기 사용(직장·집·온갖 것), 편하고 빨라서 → 동시에 단점 논쟁 많음: 실수·과의존·일자리 → 신나지만 신중히 현명하게 써야 → 직장·친구 거의 모든 대화에 나옴",
+    hint: "G 이슈: Day2 #10 재활용. 양면+신중. Day6 2순위(별도 연습 불필요)",
+    keyEnglish: "It's the kind of topic that comes up in almost every conversation now.",
+    fullScript: "These days, the issue people talk about the most is AI. Everyone around me is suddenly using it — at work, at home, for all kinds of things — because it's so convenient and helps us work much faster. But at the same time, there's a lot of debate about the downsides. People worry about mistakes, about relying on it too much, and about whether it will replace certain jobs. I find it exciting, but I also think we need to be careful and use it wisely. So it's the kind of topic that comes up in almost every conversation now, whether at work or with friends.",
+    keywords: ["talk about the most is AI", "so convenient", "debate about the downsides", "use it wisely", "every conversation"],
+    mustUse: [
+      { en: "the issue people talk about the most is ~", ko: "가장 많이 얘기하는 건 ~ (도입)" },
+      { en: "But at the same time, there's a lot of debate about ~", ko: "동시에 ~ 논쟁이 많아요 (양면)" },
+      { en: "I find it exciting, but ~ carefully", ko: "신나지만 신중히 ~ (의견)" },
+      { en: "comes up in almost every conversation now", ko: "거의 모든 대화에 나와요 (마무리)" }
+    ] },
+  { cat: "desc", set: "day6", title: "D6-15 식료품점 묘사 — 한 곳에서 다",
+    koreanFlow: "집 근처 큰 마트, 주말마다 → 가장 좋은 건 한 곳에서 다(신선식품·간식·생활용품) → 밝고 정리 잘돼 헤매지 않고 빨리 찾음 → 최애는 신선식품 코너, 과일·채소 늘 알록달록 → 주말에 한 번에 장보기, 편리 → 특별하진 않지만 주간 루틴이 편해짐",
+    hint: "A 묘사: '한 곳에서 다=편리' 한 가지. Day6 추가갭",
+    keyEnglish: "It's nothing special, but it makes my weekly routine a lot easier.",
+    fullScript: "There's a big supermarket near my home that I go to almost every weekend. What I like most is that everything is in one place — fresh food, snacks, household items, everything. It's bright and well-organized, so I can find what I need quickly without wandering around. My favorite part is the fresh produce section, where the fruit and vegetables always look colorful and fresh. I usually go on weekends and do all my shopping at once, which is really convenient. So it's nothing special, but it makes my weekly routine a lot easier.",
+    keywords: ["big supermarket", "everything is in one place", "bright and well-organized", "fresh produce section", "all at once"],
+    mustUse: [
+      { en: "What I like most is that everything is in one place", ko: "가장 좋은 건 한 곳에 다 있는 거예요 (좁히기)" },
+      { en: "I can find what I need quickly without wandering around", ko: "헤매지 않고 빨리 찾아요 (장점)" },
+      { en: "My favorite part is ~", ko: "제 최애는 ~ (디테일)" },
+      { en: "it makes my weekly routine a lot easier", ko: "주간 루틴을 훨씬 편하게 해요 (마무리)" }
+    ] },
+  { cat: "opi", set: "day6", title: "D6-16 식습관 변화 (과거 vs 현재)",
+    koreanFlow: "꽤 변함 → 예전: 아침 거름·패스트푸드·야식(바쁘거나 스트레스 때) → 지금: 규칙적으로·집밥 자주·채소 늘리고 기름진 거 줄임 → 이유는 예전보다 건강 신경 → 완벽친 않고 치팅데이도 → 핵심: 이제 먹는 걸 '생각'함",
+    hint: "F 비교: In the past↔these days. '이제 생각한다'로 마무리. Day6 추가갭",
+    keyEnglish: "The biggest change is that I actually think about what I eat now.",
+    fullScript: "My eating habits have changed quite a bit over the years. In the past, I used to skip breakfast, eat a lot of fast food, and snack late at night, especially when I was busy or stressed. But these days, I try to eat more regularly and cook at home more often. I've added more vegetables and cut back on greasy, heavy food. The main reason is that I care more about my health now than I did when I was younger. I'm still not perfect, and I have my cheat days, but overall my habits are much healthier than before. So the biggest change is that I actually think about what I eat now.",
+    keywords: ["changed quite a bit", "skip breakfast", "eat more regularly", "care more about my health", "think about what I eat"],
+    mustUse: [
+      { en: "In the past, I used to ~", ko: "예전엔 ~하곤 했어요 (과거)" },
+      { en: "But these days, I try to ~", ko: "하지만 요즘은 ~하려 해요 (현재)" },
+      { en: "I'm still not perfect, and I have my cheat days", ko: "완벽친 않고 치팅데이도 있어요 (솔직)" },
+      { en: "I actually think about what I eat now", ko: "이제 먹는 걸 정말 생각해요 (마무리)" }
+    ] },
+  { cat: "rp", set: "day6", title: "⭐D6-17A RP 미아 신고 (대화형·관리사무소)",
+    koreanFlow: "관리사무소 전화 → 정문 근처 미아, 5살쯤·울며 부모 못 찾음 → 먼저 뭘 할까? → 방송 가능? → 정보데스크로 데려갈까 여기 있을까? → 정보데스크 옆서 기다림(부모가 찾기 쉽게) → 무서워하니 서둘러달라",
+    hint: "문제형 대화: 위치+아이 정보 먼저. 질문하며 진행. Day6 1순위(보험용)",
+    keyEnglish: "Should I bring him to the information desk, or should I stay here with him?",
+    fullScript: "Hi, I'm calling because there's a lost child near the main entrance. He looks about five years old, and he's crying because he can't find his parents. What should I do first? ... Oh, you can make an announcement over the speakers? That would be great. ... Should I bring him to the information desk, or should I stay here with him? ... Okay, I'll stay by the information desk so his parents can find us easily. Please hurry — he's pretty scared. Thank you.",
+    keywords: ["a lost child", "near the main entrance", "make an announcement", "information desk", "pretty scared"],
+    mustUse: [
+      { en: "I'm calling because there's a lost child near ~", ko: "~ 근처에 미아가 있어 전화해요 (위치+상황)" },
+      { en: "What should I do first?", ko: "먼저 뭘 해야 할까요? (질문)" },
+      { en: "Should I ~, or should I ~?", ko: "~할까요, 아님 ~할까요? (선택 질문)" },
+      { en: "Please hurry — he's pretty scared", ko: "무서워하니 서둘러주세요 (긴급)" }
+    ] },
+  { cat: "exp", set: "day6", title: "D6-17B 낯선 사람 도운 경험 (아묻따 #8)",
+    koreanFlow: "이거 비슷한 경험 → 서울서 길 잃은 외국인 관광객 도움 → 지하철역서 헤매며 노선 못 찾음 → 영어로 설명해야 해 처음엔 긴장 → 그래도 돕기로, 맞는 노선까지 데려가 환승 알려줌 → 여러 번 감사 인사 → 기분 좋았음 → 큰일 아니지만 그날을 좋게 만듦",
+    hint: "E 경험(아묻따 #8): This reminds me of~. 도움→보람. Day6 추가갭",
+    keyEnglish: "Helping a stranger like that honestly made my day.",
+    fullScript: "This reminds me of a time I helped a lost foreign tourist in Seoul. He looked confused at a subway station, and he couldn't figure out which line to take. At first, I was a little nervous, because I had to explain it in English, but I decided to help anyway. I walked him over to the right line and showed him where to transfer. He thanked me several times, and I felt really good afterward. It wasn't a big deal, but helping a stranger like that honestly made my day.",
+    keywords: ["a lost foreign tourist", "confused at a subway station", "explain it in English", "showed him where to transfer", "made my day"],
+    mustUse: [
+      { en: "This reminds me of a time I helped ~", ko: "~를 도왔던 때가 떠올라요 (도입)" },
+      { en: "At first, I was a little nervous, because ~", ko: "처음엔 ~라서 좀 긴장했어요 (감정)" },
+      { en: "but I decided to help anyway", ko: "그래도 돕기로 했어요 (행동)" },
+      { en: "helping a stranger like that made my day", ko: "그렇게 도우니 하루가 좋았어요 (마무리)" }
+    ] }
 ];
 const CATS = [
-  { id: "all", label: "전체" }, { id: "w2", label: "W2 세트" }, { id: "rp", label: "롤플레이" },
-  { id: "exp", label: "경험 묘사" }, { id: "opi", label: "의견/기술" },
+  { id: "all", label: "전체" }, { id: "w2", label: "W2 세트" }, { id: "exam", label: "기출 세트" }, { id: "day1", label: "Day1" }, { id: "day2", label: "Day2" }, { id: "day3", label: "Day3" }, { id: "day4", label: "Day4" }, { id: "day5", label: "Day5" }, { id: "day6", label: "Day6" },
+  { id: "rp", label: "롤플레이" }, { id: "exp", label: "경험 묘사" }, { id: "opi", label: "의견/기술" }, { id: "desc", label: "묘사/루틴" },
   { id: "my", label: "내 카드" }, { id: "weak", label: "취약 카드" },
 ];
 const SPEAK_QS = [
@@ -502,6 +1877,13 @@ function saveUserCards() { localStorage.setItem(LS_CARDS, JSON.stringify(userCar
 function filteredCards() {
   if (currentCat === "all") return CARD_DATA;
   if (currentCat === "w2") return CARD_DATA.filter(c => c.set === "w2");
+  if (currentCat === "exam") return CARD_DATA.filter(c => c.set === "exam");
+  if (currentCat === "day1") return CARD_DATA.filter(c => c.set === "day1");
+  if (currentCat === "day2") return CARD_DATA.filter(c => c.set === "day2");
+  if (currentCat === "day3") return CARD_DATA.filter(c => c.set === "day3");
+  if (currentCat === "day4") return CARD_DATA.filter(c => c.set === "day4");
+  if (currentCat === "day5") return CARD_DATA.filter(c => c.set === "day5");
+  if (currentCat === "day6") return CARD_DATA.filter(c => c.set === "day6");
   if (currentCat === "weak") return CARD_DATA.filter(c => progress[c.title] === "mid" || progress[c.title] === "no");
   if (currentCat === "my") return userCards;
   return CARD_DATA.filter(c => c.cat === currentCat);
@@ -540,6 +1922,7 @@ function showCard() {
   document.getElementById("cardKey").textContent = c.keyEnglish;
   document.getElementById("cardScript").textContent = c.fullScript;
   document.getElementById("counter").textContent = `${cardIdx + 1} / ${cards.length}`;
+  renderMustUse(c);
   const noteEl = document.getElementById("cardEditNote");
   if (noteEl) noteEl.innerHTML = c._user
     ? `<span style="font-size:12px; color:var(--accent3);">✏️ 내가 추가한 카드 · <a href="#" onclick="openCardManager();setCardTab('list');return false;" style="color:var(--accent2);">관리</a></span>`
@@ -548,6 +1931,25 @@ function showCard() {
   if (status === "ok") document.querySelector(".recall-btn.ok").classList.add("sel-ok");
   if (status === "mid") document.querySelector(".recall-btn.mid").classList.add("sel-mid");
   if (status === "no") document.querySelector(".recall-btn.no").classList.add("sel-no");
+}
+function renderMustUse(c) {
+  const box = document.getElementById("mustUseBox");
+  const list = document.getElementById("mustUseList");
+  const cnt = document.getElementById("mustUseCount");
+  const mu = Array.isArray(c.mustUse) ? c.mustUse : [];
+  if (!mu.length) { box.style.display = "none"; return; }
+  box.style.display = "block";
+  cnt.textContent = mu.length;
+  list.innerHTML = mu.map(m =>
+    `<div class="mustuse-item"><div class="mustuse-en">${escapeHtml(m.en)}</div><div class="mustuse-ko">${escapeHtml(m.ko || "")}</div></div>`
+  ).join("");
+}
+function toggleMustUse() {
+  const list = document.getElementById("mustUseList");
+  const tog = document.getElementById("mustUseToggle");
+  const open = list.style.display !== "none";
+  list.style.display = open ? "none" : "block";
+  tog.textContent = open ? "▼ 펼치기" : "▲ 접기";
 }
 function flipCard() { document.getElementById("flashcard").classList.toggle("flipped"); }
 function nextCard() { const n = filteredCards().length; if (!n) return; cardIdx = (cardIdx + 1) % n; showCard(); }
@@ -894,6 +2296,12 @@ function addCardFromForm() {
   if (!title || !flow || !script) { alert("제목, 국문 흐름, 전체 스크립트는 필수입니다."); return; }
   const kw = document.getElementById("ncKeywords").value.split(",").map(s => s.trim()).filter(Boolean);
   const finalKw = kw.length ? kw : autoKeywords(script);
+  const mustUse = document.getElementById("ncMustUse").value.split("\n").map(line => {
+    const parts = line.split("=");
+    const en = (parts[0] || "").trim();
+    const ko = (parts.slice(1).join("=") || "").trim();
+    return en ? { en, ko } : null;
+  }).filter(Boolean);
   userCards.push({
     cat: document.getElementById("ncCat").value,
     title, koreanFlow: flow,
@@ -901,10 +2309,11 @@ function addCardFromForm() {
     keyEnglish: document.getElementById("ncKey").value.trim() || script.split(".")[0] + ".",
     fullScript: script,
     keywords: finalKw,
+    mustUse,
     _user: true,
   });
   saveUserCards();
-  ["ncTitle","ncFlow","ncHint","ncKey","ncScript","ncKeywords"].forEach(id => document.getElementById(id).value = "");
+  ["ncTitle","ncFlow","ncHint","ncKey","ncScript","ncKeywords","ncMustUse"].forEach(id => document.getElementById(id).value = "");
   renderPills();
   alert(kw.length
     ? "카드가 추가되었습니다! '내 카드' 카테고리에서 확인하세요."
@@ -937,6 +2346,7 @@ function importCardsFromFile() {
             cat: c.cat || "opi", title: c.title, koreanFlow: c.koreanFlow,
             hint: c.hint || "가져온 카드", keyEnglish: c.keyEnglish || "",
             fullScript: c.fullScript, keywords: Array.isArray(c.keywords) ? c.keywords : [],
+            mustUse: Array.isArray(c.mustUse) ? c.mustUse : [],
             _user: true,
           });
           added++;
