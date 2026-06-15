@@ -1862,7 +1862,10 @@ let CARD_DATA = [];          // 기본 + 사용자 카드 병합 결과
 const LS_PROG = "opic_progress_v1", LS_CFG = "opic_config_v1", LS_CARDS = "opic_usercards_v1";
 
 function rebuildCards() {
-  CARD_DATA = [...DEFAULT_CARDS, ...userCards];
+  // 유효한 카드만 사용 (localStorage에 깨진 항목이 있어도 앱이 죽지 않도록 방어)
+  const valid = c => c && typeof c === "object" && typeof c.title === "string";
+  userCards = (Array.isArray(userCards) ? userCards : []).filter(valid);
+  CARD_DATA = [...DEFAULT_CARDS, ...userCards].filter(valid);
 }
 function loadState() {
   try { progress = JSON.parse(localStorage.getItem(LS_PROG)) || {}; } catch { progress = {}; }
@@ -1884,12 +1887,12 @@ function filteredCards() {
   if (currentCat === "day4") return CARD_DATA.filter(c => c.set === "day4");
   if (currentCat === "day5") return CARD_DATA.filter(c => c.set === "day5");
   if (currentCat === "day6") return CARD_DATA.filter(c => c.set === "day6");
-  if (currentCat === "weak") return CARD_DATA.filter(c => progress[c.title] === "mid" || progress[c.title] === "no");
+  if (currentCat === "weak") return CARD_DATA.filter(c => c && (progress[c.title] === "mid" || progress[c.title] === "no"));
   if (currentCat === "my") return userCards;
   return CARD_DATA.filter(c => c.cat === currentCat);
 }
 function renderPills() {
-  const weakCount = CARD_DATA.filter(c => progress[c.title] === "mid" || progress[c.title] === "no").length;
+  const weakCount = CARD_DATA.filter(c => c && (progress[c.title] === "mid" || progress[c.title] === "no")).length;
   const myCount = userCards.length;
   document.getElementById("catPills").innerHTML = CATS.map(c => {
     let badge = "";
