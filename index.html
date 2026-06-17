@@ -2452,7 +2452,11 @@ async function callLLM(messages, systemPrompt) {
   const body = JSON.stringify({
     model: config.modelName,
     messages: systemPrompt ? [{ role: "system", content: systemPrompt }, ...messages] : messages,
-    max_tokens: 1000, temperature: 0.7,
+    max_tokens: 2048, temperature: 0.7,
+    // Gemini 3.x Flash는 thinking이 기본 ON이고 thinking 토큰이 max_tokens를 함께 잠식해
+    // 응답 본문이 잘립니다. reasoning_effort로 thinking을 억제하고 토큰 여유를 줍니다.
+    // (Gemini가 무시해도 무해. 그래도 잘리면 "minimal" 또는 "none"으로 낮추세요.)
+    reasoning_effort: "low",
   });
   const resp = await fetch(config.apiUrl, { method: "POST", headers, body });
   if (!resp.ok) throw new Error("API " + resp.status);
