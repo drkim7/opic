@@ -202,6 +202,108 @@
     .tab span { display: none; }
     .recall-row { flex-direction: column; }
   }
+
+  /* ===== 변형 훈련 (Twist Training) ===== */
+  .tw-stats { display:flex; gap:14px; flex-wrap:wrap; margin-bottom:14px; }
+  .tw-stat {
+    flex:1; min-width:100px; background:var(--surface); border:1px solid var(--border);
+    border-radius:12px; padding:10px 14px; text-align:center;
+  }
+  .tw-stat .num { font-size:22px; font-weight:900; background:linear-gradient(135deg,var(--accent),var(--accent3));
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+  .tw-stat .lab { font-size:11px; color:var(--dim); margin-top:2px; }
+  .tw-zone { display:grid; grid-template-columns: 1fr 1.4fr; gap:12px; margin-bottom:14px; }
+  @media (max-width:640px){ .tw-zone { grid-template-columns:1fr; } }
+  .tw-subject {
+    background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:16px;
+  }
+  .tw-sub-label { font-size:10px; letter-spacing:1.5px; color:var(--dim); font-weight:700; margin-bottom:8px; }
+  .tw-sub-title { font-size:17px; font-weight:800; margin-bottom:10px; line-height:1.35; }
+  .tw-chips { display:flex; flex-wrap:wrap; gap:6px; }
+  .tw-chip {
+    font-size:12px; padding:4px 10px; border-radius:999px; background:var(--surface2);
+    border:1px solid var(--border); color:var(--accent3);
+  }
+  .tw-directive {
+    position:relative; background:var(--surface); border:1px solid var(--border);
+    border-radius:14px; padding:16px 16px 16px 22px; overflow:hidden;
+  }
+  .tw-directive::before {
+    content:""; position:absolute; left:0; top:0; bottom:0; width:6px;
+    background:var(--tw-color, var(--accent));
+  }
+  .tw-dir-head { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
+  .tw-dir-icon { font-size:20px; }
+  .tw-dir-label { font-size:14px; font-weight:800; color:var(--tw-color, var(--accent)); }
+  .tw-dir-ko { font-size:13px; color:#c8c8e0; line-height:1.55; margin-bottom:10px; }
+  .tw-dir-en { font-size:15px; font-weight:600; line-height:1.5; padding:10px 12px;
+    background:var(--surface2); border-radius:10px; border:1px dashed var(--border); }
+  .tw-dir-hints { margin-top:10px; display:flex; flex-wrap:wrap; gap:6px; }
+  .tw-hint-chip { font-size:11px; color:var(--dim); padding:3px 9px; border-radius:999px; border:1px solid var(--border); }
+  .tw-controls { display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-bottom:14px; }
+  .tw-weak-toggle { display:flex; align-items:center; gap:6px; font-size:12px; color:var(--dim); margin-left:auto; cursor:pointer; user-select:none; }
+  .tw-timer-box {
+    display:flex; align-items:center; gap:14px; background:var(--surface);
+    border:1px solid var(--border); border-radius:14px; padding:12px 16px; margin-bottom:12px;
+  }
+  .tw-clock { font-size:34px; font-weight:900; font-variant-numeric:tabular-nums; letter-spacing:1px; min-width:96px; }
+  .tw-clock.danger { color:var(--error); }
+  .tw-bar { flex:1; height:8px; background:var(--surface2); border-radius:999px; overflow:hidden; }
+  .tw-bar-fill { height:100%; width:100%; border-radius:999px;
+    background:linear-gradient(90deg,var(--accent),var(--accent3)); transition:width 1s linear; }
+
+
+  /* ===== v10: 모바일 탭, TTS, 카운트다운, 기록 ===== */
+  @media (max-width:480px) { .tab span { display:none; } .tab { font-size:17px; } }
+  .tts-btn {
+    background:var(--surface2); border:1px solid var(--border); color:var(--text);
+    border-radius:8px; padding:5px 10px; font-size:13px; cursor:pointer; flex-shrink:0;
+  }
+  .tts-btn:hover { border-color:var(--accent); }
+  .tw-clock.countdown { color:var(--accent3); }
+  .tw-hist { margin-top:16px; }
+  .tw-hist summary {
+    cursor:pointer; font-size:13px; font-weight:700; color:var(--dim);
+    padding:10px 14px; background:var(--surface); border:1px solid var(--border); border-radius:12px;
+    list-style:none; user-select:none;
+  }
+  .tw-hist summary::before { content:"▸ "; }
+  .tw-hist[open] summary::before { content:"▾ "; }
+  .tw-hist-body { border:1px solid var(--border); border-top:none; border-radius:0 0 12px 12px; padding:12px 14px; background:var(--surface); }
+  .tw-hist-row { display:flex; align-items:center; gap:8px; padding:7px 0; border-bottom:1px dashed var(--border); font-size:12px; }
+  .tw-hist-row:last-child { border-bottom:none; }
+  .tw-hist-date { color:var(--dim); min-width:52px; }
+  .tw-hist-grade { font-weight:800; min-width:24px; }
+  .tw-hist-grade.g-al { color:var(--gold); } .tw-hist-grade.g-ih { color:var(--accent); } .tw-hist-grade.g-im { color:var(--dim); }
+  .tw-hist-title { flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:#c8c8e0; }
+  .tw-hist-fail { color:var(--error); font-size:11px; white-space:nowrap; }
+  .tw-weakspot { margin-top:10px; font-size:12px; color:var(--warn); line-height:1.6; }
+
+
+  /* ===== v11: 표현 암기 (SRS) ===== */
+  .ex-stats { display:flex; gap:10px; margin-bottom:14px; }
+  .ex-stat { flex:1; background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:10px; text-align:center; }
+  .ex-stat .num { font-size:20px; font-weight:900; color:var(--accent3); }
+  .ex-stat .lab { font-size:11px; color:var(--dim); margin-top:2px; }
+  .ex-card {
+    background:var(--surface); border:1px solid var(--border); border-radius:16px;
+    padding:28px 20px; text-align:center; margin-bottom:14px; min-height:190px;
+    display:flex; flex-direction:column; justify-content:center; gap:14px;
+  }
+  .ex-cat-badge { font-size:11px; font-weight:700; color:var(--accent); letter-spacing:1px; }
+  .ex-ko { font-size:17px; font-weight:700; line-height:1.5; }
+  .ex-en { font-size:19px; font-weight:800; line-height:1.5; color:var(--accent3); }
+  .ex-box-ind { font-size:11px; color:var(--dim); }
+  .ex-grade-btns { display:flex; gap:8px; }
+  .ex-grade-btns .btn { flex:1; }
+  .ex-done { text-align:center; padding:30px 16px; color:var(--dim); font-size:14px; line-height:1.7; }
+  .ex-list-row { display:flex; align-items:center; gap:8px; padding:9px 4px; border-bottom:1px dashed var(--border); font-size:13px; }
+  .ex-list-row .en { flex:1; font-weight:600; }
+  .ex-list-row .ko { color:var(--dim); font-size:12px; }
+  .ex-boxdots { font-size:10px; letter-spacing:1px; color:var(--gold); white-space:nowrap; }
+  .ex-del { background:none; border:none; color:var(--error); cursor:pointer; font-size:14px; }
+  .tw-hint-chip.expr { border-color:var(--accent3); color:var(--accent3); border-style:solid; }
+
 </style>
 </head>
 <body>
@@ -219,6 +321,8 @@
 
   <div class="tabs">
     <button class="tab active" onclick="switchTab('cards')">🃏 <span>스크립트 카드</span></button>
+    <button class="tab" onclick="switchTab('expr')">💬 <span>표현 암기</span></button>
+    <button class="tab" onclick="switchTab('twist')">🔀 <span>변형 훈련</span></button>
     <button class="tab" onclick="switchTab('speaking')">🎙️ <span>스피킹 연습</span></button>
     <button class="tab" onclick="switchTab('roleplay')">🎭 <span>롤플레이</span></button>
   </div>
@@ -291,6 +395,125 @@
     <div id="recallFeedback"></div>
   </div>
 
+  
+  
+  <div id="panel-expr" class="panel">
+    <div class="ex-stats" id="exStats"></div>
+
+    <div style="display:flex; gap:6px; margin-bottom:14px;">
+      <button class="mode-btn active" id="exTabStudy" onclick="setExMode('study')" style="flex:1; padding:8px;">🃏 오늘의 복습</button>
+      <button class="mode-btn" id="exTabList" onclick="setExMode('list')" style="flex:1; padding:8px;">📚 전체 목록 / 추가</button>
+    </div>
+
+    <div id="exStudy">
+      <div class="ex-card" id="exCard">
+        <div class="ex-cat-badge" id="exCat"></div>
+        <div class="ex-ko" id="exKo">아래 버튼으로 복습을 시작하세요</div>
+        <div class="ex-en" id="exEn" style="display:none;"></div>
+        <div class="ex-box-ind" id="exBoxInd"></div>
+      </div>
+      <div id="exRevealRow">
+        <button class="btn btn-primary" style="width:100%;" onclick="exReveal()">👀 영어 표현 보기</button>
+      </div>
+      <div id="exGradeRow" style="display:none;">
+        <div style="text-align:center; margin-bottom:10px;">
+          <button class="tts-btn" onclick="exSpeak()">🔊 발음 듣고 3번 따라 말하기</button>
+        </div>
+        <div class="ex-grade-btns">
+          <button class="btn" style="border-color:var(--error);" onclick="exGrade(0)">😵 몰라요</button>
+          <button class="btn" style="border-color:var(--warn);" onclick="exGrade(1)">🤔 애매해요</button>
+          <button class="btn" style="border-color:var(--gold);" onclick="exGrade(2)">😎 알아요</button>
+        </div>
+      </div>
+      <div class="ex-done" id="exDone" style="display:none;"></div>
+    </div>
+
+    <div id="exList" style="display:none;">
+      <div style="background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:14px; margin-bottom:14px;">
+        <div style="font-size:12px; font-weight:700; color:var(--dim); margin-bottom:10px;">➕ 내 표현 추가</div>
+        <div class="field"><input id="exNewEn" placeholder="영어 표현 (예: It was a blessing in disguise.)"></div>
+        <div class="field"><input id="exNewKo" placeholder="한글 뜻 (예: 전화위복이었어요)"></div>
+        <div style="display:flex; gap:8px;">
+          <select id="exNewCat" style="flex:1; padding:8px 12px; background:var(--surface2); border:1px solid var(--border); border-radius:10px; color:var(--text); font-size:13px;">
+            <option value="hook">운 시작</option><option value="compare">비교</option><option value="hypo">가정</option>
+            <option value="emotion">감정/의견</option><option value="transition">전환/디테일</option>
+            <option value="closing">마무리</option><option value="rp">롤플레이</option>
+          </select>
+          <button class="btn btn-primary" onclick="exAdd()">추가</button>
+        </div>
+      </div>
+      <div id="exListBody"></div>
+    </div>
+  </div>
+
+  <div id="panel-twist" class="panel">
+    <div class="tw-stats" id="twStats"></div>
+
+    <div class="tw-zone">
+      <div class="tw-subject">
+        <div class="tw-sub-label">재료 카드 — 키워드만 보고 말하기</div>
+        <div class="tw-sub-title" id="twCardTitle">아래 '새 조합'을 눌러 시작하세요</div>
+        <div class="tw-chips" id="twChips"></div>
+      </div>
+      <div class="tw-directive" id="twDirective">
+        <div class="tw-dir-head"><span class="tw-dir-icon" id="twIcon">🔀</span><span class="tw-dir-label" id="twLabel">오늘의 각도</span></div>
+        <div class="tw-dir-ko" id="twKo">같은 스토리를 매번 다른 각도로 트는 훈련입니다. 외운 스크립트 재생이 아니라, 재료를 즉석에서 요리하는 게 목표예요.</div>
+        <div class="tw-dir-en" id="twEn"></div>
+        <div class="tw-dir-hints" id="twHints"></div>
+      </div>
+    </div>
+
+    <div class="tw-controls">
+      <button class="btn btn-primary" onclick="twNewCombo()">🔀 새 조합</button>
+      <button class="btn" onclick="twNewTwist()">🎲 각도만 바꾸기</button>
+      <button class="tts-btn" onclick="twCard && speakTTS(twCurQ || twTwist.en)">🔊 질문 듣기</button>
+      <label class="tw-weak-toggle"><input type="checkbox" id="twAutoTTS" checked onchange="twSaveOpts()"> 시작 시 질문 읽어주기</label>
+      <label class="tw-weak-toggle" style="margin-left:0;"><input type="checkbox" id="twWeakFirst" onchange="twSaveOpts()"> 취약 카드 우선</label>
+    </div>
+
+    <div class="tw-timer-box">
+      <span class="tw-clock" id="twClock">1:30</span>
+      <div class="tw-bar"><div class="tw-bar-fill" id="twBarFill"></div></div>
+      <button class="btn" id="twTimerBtn" onclick="twToggleTimer()">▶ 시작</button>
+    </div>
+
+    <div class="voice-box">
+      <div class="voice-head">
+        <span class="voice-title">🎤 내 답변</span>
+        <div class="mode-toggle">
+          <button class="mode-btn active" id="twModeVoice" onclick="setTwMode('voice')">음성</button>
+          <button class="mode-btn" id="twModeText" onclick="setTwMode('text')">텍스트</button>
+        </div>
+      </div>
+      <div id="twVoiceMode">
+        <button class="mic-btn" id="twMicBtn" onclick="toggleTwMic()">🎙️ 녹음 시작</button>
+        <div id="twAudioBox" style="display:none; margin:10px 0;">
+          <div style="font-size:11px; color:var(--dim); margin-bottom:4px;">🎧 이번 시도 — 필러·침묵·자가수정을 귀로 체크하세요</div>
+          <audio id="twAudio" controls style="width:100%;"></audio>
+          <div id="twAudioPrevRow" style="display:none; margin-top:6px;">
+            <div style="font-size:11px; color:var(--dim); margin-bottom:4px;">↩️ 직전 시도 — 비교해서 들어보세요</div>
+            <audio id="twAudioPrev" controls style="width:100%;"></audio>
+          </div>
+        </div>
+        <div class="transcript" id="twTranscript"><span style="color:var(--dim)">타이머 '시작'을 누르면 녹음도 함께 시작됩니다.</span></div>
+        <div class="small-note">⚠️ Chrome + HTTPS(또는 localhost)에서만 음성인식이 작동합니다.</div>
+      </div>
+      <div id="twTextMode" style="display:none;">
+        <textarea id="twAnswer" placeholder="영어 답변을 입력하세요..."></textarea>
+      </div>
+    </div>
+    <button class="btn btn-primary" style="width:100%; margin-top:12px;" onclick="submitTwist()">✨ AL 기준 체크 받기</button>
+    <div id="twFeedback" style="margin-top:14px;"></div>
+
+    <details class="tw-hist" id="twHistBox">
+      <summary>📜 최근 훈련 기록</summary>
+      <div class="tw-hist-body">
+        <div id="twHistList"><span style="font-size:12px; color:var(--dim);">아직 기록이 없어요. 첫 훈련을 시작해보세요!</span></div>
+        <div class="tw-weakspot" id="twWeakspot"></div>
+      </div>
+    </details>
+  </div>
+
   <div id="panel-speaking" class="panel">
     <div class="question-box">
       <div class="q-label">● OPIc 문제</div>
@@ -298,6 +521,7 @@
     </div>
     <div style="display:flex; gap:10px; margin-bottom:12px;">
       <button class="btn" onclick="newSpeakQ()">🔄 새 문제</button>
+      <button class="tts-btn" onclick="speakTTS(speakCurQ)">🔊 질문 듣기</button>
     </div>
     <div class="voice-box">
       <div class="voice-head">
@@ -366,7 +590,20 @@
     <div class="field">
       <label>API Key (없으면 공란)</label>
       <input id="cfgKey" type="password" placeholder="선택">
+      <label style="display:flex; align-items:center; gap:6px; font-size:12px; color:var(--dim); margin-top:8px; cursor:pointer;">
+        <input type="checkbox" id="cfgRemember" checked> 이 기기에 API 키 기억하기 (끄면 브라우저/탭 종료 시 삭제)
+      </label>
       <div style="font-size:11px; color:var(--error); margin-top:6px; line-height:1.5;">🔒 공개 GitHub Pages에서는 API Key가 브라우저(localStorage)에 저장되므로 <b>민감한 키를 입력하지 마세요.</b> 개인 학습용/로컬 테스트용으로만 사용하세요.</div>
+    </div>
+    <button class="btn" style="width:100%; margin-bottom:14px;" onclick="fillGeminiPreset()">⚡ Gemini 무료 프리셋 채우기 (키만 붙여넣으면 됨)</button>
+    <div style="border-top:1px solid var(--border); padding-top:14px; margin-top:4px;">
+      <div style="font-size:12px; font-weight:700; color:var(--dim); margin-bottom:8px;">💾 전체 백업 / 복원 (기기 간 이동용)</div>
+      <div style="font-size:11px; color:var(--dim); line-height:1.5; margin-bottom:10px;">진도·취약 기록·내 카드·변형 훈련 통계를 JSON 파일 하나로 내보내고, 다른 기기에서 불러올 수 있습니다. API 키는 백업에 <b>포함되지 않습니다.</b></div>
+      <div style="display:flex; gap:8px; margin-bottom:14px;">
+        <button class="btn" style="flex:1;" onclick="exportAll()">⬇️ 백업 내보내기</button>
+        <button class="btn" style="flex:1;" onclick="document.getElementById('restoreFile').click()">⬆️ 백업 불러오기</button>
+        <input type="file" id="restoreFile" accept=".json" style="display:none;" onchange="importAll(this)">
+      </div>
     </div>
     <div style="display:flex; gap:10px; margin-top:6px;">
       <button class="btn" style="flex:1;" onclick="closeConfig()">닫기</button>
@@ -510,12 +747,12 @@ const DEFAULT_CARDS = [
       { en: "I feel really nervous about ~", ko: "저는 ~가 정말 불안해요 (감정 표현)" },
       { en: "What worries me the most is ~", ko: "가장 걱정되는 건 ~ (강조)" },
       { en: "So I think ~ is the most serious ~", ko: "그래서 ~가 가장 심각한 ~라고 생각해요 (Outro)" },
-    ] },,
+    ] },
   { cat: "desc", set: "exam", title: "🎵 music — 묘사/라이브경험",
     koreanFlow: "한국 록 좋아함 → Silica Gel → 실험적·철학적 가사 → 밤 운전하며 들음 → 다른 세계 느낌",
     hint: "A 묘사: 한 가지로 좁히고 감정으로 끝내기. 라이브 경험은 E형(반전+감정 한 방)",
     keyEnglish: "I'm really into Korean rock these days. It feels like being transported to another world.",
-    fullScript: "I'm really into Korean rock these days. My favorite band is Silica Gel — their songs are experimental and the lyrics are even philosophical. I usually play them when I'm driving alone at night, and it feels like being transported to another world. (라이브 60초) I once ran into a busking show at the Santa Monica Pier in LA. I'd just gone for a beer and the sunset, but a live band started playing — the drums and guitar blended perfectly with the sunset, and people stopped to listen one by one. I'd been homesick that day, but I felt strangely comforted. That's when it hit me — sometimes music is real medicine for the mind.",
+    fullScript: "I'm really into Korean rock these days. My favorite band is Silica Gel — their songs are experimental and the lyrics are even philosophical. I usually play them when I'm driving alone at night, and it feels like being transported to another world. I once ran into a busking show at the Santa Monica Pier in LA. I'd just gone for a beer and the sunset, but a live band started playing — the drums and guitar blended perfectly with the sunset, and people stopped to listen one by one. I'd been homesick that day, but I felt strangely comforted. That's when it hit me — sometimes music is real medicine for the mind.",
     keywords: ["Korean rock", "Silica Gel", "driving alone at night", "another world", "Santa Monica"],
     mustUse: [
       { en: "I'm really into ~ these days", ko: "요즘 ~에 푹 빠져있어요 (묘사 도입)" },
@@ -2050,6 +2287,7 @@ function rebuildCards() {
 function loadState() {
   try { progress = JSON.parse(localStorage.getItem(LS_PROG)) || {}; } catch { progress = {}; }
   try { const c = JSON.parse(localStorage.getItem(LS_CFG)); if (c) config = c; } catch {}
+  if (!config.apiKey) { try { const sk = sessionStorage.getItem("opic_key_session"); if (sk) config.apiKey = sk; } catch (e) {} }
   try { userCards = JSON.parse(localStorage.getItem(LS_CARDS)) || []; } catch { userCards = []; }
   rebuildCards();
 }
@@ -2280,17 +2518,17 @@ function localCheck(card, answer) {
   return { checks, missing: missingText, feedback: fb, suggestions: [card.keyEnglish] };
 }
 function renderRecallFeedback(data, isAI) {
-  const checksHtml = data.checks.map(c => `<div class="check-item"><span class="check-icon">${c.pass ? "✅" : "❌"}</span><span>${c.label}</span></div>`).join("");
-  const sugHtml = (data.suggestions || []).map(s => `<div style="font-size:13px; color:var(--accent3); margin-bottom:6px;">→ ${s}</div>`).join("");
+  const checksHtml = data.checks.map(c => `<div class="check-item"><span class="check-icon">${c.pass ? "✅" : "❌"}</span><span>${escapeHtml(String(c.label))}</span></div>`).join("");
+  const sugHtml = (data.suggestions || []).map(s => `<div style="font-size:13px; color:var(--accent3); margin-bottom:6px;">→ ${escapeHtml(String(s))}</div>`).join("");
   document.getElementById("recallFeedback").innerHTML = `
     <div class="feedback">
       <div class="fb-head"><span style="font-weight:700;">📊 비교 결과</span><span style="font-size:11px; color:var(--dim);">${isAI ? "AI 분석" : "로컬 체크"}</span></div>
       <div class="fb-body">
         ${checksHtml}
         <div class="fb-section-title" style="color:var(--accent2)">빠진 흐름</div>
-        <div style="font-size:14px; line-height:1.6; color:#c8c8e0;">${data.missing}</div>
+        <div style="font-size:14px; line-height:1.6; color:#c8c8e0;">${escapeHtml(String(data.missing || ""))}</div>
         <div class="fb-section-title" style="color:var(--accent3)">피드백</div>
-        <div style="font-size:14px; line-height:1.6; color:#c8c8e0;">${data.feedback}</div>
+        <div style="font-size:14px; line-height:1.6; color:#c8c8e0;">${escapeHtml(String(data.feedback || ""))}</div>
         ${sugHtml ? `<div class="fb-section-title" style="color:var(--accent)">영어 표현 제안</div>${sugHtml}` : ""}
       </div>
     </div>`;
@@ -2338,27 +2576,31 @@ async function submitSpeak() {
     }
   } else {
     const wc = answer.split(/\s+/).filter(Boolean).length;
+    const localChecks = [
+      { label: "답변 길이 충분 (40단어+)", pass: wc >= 40 },
+      { label: "문장 2개 이상", pass: (answer.match(/[.!?]/g) || []).length >= 2 },
+    ];
     renderSpeakFeedback({
-      grade: wc >= 60 ? "IH" : "IM",
-      checks: [
-        { label: "답변 길이 충분 (40단어+)", pass: wc >= 40 },
-        { label: "문장 2개 이상", pass: (answer.match(/[.!?]/g) || []).length >= 2 },
-      ],
-      feedback: "AI를 연결하면 질문 적합성·구조·One Main Point 등 OPIc 기준 상세 피드백을 받을 수 있어요. 지금은 길이/문장 수만 체크했습니다.",
+      grade: localChecks.filter(c => c.pass).length + "/" + localChecks.length,
+      checks: localChecks,
+      feedback: "길이/문장 수만 본 연습 지표예요 — 등급이 아닙니다. 실제 OPIc은 12~15문항 전체를 종합 평가해요. AI를 연결하면 질문 적합성·구조까지 평가받을 수 있어요.",
       suggestions: ["So overall, I think...", "What I find really ... is that ..."],
     });
   }
 }
 function renderSpeakFeedback(data) {
-  const gc = data.grade === "AL" ? "grade-al" : data.grade === "IH" ? "grade-ih" : "grade-im";
-  const checksHtml = (data.checks||[]).map(c => `<div class="check-item"><span class="check-icon">${c.pass?"✅":"❌"}</span><span>${c.label}</span></div>`).join("");
-  const sugHtml = (data.suggestions||[]).map(s => `<div style="font-size:13px; color:var(--accent3); margin-bottom:6px;">→ ${s}</div>`).join("");
+  const g = String(data.grade || "");
+  const isScore = g.includes("/");
+  const gc = g === "AL" ? "grade-al" : g === "IH" || isScore ? "grade-ih" : "grade-im";
+  data = Object.assign({}, data, { grade: isScore ? "구조 " + g : g + " 추정" });
+  const checksHtml = (data.checks||[]).map(c => `<div class="check-item"><span class="check-icon">${c.pass?"✅":"❌"}</span><span>${escapeHtml(String(c.label))}</span></div>`).join("");
+  const sugHtml = (data.suggestions||[]).map(s => `<div style="font-size:13px; color:var(--accent3); margin-bottom:6px;">→ ${escapeHtml(String(s))}</div>`).join("");
   document.getElementById("speakFeedback").innerHTML = `
     <div class="feedback">
-      <div class="fb-head"><span style="font-weight:700;">📊 OPIc 기준 피드백</span><span class="grade-badge ${gc}">${data.grade}</span></div>
+      <div class="fb-head"><span style="font-weight:700;">📊 OPIc 기준 피드백</span><span class="grade-badge ${gc}">${escapeHtml(String(data.grade))}</span></div>
       <div class="fb-body">${checksHtml}
         <div class="fb-section-title" style="color:var(--accent3)">피드백</div>
-        <div style="font-size:14px; line-height:1.6; color:#c8c8e0;">${data.feedback}</div>
+        <div style="font-size:14px; line-height:1.6; color:#c8c8e0;">${escapeHtml(String(data.feedback || ""))}</div>
         ${sugHtml ? `<div class="fb-section-title" style="color:var(--accent)">영어 표현 제안</div>${sugHtml}` : ""}
       </div>
     </div>`;
@@ -2402,7 +2644,7 @@ async function startRp() {
 function addRpMsg(who, text) {
   const div = document.createElement("div");
   div.className = `msg ${who}`;
-  div.innerHTML = `<div class="avatar ${who}">${who==="ai"?"🤖":"👤"}</div><div class="bubble">${text}</div>`;
+  div.innerHTML = `<div class="avatar ${who}">${who==="ai"?"🤖":"👤"}</div><div class="bubble">${escapeHtml(String(text))}</div>`;
   const chat = document.getElementById("rpChat");
   chat.appendChild(div); chat.scrollTop = chat.scrollHeight;
 }
@@ -2446,13 +2688,13 @@ function parseLLMJson(text) {
   }
 }
 
-async function callLLM(messages, systemPrompt) {
+async function callLLM(messages, systemPrompt, temperature) {
   const headers = { "Content-Type": "application/json" };
   if (config.apiKey) headers["Authorization"] = `Bearer ${config.apiKey}`;
   const body = JSON.stringify({
     model: config.modelName,
     messages: systemPrompt ? [{ role: "system", content: systemPrompt }, ...messages] : messages,
-    max_tokens: 2048, temperature: 0.7,
+    max_tokens: 2048, temperature: (typeof temperature === "number" ? temperature : 0.7),
     // Gemini 3.x Flash는 thinking이 기본 ON이고 thinking 토큰이 max_tokens를 함께 잠식해
     // 응답 본문이 잘립니다. reasoning_effort로 thinking을 억제하고 토큰 여유를 줍니다.
     // (Gemini가 무시해도 무해. 그래도 잘리면 "minimal" 또는 "none"으로 낮추세요.)
@@ -2471,14 +2713,25 @@ function openConfig() {
   document.getElementById("cfgUrl").value = config.apiUrl;
   document.getElementById("cfgModel").value = config.modelName;
   document.getElementById("cfgKey").value = config.apiKey;
+  document.getElementById("cfgRemember").checked = config.rememberKey !== false;
   document.getElementById("configModal").classList.add("show");
 }
 function closeConfig() { document.getElementById("configModal").classList.remove("show"); }
+const SS_KEY = "opic_key_session";
 function saveConfig() {
   config.apiUrl = document.getElementById("cfgUrl").value.trim();
   config.modelName = document.getElementById("cfgModel").value.trim();
   config.apiKey = document.getElementById("cfgKey").value.trim();
-  saveConfigLS(); updateConfigStatus(); closeConfig();
+  config.rememberKey = document.getElementById("cfgRemember").checked;
+  if (config.rememberKey) {
+    try { sessionStorage.removeItem(SS_KEY); } catch (e) {}
+    saveConfigLS();  // 키 포함 저장
+  } else {
+    try { sessionStorage.setItem(SS_KEY, config.apiKey); } catch (e) {}
+    const persist = Object.assign({}, config, { apiKey: "" });  // localStorage에는 키 제외
+    localStorage.setItem(LS_CFG, JSON.stringify(persist));
+  }
+  updateConfigStatus(); closeConfig();
 }
 function updateConfigStatus() {
   const ok = config.apiUrl && config.modelName;
@@ -2602,13 +2855,802 @@ function exportMyCards() {
 function escapeHtml(s) { return String(s).replace(/[&<>"]/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[c])); }
 
 function switchTab(name) {
-  const tabs = ["cards", "speaking", "roleplay"];
+  const tabs = ["cards", "expr", "twist", "speaking", "roleplay"];
   document.querySelectorAll(".tab").forEach((t, i) => t.classList.toggle("active", tabs[i] === name));
   document.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
   document.getElementById("panel-" + name).classList.add("active");
 }
 
-loadState(); renderPills(); showCard(); updateConfigStatus(); newSpeakQ();
+
+/* ===================== 변형 훈련 (Twist Training) ===================== */
+const LS_TWIST = "opic_twist_v1";
+const TWISTS = [
+  { id: "past", icon: "⏪", label: "과거 경험으로", color: "var(--accent2)",
+    ko: "이 주제를 '구체적인 과거 경험담'으로 말하세요. 언제·어디서·누구와·무슨 일이 있었고 어떤 감정이었는지까지.",
+    en: "Tell me about a memorable experience related to this topic. When was it, what exactly happened, and how did you feel about it?",
+    enT: "Tell me about a memorable experience you had with {topic}. When was it, what exactly happened, and how did you feel about it?",
+    hints: ["I still remember when...", "A couple of years ago...", "What made it so memorable was..."] },
+  { id: "compare", icon: "⚖️", label: "과거 vs 현재 비교로", color: "var(--gold)",
+    ko: "이 주제가 '예전과 지금 어떻게 달라졌는지' 비교하며 말하세요. 과거 시제와 현재 시제를 반드시 오가야 합니다.",
+    en: "How have things changed over the years when it comes to this topic? Compare how it used to be with how it is these days.",
+    enT: "How has {topic} changed over the years? Compare how it used to be in the past with how it is these days.",
+    hints: ["Back then, people used to...", "But these days...", "The biggest difference is..."] },
+  { id: "hypo", icon: "🔮", label: "가정법으로", color: "var(--accent)",
+    ko: "'만약 ~라면'의 가정으로 말하세요. would / could / if 를 자연스럽게 섞고, 이유까지 붙이세요.",
+    en: "If you could change or improve one thing about this topic, what would it be, and why would you choose that?",
+    enT: "If you could change or improve one thing about {topic}, what would it be, and why would you choose that?",
+    hints: ["If I could..., I would definitely...", "That would make a huge difference because...", "I wish I could..."] },
+  { id: "issue", icon: "🗞️", label: "이슈 + 내 의견으로", color: "var(--accent3)",
+    ko: "이 주제와 관련해 '요즘 사람들이 말하는 이슈/문제'를 하나 소개하고, 내 의견과 근거를 말하세요.",
+    en: "What is an issue or concern people talk about these days related to this topic? What's your personal take on it?",
+    enT: "What is an issue or concern people talk about these days related to {topic}? What's your personal take on it?",
+    hints: ["One big issue these days is...", "Personally, I think...", "The way I see it..."] },
+];
+
+let twCard = null, twTwist = null, twCurQ = "";
+const TW_TOPIC_JUNK = new Set(["okay","ok","really","actually","honestly","so","and","great","good","fun","nice","thing","things","stuff"]);
+function twTopicPhrase(card) {
+  const cand = (card && card.keywords || [])
+    .map(k => String(k).replace(/[^\x20-\x7E]/g, "").trim().toLowerCase())
+    .filter(k => /[a-z]/.test(k) && !TW_TOPIC_JUNK.has(k) && k.split(/\s+/).length <= 4);
+  if (!cand.length) return "this topic";
+  // 더 구체적인(긴) 키워드를 토픽으로
+  cand.sort((a, b) => b.length - a.length);
+  return cand[0];
+}
+const TW_CAT_ALLOWED = { exp: ["past","compare","hypo","issue"], desc: ["past","compare","hypo"], opi: ["compare","hypo","issue"] };
+function twAllowedTwists(card) {
+  if (card && Array.isArray(card.twists) && card.twists.length) {
+    const ids = new Set(card.twists);
+    const sel = TWISTS.filter(t => ids.has(t.id));
+    if (sel.length) return sel;
+  }
+  const ids = card && TW_CAT_ALLOWED[card.cat];
+  if (ids) { const sel = TWISTS.filter(t => ids.includes(t.id)); if (sel.length) return sel; }
+  return TWISTS;
+}
+let twStats = { days: {}, weakFirst: false };
+let twRec = null, twRecording = false, twFinal = "", twMode = "voice";
+let twTimerId = null, twTimeLeft = 90;
+const TW_TOTAL = 90;
+
+function twLoad() {
+  try { const s = JSON.parse(localStorage.getItem(LS_TWIST)); if (s && typeof s === "object") twStats = Object.assign(twStats, s); } catch {}
+  if (!twStats.days || typeof twStats.days !== "object") twStats.days = {};
+  document.getElementById("twWeakFirst").checked = !!twStats.weakFirst;
+  document.getElementById("twAutoTTS").checked = twStats.autoTTS !== false;
+}
+function twSave() { localStorage.setItem(LS_TWIST, JSON.stringify(twStats)); }
+function twSaveOpts() {
+  twStats.weakFirst = document.getElementById("twWeakFirst").checked;
+  twStats.autoTTS = document.getElementById("twAutoTTS").checked;
+  twSave();
+}
+function twTodayKey() {
+  const d = new Date();
+  return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
+}
+function twStreak() {
+  let n = 0; const d = new Date();
+  // 오늘 안 했어도 어제까지 이어졌으면 어제부터 센다 (오늘 하면 +1로 보이게 오늘부터 검사)
+  for (let i = 0; i < 3650; i++) {
+    const key = d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
+    if (twStats.days[key] > 0) { n++; }
+    else if (i === 0) { /* 오늘은 아직 안 했을 수 있음 — 끊긴 걸로 치지 않고 어제로 */ }
+    else break;
+    d.setDate(d.getDate() - 1);
+  }
+  return n;
+}
+function twRenderStats() {
+  const today = twStats.days[twTodayKey()] || 0;
+  const total = Object.values(twStats.days).reduce((a,b) => a + (b||0), 0);
+  document.getElementById("twStats").innerHTML = `
+    <div class="tw-stat"><div class="num">${today}</div><div class="lab">오늘 훈련</div></div>
+    <div class="tw-stat"><div class="num">${twStreak()}</div><div class="lab">연속 일수</div></div>
+    <div class="tw-stat"><div class="num">${total}</div><div class="lab">누적 훈련</div></div>`;
+}
+
+function twPickCard() {
+  const pool = CARD_DATA.filter(c => c && c.cat !== "rp");
+  const base = pool.length ? pool : CARD_DATA;
+  if (twStats.weakFirst) {
+    const weak = base.filter(c => progress[c.title] === "mid" || progress[c.title] === "no");
+    if (weak.length && Math.random() < 0.7) return weak[Math.floor(Math.random() * weak.length)];
+  }
+  return base[Math.floor(Math.random() * base.length)];
+}
+function twRender() {
+  if (!twCard || !twTwist) return;
+  document.getElementById("twCardTitle").textContent = twCard.title;
+  document.getElementById("twChips").innerHTML =
+    (twCard.keywords || []).map(k => `<span class="tw-chip">${escapeHtml(k)}</span>`).join("");
+  const d = document.getElementById("twDirective");
+  d.style.setProperty("--tw-color", twTwist.color);
+  document.getElementById("twIcon").textContent = twTwist.icon;
+  document.getElementById("twLabel").textContent = twTwist.label;
+  document.getElementById("twKo").textContent = twTwist.ko;
+  twCurQ = twTwist.enT ? twTwist.enT.replace("{topic}", twTopicPhrase(twCard)) : twTwist.en;
+  document.getElementById("twEn").textContent = twCurQ;
+  const exPicks = (typeof twExprHints === "function") ? twExprHints(twTwist) : [];
+  document.getElementById("twHints").innerHTML =
+    `<span class="tw-hint-chip" style="border-style:dashed;">막히면 →</span>` +
+    twTwist.hints.map(h => `<span class="tw-hint-chip">${escapeHtml(h)}</span>`).join("") +
+    (exPicks.length ? `<span class="tw-hint-chip" style="border-style:dashed; border-color:var(--accent3); color:var(--accent3);">💬 외운 표현 써먹기 →</span>` +
+      exPicks.map(it => `<span class="tw-hint-chip expr">${escapeHtml(it.en)}</span>`).join("") : "");
+  document.getElementById("twFeedback").innerHTML = "";
+}
+function twNewCombo() {
+  twCard = twPickCard();
+  const allowed = twAllowedTwists(twCard);
+  twTwist = allowed[Math.floor(Math.random() * allowed.length)];
+  twAttemptPrev = null;
+  twClearAudioAll();
+  twResetTimer(); twClearAnswer(); twRender();
+}
+function twNewTwist() {
+  if (!twCard) { twNewCombo(); return; }
+  const others = twAllowedTwists(twCard).filter(t => t !== twTwist);
+  if (!others.length) return;
+  twTwist = others[Math.floor(Math.random() * others.length)];
+  twAttemptPrev = null;
+  twClearAudioAll();
+  twResetTimer(); twClearAnswer(); twRender();
+}
+function twClearAudioAll() {
+  if (twAudioUrl) { URL.revokeObjectURL(twAudioUrl); twAudioUrl = null; }
+  if (twAudioPrevUrl) { URL.revokeObjectURL(twAudioPrevUrl); twAudioPrevUrl = null; }
+  const pr = document.getElementById("twAudioPrevRow"); if (pr) pr.style.display = "none";
+}
+function twClearAnswer() {
+  twFinal = "";
+  const ab = document.getElementById("twAudioBox"); if (ab) ab.style.display = "none";
+  document.getElementById("twTranscript").innerHTML = '<span style="color:var(--dim)">타이머 \'시작\'을 누르면 녹음도 함께 시작됩니다.</span>';
+  document.getElementById("twAnswer").value = "";
+}
+
+/* ---- 타이머 ---- */
+function twFmt(s) { return Math.floor(s/60) + ":" + String(s%60).padStart(2,"0"); }
+function twResetTimer() {
+  if (twTimerId) { clearInterval(twTimerId); twTimerId = null; }
+  if ("speechSynthesis" in window) speechSynthesis.cancel();
+  twPhase = "idle";
+  twTimeLeft = TW_TOTAL;
+  const clock = document.getElementById("twClock");
+  clock.textContent = twFmt(twTimeLeft); clock.classList.remove("danger"); clock.classList.remove("countdown");
+  document.getElementById("twBarFill").style.width = "100%";
+  document.getElementById("twTimerBtn").textContent = "▶ 시작";
+  if (twRecording) toggleTwMic();
+}
+function twToggleTimer() {
+  if (twPhase !== "idle" || twTimerId) { twResetTimer(); return; }
+  if (!twCard) twNewCombo();
+  document.getElementById("twTimerBtn").textContent = "⏹ 리셋";
+  const autoTTS = document.getElementById("twAutoTTS").checked;
+  if (autoTTS && "speechSynthesis" in window) {
+    twPhase = "reading";
+    document.getElementById("twClock").textContent = "🔊 듣기";
+    speakTTS(twCurQ || twTwist.en, () => { if (twPhase === "reading") twStartCountdown(); });
+  } else {
+    twStartCountdown();
+  }
+}
+
+/* ---- 실제 음성 녹음 (MediaRecorder) ---- */
+let twMediaRec = null, twChunks = [], twAudioUrl = null, twAudioPrevUrl = null;
+async function twStartAudioRec() {
+  if (!navigator.mediaDevices || !window.MediaRecorder) return;
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    twChunks = [];
+    twMediaRec = new MediaRecorder(stream);
+    twMediaRec.ondataavailable = (e) => { if (e.data && e.data.size) twChunks.push(e.data); };
+    twMediaRec.onstop = () => {
+      stream.getTracks().forEach(t => t.stop());
+      if (!twChunks.length) return;
+      if (twAudioPrevUrl) URL.revokeObjectURL(twAudioPrevUrl);
+      twAudioPrevUrl = twAudioUrl;  // 직전 시도 녹음 보존 (재도전 비교 청취용)
+      const blob = new Blob(twChunks, { type: twMediaRec && twMediaRec.mimeType ? twMediaRec.mimeType : "audio/webm" });
+      twAudioUrl = URL.createObjectURL(blob);
+      const audio = document.getElementById("twAudio");
+      const box = document.getElementById("twAudioBox");
+      if (audio && box) { audio.src = twAudioUrl; box.style.display = "block"; }
+      const prevRow = document.getElementById("twAudioPrevRow");
+      const prevAudio = document.getElementById("twAudioPrev");
+      if (prevRow && prevAudio) {
+        if (twAudioPrevUrl) { prevAudio.src = twAudioPrevUrl; prevRow.style.display = "block"; }
+        else prevRow.style.display = "none";
+      }
+    };
+    twMediaRec.start();
+  } catch (e) { /* 마이크 권한 거부 등 — STT만으로 진행 */ }
+}
+function twStopAudioRec() {
+  if (twMediaRec && twMediaRec.state !== "inactive") { try { twMediaRec.stop(); } catch (e) {} }
+  twMediaRec = null;
+}
+
+/* ---- 음성/텍스트 ---- */
+function setTwMode(m) {
+  twMode = m;
+  document.getElementById("twModeVoice").classList.toggle("active", m === "voice");
+  document.getElementById("twModeText").classList.toggle("active", m === "text");
+  document.getElementById("twVoiceMode").style.display = m === "voice" ? "block" : "none";
+  document.getElementById("twTextMode").style.display = m === "text" ? "block" : "none";
+}
+function toggleTwMic() {
+  const btn = document.getElementById("twMicBtn");
+  if (twRecording) { twRecording = false; btn.classList.remove("recording"); btn.innerHTML = "🎙️ 녹음 시작"; if (twRec) twRec.forceStop(); twStopAudioRec(); return; }
+  twRec = makeRecognizer(
+    (fin, interim) => { twFinal = fin; document.getElementById("twTranscript").innerHTML = escapeHtml(fin) + `<span class="interim">${escapeHtml(interim)}</span>`; },
+    (fin) => { twRecording = false; btn.classList.remove("recording"); btn.innerHTML = "🎙️ 녹음 시작"; twFinal = fin; }
+  );
+  if (!twRec) { alert("이 브라우저에서는 음성인식이 지원되지 않습니다. 텍스트 모드를 이용하세요."); setTwMode("text"); return; }
+  twFinal = ""; document.getElementById("twTranscript").innerHTML = '<span style="color:var(--accent3)">🔴 듣는 중...</span>';
+  twRec.start(); twStartAudioRec(); twRecording = true; btn.classList.add("recording"); btn.innerHTML = "⏹️ 녹음 중지";
+}
+
+/* ---- 로컬 구조 체크 (AI 미연결 시) — 유형별 기준, 등급 아님 ---- */
+function twLocalCheck(card, twist, answer) {
+  const lower = " " + answer.toLowerCase() + " ";
+  const wc = answer.split(/\s+/).filter(Boolean).length;
+  const count = (re) => (lower.match(re) || []).length;
+  const past = count(/\b(was|were|went|did|didn't|had|got|took|saw|felt|made|came|thought|used to|[a-z]{3,}ed)\b/g);
+  const present = count(/\b(is|are|am|do|does|go|goes|these days|nowadays|usually|every day|now|tend to)\b/g);
+  const compare = count(/\b(used to|back then|in the past|nowadays|these days|compared to|than|whereas|while|but now|way more|a lot more)\b/g);
+  const hypo = count(/\b(if|would|could|might|wish|imagine|were to)\b/g);
+  const wouldRe = count(/\b(would|could) [a-z]+/g);
+  const opinion = count(/\b(i think|i believe|in my opinion|personally|my take|the problem is|the issue is|i feel like)\b/g);
+  const emotion = count(/\b(honestly|actually|to be honest|really|love|hate|excited|annoyed|frustrated|amazing|disappointed|surprised|proud|relieved|struck)\b/g);
+  const reason = count(/\b(because|since|that's why|as a result|so that|the reason)\b/g);
+  const example = count(/\b(for example|for instance|once|one time|last (week|month|year|summer|winter))\b/g);
+  const detail = count(/\b(when|where|with|at|years? ago|last|during)\b/g);
+  const closing = /(so overall|all in all|that's why|in the end|to sum up|anyway,? that's|at the end of the day)/.test(lower);
+  const ending = closing || /\b(eventually|finally|in the end)\b/.test(lower);
+  const lenCheck = { id: "len", label: `분량 ${wc}단어 (연습 기준 80+ · 참고용)`, pass: wc >= 80, info: true };
+
+  let checks, fixMap;
+  if (twist.id === "past") {
+    checks = [
+      { id: "angle", label: "과거 시제로 사건 전개 (일관성)", pass: past >= 5 && past >= present },
+      { id: "detail", label: "디테일 (언제·어디·누구)", pass: detail >= 3 },
+      { id: "emotion", label: "감정 표현", pass: emotion >= 1 },
+      { id: "closing", label: "결과·마무리", pass: ending },
+      lenCheck,
+    ];
+    fixMap = ["이야기를 과거 시제로 끌고 가세요 — 현재형으로 새는 순간이 언제인지 녹음에서 찾아보세요.", "언제·어디서·누구와였는지 한 겹만 더 붙이세요.", "그때 기분을 한 문장 넣으세요 (honestly, I was...).", "사건의 결과로 닫으세요 (In the end...).", "80단어를 못 채우면 디테일 층이 얇다는 신호예요."];
+  } else if (twist.id === "compare") {
+    checks = [
+      { id: "angle", label: "과거·현재를 실제로 오감", pass: past >= 2 && present >= 2 },
+      { id: "detail", label: "대비 표지 2개+ (used to / these days...)", pass: compare >= 2 },
+      { id: "reason", label: "변화의 이유나 영향", pass: reason >= 1 },
+      { id: "closing", label: "마무리 문장", pass: closing },
+      lenCheck,
+    ];
+    fixMap = ["과거 문장과 현재 문장이 둘 다 있어야 비교예요.", "'Back then / these days' 같은 대비 표지를 최소 2개 쓰세요.", "왜 변했는지, 그래서 뭐가 달라졌는지 because로 한 문장.", "'So overall...'로 닫으세요.", "80단어 미만이면 양쪽 비교가 얕아요."];
+  } else if (twist.id === "hypo") {
+    checks = [
+      { id: "angle", label: "가정 표현 (if / would / could)", pass: hypo >= 3 },
+      { id: "detail", label: "예상 결과 구체화 (would+동사 2개+)", pass: wouldRe >= 2 },
+      { id: "reason", label: "선택의 이유", pass: reason >= 1 },
+      { id: "closing", label: "마무리 문장", pass: closing || ending },
+      lenCheck,
+    ];
+    fixMap = ["if/would 없이 사실만 말하고 있어요 — 가정의 세계로 들어가세요.", "바뀌면 뭐가 어떻게 되는지 would로 2문장 이상 그리세요.", "왜 그걸 고르는지 because로 답하세요.", "'That would make...' 류로 닫으세요.", "80단어 미만이면 가정 전개가 짧아요."];
+  } else {
+    checks = [
+      { id: "angle", label: "의견 표명 2회+ (I think / personally...)", pass: opinion >= 2 },
+      { id: "detail", label: "구체적 사례 1개+", pass: example >= 1 || past >= 3 },
+      { id: "emotion", label: "감정·태도 표현", pass: emotion >= 1 },
+      { id: "closing", label: "초점 재확인·마무리", pass: closing },
+      lenCheck,
+    ];
+    fixMap = ["의견을 명시하세요 — I think 없이 사실 나열만 하면 이슈 답변이 아니에요.", "for example로 실제 사례 하나를 붙이세요.", "이 이슈에 대한 내 감정을 드러내세요.", "처음 낸 의견으로 되돌아와 닫으세요.", "80단어 미만이면 근거가 얇아요."];
+  }
+  const scored = checks.filter(c => !c.info);
+  const passCount = scored.filter(c => c.pass).length;
+  const firstFail = checks.findIndex(c => !c.pass && !c.info);
+  const feedback = firstFail === -1
+    ? "구조 항목 모두 통과! 녹음을 다시 들으며 필러와 침묵도 체크해보세요."
+    : "가장 먼저 고칠 것 → " + fixMap[firstFail];
+  return { score: passCount + "/" + scored.length, checks, feedback, suggestions: twist.hints.slice(0, 2), primaryFix: firstFail === -1 ? null : checks[firstFail].label };
+}
+
+/* ---- 습관 카운터 (정보용, 채점 아님) ---- */
+function twHabitScan(answer) {
+  const cnt = (re) => (answer.match(re) || []).length;
+  // 필러성 like만: I like / would like / feel(s) like / look(s) like / things like 등 정상 용법 제외
+  const toks = answer.toLowerCase().replace(/[^a-z'\s]/g, " ").split(/\s+/).filter(Boolean);
+  const prevBlock = new Set(["i","you","we","they","he","she","people","everyone","would","'d","to","really","just","also","dont","don't","didnt","didn't","doesnt","doesn't","not","feel","feels","felt","look","looks","looked","sound","sounds","sounded","seem","seems","seemed","something","things","anything","stuff","was","is","are","be"]);
+  let like = 0;
+  for (let k = 0; k < toks.length; k++) {
+    if (toks[k] !== "like") continue;
+    if (prevBlock.has(toks[k - 1] || "")) continue;
+    if ((toks[k + 1] || "") === "to") continue;
+    like++;
+  }
+  const youKnow = cnt(/\byou know\b/gi);
+  const soAndStart = cnt(/(?:^|[.!?]\s+)(?:so|and)\b/gi);
+  const theCountry = cnt(/\bthe (Korea|Japan|China|Seoul|Busan)\b/gi);
+  const words = answer.toLowerCase().replace(/[^a-z\s]/g, " ").split(/\s+/).filter(Boolean);
+  const ttr = words.length ? new Set(words).size / words.length : 1;
+  const parts = [];
+  if (words.length > 60 && ttr < 0.5) parts.push("같은 단어 반복이 많아요 (어휘 다양성 낮음)");
+  if (like) parts.push(`필러성 like ${like}회`);
+  if (youKnow) parts.push(`you know ${youKnow}회`);
+  if (soAndStart >= 3) parts.push(`so/and로 문장 시작 ${soAndStart}회 (연결어 다양화)`);
+  if (theCountry) parts.push(`'the Korea' 류 관사 오류 ${theCountry}회`);
+  return parts.length ? "🗣 습관 체크: " + parts.join(" · ") : "";
+}
+
+/* ---- 제출/피드백/재도전 ---- */
+let twAttemptPrev = null;  // 같은 질문 직전 시도 (재도전 비교용)
+async function submitTwist() {
+  const fbEl = document.getElementById("twFeedback");
+  if (!twCard || !twTwist) { fbEl.innerHTML = `<div class="feedback"><div class="fb-body" style="color:var(--warn)">먼저 '새 조합'으로 카드와 각도를 받아주세요.</div></div>`; return; }
+  // 녹음 중 제출: 먼저 녹음을 멈추고 마지막 전사가 도착할 시간을 준다
+  if (twMode === "voice" && twRecording) {
+    toggleTwMic();
+    fbEl.innerHTML = `<div class="feedback"><div class="fb-body" style="color:var(--dim)">⏳ 마지막 문장 전사 중...</div></div>`;
+    await new Promise(r => setTimeout(r, 900));
+  }
+  if (twTimerId || twPhase !== "idle") twResetTimer();
+  const answer = twMode === "voice" ? twFinal.trim() : document.getElementById("twAnswer").value.trim();
+  if (!answer) { fbEl.innerHTML = `<div class="feedback"><div class="fb-body" style="color:var(--warn)">먼저 답변을 말하거나 입력해주세요.</div></div>`; return; }
+
+  const wc = answer.split(/\s+/).filter(Boolean).length;
+  const habits = twHabitScan(answer);
+  let result, isAI = false;
+  if (config.apiUrl && config.modelName) {
+    fbEl.innerHTML = `<div class="feedback"><div class="fb-body"><div class="loading"><div class="ld"></div><div class="ld"></div><div class="ld"></div> 평가 중...</div></div></div>`;
+    try {
+      const res = await callLLM(
+        [{ role: "user", content: `주제 카드: ${twCard.title}\n카드 키워드: ${(twCard.keywords||[]).join(", ")}\n요구된 변형 각도: ${twTwist.label} — ${twTwist.en}\n\n학습자 답변: ${answer}` }],
+        `당신은 OPIc 평가 전문가입니다. 이것은 '변형 훈련'입니다: 외운 스크립트 재생이 아니라 주어진 각도로 즉석에서 이야기를 재구성했는지를, 그 질문 유형에 맞는 기준(과거 경험=시제 일관성·사건 순서·감정·결과 / 비교=명시적 대비·이유 / 가정=조건문·예상 결과·이유 / 이슈=하나의 주장·사례·재확인)으로 평가하세요. 반드시 JSON만 반환하세요. checks의 id는 아래 다섯 개를 그대로 사용하고 순서도 유지하세요. 피드백은 한국어로 짧고 구체적으로.\n{"grade":"AL 또는 IH 또는 IM","checks":[{"id":"angle","label":"요구된 각도(변형) 수행","pass":true},{"id":"tense","label":"이 유형에 필요한 시제의 일관된 관리","pass":true},{"id":"detail","label":"구체적 디테일과 감정","pass":false},{"id":"natural","label":"스크립트 낭독체가 아닌 자연 회화체","pass":true},{"id":"closing","label":"기승전결 (마무리 문장 포함)","pass":true}],"feedback":"짧은 한국어 피드백","primaryFix":"실패 항목 중 가장 먼저 고칠 것 한 줄 (전부 통과면 null)","suggestions":["영어 표현1","영어 표현2"]}`,
+        0.2
+      );
+      result = parseLLMJson(res); isAI = true;
+    } catch (e) {
+      result = twLocalCheck(twCard, twTwist, answer);
+    }
+  } else {
+    result = twLocalCheck(twCard, twTwist, answer);
+  }
+
+  if (!result.primaryFix) {
+    const ff = (result.checks || []).find(c => !c.pass && !c.info);
+    result.primaryFix = ff ? ff.label : null;
+  }
+  const attempt = { checks: result.checks || [], wc, n: twAttemptPrev ? twAttemptPrev.n + 1 : 1 };
+  twRenderFeedback(result, isAI, habits, twAttemptPrev);
+  twLogResult(result, isAI, wc, twAttemptPrev, answer);
+  twAttemptPrev = attempt;
+
+  twStats.days[twTodayKey()] = (twStats.days[twTodayKey()] || 0) + 1;
+  twSave(); twRenderStats();
+}
+function twRetrySame() {
+  twResetTimer(); twClearAnswer();
+  document.getElementById("twFeedback").innerHTML = `<div class="feedback"><div class="fb-body" style="font-size:13px; color:var(--accent3);">🔁 재도전 ${twAttemptPrev ? twAttemptPrev.n + 1 : 2}차 — 같은 질문, 같은 각도. 직전에 놓친 것 하나만 고치는 게 목표예요. 준비되면 ▶ 시작.</div></div>`;
+  try { window.scrollTo({ top: 0, behavior: "smooth" }); } catch (e) {}
+}
+function twCheckKey(c) { return c.id || c.label; }
+function twCompareHtml(prev, cur) {
+  if (!prev) return "";
+  const prevPass = new Set(prev.checks.filter(c => c.pass).map(twCheckKey));
+  const scored = cur.filter(c => !c.info);
+  const gained = scored.filter(c => c.pass && !prevPass.has(twCheckKey(c))).map(c => c.label);
+  const still = scored.filter(c => !c.pass).map(c => c.label);
+  let out = `<div class="fb-section-title" style="color:var(--gold)">🔁 ${prev.n}차 대비 (${prev.wc}단어 → ${cur === prev.checks ? prev.wc : ""})</div>`;
+  out = `<div class="fb-section-title" style="color:var(--gold)">🔁 직전 시도(${prev.n}차) 대비</div>`;
+  if (gained.length) out += `<div style="font-size:13px; color:var(--gold); margin-bottom:4px;">개선됨: ${gained.map(escapeHtml).join(" · ")} ✅</div>`;
+  if (still.length) out += `<div style="font-size:13px; color:var(--error); margin-bottom:4px;">아직: ${still.map(escapeHtml).join(" · ")}</div>`;
+  if (!gained.length && !still.length) out += `<div style="font-size:13px; color:var(--gold);">전 항목 유지 — 완벽!</div>`;
+  return out;
+}
+function twRenderFeedback(data, isAI, habits, prevAttempt) {
+  const badge = isAI ? escapeHtml(String(data.grade || "?")) + " 추정" : "구조 " + escapeHtml(String(data.score || "?"));
+  const gc = isAI ? (data.grade === "AL" ? "grade-al" : data.grade === "IH" ? "grade-ih" : "grade-im") : "grade-ih";
+  const checksHtml = (data.checks || []).map(c => `<div class="check-item"><span class="check-icon">${c.info ? "ℹ️" : c.pass ? "✅" : "❌"}</span><span>${escapeHtml(String(c.label))}</span></div>`).join("");
+  const sugHtml = (data.suggestions || []).map(s => `<div style="font-size:13px; color:var(--accent3); margin-bottom:6px;">→ ${escapeHtml(String(s))}</div>`).join("");
+  const compareHtml = prevAttempt ? twCompareHtml(prevAttempt, data.checks || []) : "";
+  const retryLabel = data.primaryFix ? `🔁 같은 질문 다시 — 이번엔 '${escapeHtml(String(data.primaryFix))}' 고치기` : "🔁 같은 질문 한 번 더 (완성도 굳히기)";
+  document.getElementById("twFeedback").innerHTML = `
+    <div class="feedback">
+      <div class="fb-head"><span style="font-weight:700;">🔀 변형 훈련 결과</span>
+        <span style="display:flex; align-items:center; gap:8px;">
+          <span style="font-size:11px; color:var(--dim);">${isAI ? "AI 분석" : "규칙 기반"}</span>
+          <span class="grade-badge ${gc}">${badge}</span>
+        </span>
+      </div>
+      <div class="fb-body">${checksHtml}
+        ${compareHtml}
+        <div class="fb-section-title" style="color:var(--accent3)">피드백</div>
+        <div style="font-size:14px; line-height:1.6; color:#c8c8e0;">${escapeHtml(String(data.feedback || ""))}</div>
+        ${habits ? `<div style="font-size:12px; color:var(--warn); margin-top:8px;">${escapeHtml(habits)}</div>` : ""}
+        ${sugHtml ? `<div class="fb-section-title" style="color:var(--accent)">이렇게 시작해보세요</div>${sugHtml}` : ""}
+        <div style="font-size:11px; color:var(--dim); margin-top:10px;">${isAI ? "※ 단일 답변 기준 추정이에요. 실제 OPIc은 12~15문항 전체를 종합 평가해요." : "※ 구조 표지만 확인한 연습 지표예요 — 질문 적합성·문법·자연스러움은 판정하지 않아요. 실제 OPIc은 12~15문항 종합 평가입니다."}</div>
+        <div style="margin-top:12px; display:flex; gap:8px; flex-wrap:wrap;">
+          <button class="btn btn-primary" onclick="twRetrySame()">${retryLabel}</button>
+          <button class="btn" onclick="twNewTwist()">🎲 다른 각도로</button>
+        </div>
+      </div>
+    </div>`;
+}
+function twLogResult(data, isAI, wc, prevAttempt, answer) {
+  if (!Array.isArray(twStats.history)) twStats.history = [];
+  const fails = (data.checks || []).filter(c => !c.pass).map(c => String(c.label).replace(/^🎯 /, "").split(" (")[0]);
+  let gained = 0;
+  if (prevAttempt) {
+    const prevPass = new Set(prevAttempt.checks.filter(c => c.pass).map(twCheckKey));
+    gained = (data.checks || []).filter(c => !c.info && c.pass && !prevPass.has(twCheckKey(c))).length;
+  }
+  twStats.history.unshift({
+    d: twTodayKey().slice(5),
+    card: twCard ? twCard.title : "?",
+    twist: twTwist ? twTwist.label : "?",
+    grade: isAI ? (data.grade || "?") : (data.score || "?"),
+    wc,
+    retry: prevAttempt ? prevAttempt.n + 1 : 0,
+    gained,
+    fails,
+    t: (answer || "").slice(0, 200),
+  });
+  twStats.history = twStats.history.slice(0, 20);
+  twSave(); twRenderHist();
+}
+function initTwist() { twLoad(); twRenderStats(); }
+
+
+/* ===================== v10: TTS / 백업 / 카운트다운 / 기록 ===================== */
+/* ---- 질문 음성 읽어주기 (브라우저 내장, 무료) ---- */
+let ttsVoice = null;
+function pickTTSVoice() {
+  if (!("speechSynthesis" in window)) return;
+  const vs = speechSynthesis.getVoices().filter(v => /^en(-|_)/i.test(v.lang));
+  ttsVoice = vs.find(v => /en(-|_)US/i.test(v.lang)) || vs[0] || null;
+}
+if ("speechSynthesis" in window) {
+  pickTTSVoice();
+  speechSynthesis.onvoiceschanged = pickTTSVoice;
+}
+function speakTTS(text, onDone) {
+  if (!("speechSynthesis" in window) || !text) { if (onDone) onDone(); return; }
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = "en-US"; u.rate = 0.95;
+  if (ttsVoice) u.voice = ttsVoice;
+  let done = false;
+  const finish = () => { if (!done) { done = true; if (onDone) onDone(); } };
+  u.onend = finish; u.onerror = finish;
+  // 일부 브라우저에서 onend가 안 오는 경우를 대비한 안전장치
+  setTimeout(finish, Math.min(2500 + text.length * 80, 15000));
+  speechSynthesis.speak(u);
+}
+
+/* ---- 전체 백업 / 복원 ---- */
+const BACKUP_KEYS = () => [LS_PROG, LS_CARDS, LS_TWIST, LS_EXPR];  // API 키(LS_CFG)는 보안상 제외
+function exportAll() {
+  const data = { app: "opic-al-trainer", version: 12, exportedAt: new Date().toISOString(), data: {} };
+  BACKUP_KEYS().forEach(k => { const v = localStorage.getItem(k); if (v !== null) data.data[k] = v; });
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "opic-backup-" + twTodayKey() + ".json";
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+function importAll(input) {
+  const file = input.files && input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const parsed = JSON.parse(reader.result);
+      if (!parsed || parsed.app !== "opic-al-trainer" || !parsed.data) { alert("올바른 백업 파일이 아닙니다."); return; }
+      if (!confirm("이 기기의 진도·내 카드·훈련 기록을 백업 파일 내용으로 덮어씁니다. 계속할까요?")) return;
+      Object.entries(parsed.data).forEach(([k, v]) => {
+        if (BACKUP_KEYS().includes(k) && typeof v === "string") localStorage.setItem(k, v);
+      });
+      loadState(); twLoad(); renderPills(); showCard(); twRenderStats(); twRenderHist(); initExpr();
+      alert("복원 완료! 진도·카드·훈련 기록을 불러왔습니다.");
+    } catch (e) { alert("파일을 읽지 못했습니다: " + e.message); }
+    input.value = "";
+  };
+  reader.readAsText(file);
+}
+
+/* ---- 훈련 기록 (최근 20회 저장, 10회 표시) ---- */
+function twRenderHist() {
+  const listEl = document.getElementById("twHistList");
+  const weakEl = document.getElementById("twWeakspot");
+  if (!listEl) return;
+  const hist = Array.isArray(twStats.history) ? twStats.history : [];
+  if (!hist.length) {
+    listEl.innerHTML = '<span style="font-size:12px; color:var(--dim);">아직 기록이 없어요. 첫 훈련을 시작해보세요!</span>';
+    weakEl.innerHTML = ""; return;
+  }
+  listEl.innerHTML = hist.slice(0, 10).map(h => {
+    const gc = h.grade === "AL" ? "g-al" : (h.grade === "IH" || String(h.grade).includes("/")) ? "g-ih" : "g-im";
+    const fail = h.fails && h.fails.length ? `❌ ${escapeHtml(h.fails.join(" · "))}` : "✅ 전부 통과";
+    const retryTag = h.retry ? ` <span style="color:var(--gold);">↻${h.retry}차${h.gained ? " +" + h.gained : ""}</span>` : "";
+    return `<div class="tw-hist-row">
+      <span class="tw-hist-date">${h.d}</span>
+      <span class="tw-hist-grade ${gc}">${escapeHtml(String(h.grade))}${retryTag}</span>
+      <span class="tw-hist-title">${escapeHtml(h.card)} — ${escapeHtml(h.twist)}</span>
+      <span class="tw-hist-fail">${fail}</span>
+    </div>`;
+  }).join("");
+  // 최근 10회에서 자주 놓친 항목 집계
+  const freq = {};
+  hist.slice(0, 10).forEach(h => (h.fails || []).forEach(f => { freq[f] = (freq[f] || 0) + 1; }));
+  const top = Object.entries(freq).sort((a, b) => b[1] - a[1]).slice(0, 2);
+  weakEl.innerHTML = top.length
+    ? "⚠️ 최근 10회에서 자주 놓친 항목: " + top.map(([f, n]) => `<b>${escapeHtml(f)}</b> (${n}회)`).join(", ") + " — 다음 훈련에서 여기에 집중하세요."
+    : "🏆 최근 훈련에서 놓친 항목이 없어요. 이 감각을 실전까지 유지하세요!";
+}
+
+/* ---- 3초 준비 카운트다운 (+ 질문 자동 읽기) ---- */
+let twPhase = "idle"; // idle | reading | countdown | running
+function twStartCountdown() {
+  twPhase = "countdown";
+  let n = 3;
+  const clock = document.getElementById("twClock");
+  clock.classList.add("countdown");
+  clock.textContent = "•" + n + "•";
+  twTimerId = setInterval(() => {
+    n--;
+    if (n > 0) { clock.textContent = "•" + n + "•"; return; }
+    clearInterval(twTimerId); twTimerId = null;
+    clock.classList.remove("countdown");
+    twStartMain();
+  }, 1000);
+}
+function twStartMain() {
+  twPhase = "running";
+  if (twMode === "voice" && !twRecording) toggleTwMic();
+  document.getElementById("twClock").textContent = twFmt(twTimeLeft);
+  twTimerId = setInterval(() => {
+    twTimeLeft--;
+    const clock = document.getElementById("twClock");
+    clock.textContent = twFmt(Math.max(twTimeLeft, 0));
+    clock.classList.toggle("danger", twTimeLeft <= 15);
+    document.getElementById("twBarFill").style.width = (Math.max(twTimeLeft, 0) / TW_TOTAL * 100) + "%";
+    if (twTimeLeft <= 0) {
+      clearInterval(twTimerId); twTimerId = null; twPhase = "idle";
+      document.getElementById("twTimerBtn").textContent = "▶ 시작";
+      if (twRecording) toggleTwMic();
+      clock.textContent = "0:00";
+    }
+  }, 1000);
+}
+
+/* ---- Gemini 무료 프리셋 ---- */
+function fillGeminiPreset() {
+  document.getElementById("cfgUrl").value = "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions";
+  document.getElementById("cfgModel").value = "gemini-flash-latest";
+  document.getElementById("cfgKey").focus();
+  alert("URL과 모델명을 채웠어요.\n\n1) aistudio.google.com 접속 → 'Get API key'에서 무료 키 발급\n2) 발급받은 키를 API Key 칸에 붙여넣고 저장\n\n※ 결제 등록은 하지 마세요 (결제를 켜면 무료 티어가 사라집니다). 모델명이 안 맞으면 AI Studio에 표시되는 무료 Flash 모델명으로 바꿔주세요.");
+}
+
+
+/* ===================== v11: 표현 암기 (SRS 간격 반복) ===================== */
+const LS_EXPR = "opic_expr_v1";
+const EX_CATS = { hook:"운 시작", compare:"비교", hypo:"가정", emotion:"감정/의견", transition:"전환/디테일", closing:"마무리", rp:"롤플레이" };
+const EX_INTERVALS = [1, 3, 7, 14, 30]; // box1~5 통과 시 다음 복습까지 일수
+const EXPR_DATA = [
+  // 운 시작 (hook)
+  { id:"h1", cat:"hook", en:"Oh, where do I even start? There's a lot to say about this.", ko:"어디서부터 말해야 하지? 할 얘기가 정말 많아요." },
+  { id:"h2", cat:"hook", en:"You know what, the first thing that comes to mind is...", ko:"있잖아요, 제일 먼저 떠오르는 건..." },
+  { id:"h3", cat:"hook", en:"I still vividly remember the day...", ko:"그날이 아직도 생생하게 기억나요..." },
+  { id:"h4", cat:"hook", en:"Honestly, this is something I really care about.", ko:"솔직히 이건 제가 정말 아끼는 주제예요." },
+  { id:"h5", cat:"hook", en:"That question actually brings back a lot of memories.", ko:"그 질문 들으니 옛 기억이 확 떠오르네요." },
+  { id:"h6", cat:"hook", en:"Speaking of which, something interesting happened to me recently.", ko:"말 나온 김에, 최근에 재밌는 일이 있었어요." },
+  // 비교 (compare)
+  { id:"c1", cat:"compare", en:"Back in the day, it was a completely different story.", ko:"옛날에는 완전히 다른 얘기였죠." },
+  { id:"c2", cat:"compare", en:"It's nothing like it used to be.", ko:"예전 같지가 않아요." },
+  { id:"c3", cat:"compare", en:"The biggest difference I've noticed is...", ko:"제가 느낀 가장 큰 차이는..." },
+  { id:"c4", cat:"compare", en:"Whereas we used to do everything in person, now it's all online.", ko:"예전엔 다 직접 했다면, 지금은 전부 온라인이에요." },
+  { id:"c5", cat:"compare", en:"Looking back, I can't believe how much has changed.", ko:"돌이켜보면 이렇게 많이 변했다는 게 믿기지 않아요." },
+  { id:"c6", cat:"compare", en:"These days, it's way more convenient than it used to be.", ko:"요즘은 예전보다 훨씬 편리해요." },
+  // 가정 (hypo)
+  { id:"y1", cat:"hypo", en:"If it were up to me, I'd change it in a heartbeat.", ko:"저한테 달렸다면 한순간에 바꿀 거예요." },
+  { id:"y2", cat:"hypo", en:"That would make a world of difference.", ko:"그러면 완전히 달라질 거예요." },
+  { id:"y3", cat:"hypo", en:"If I had known earlier, I would have done it differently.", ko:"미리 알았더라면 다르게 했을 거예요." },
+  { id:"y4", cat:"hypo", en:"I can only imagine how different things would be.", ko:"얼마나 달라질지 상상만 할 뿐이에요." },
+  { id:"y5", cat:"hypo", en:"Suppose that happened to me — I'd probably freak out at first.", ko:"저한테 그런 일이 생긴다면, 처음엔 아마 기겁하겠죠." },
+  { id:"y6", cat:"hypo", en:"If I had the chance, I would definitely give it a try.", ko:"기회가 된다면 꼭 해볼 거예요." },
+  // 감정/의견 (emotion)
+  { id:"e1", cat:"emotion", en:"What really struck me was...", ko:"정말 인상 깊었던 건..." },
+  { id:"e2", cat:"emotion", en:"To be honest, I was a bit overwhelmed at first.", ko:"솔직히 처음엔 좀 벅찼어요." },
+  { id:"e3", cat:"emotion", en:"I was over the moon when it worked out.", ko:"잘 풀렸을 때 날아갈 듯 기뻤어요." },
+  { id:"e4", cat:"emotion", en:"It was such a relief, you have no idea.", ko:"얼마나 안심됐는지 몰라요." },
+  { id:"e5", cat:"emotion", en:"The way I see it, it's a matter of priorities.", ko:"제가 보기엔 결국 우선순위 문제예요." },
+  { id:"e6", cat:"emotion", en:"It drives me crazy when that happens.", ko:"그런 일이 생기면 정말 미치겠어요." },
+  { id:"e7", cat:"emotion", en:"I couldn't help but feel proud of myself.", ko:"스스로가 자랑스러울 수밖에 없었어요." },
+  { id:"e8", cat:"emotion", en:"Personally, I'm a big fan of keeping things simple.", ko:"개인적으로 단순하게 사는 걸 선호해요." },
+  // 전환/디테일 (transition)
+  { id:"t1", cat:"transition", en:"Now that I think about it, ...", ko:"지금 생각해보니..." },
+  { id:"t2", cat:"transition", en:"The funny thing is, ...", ko:"웃긴 게 뭐냐면..." },
+  { id:"t3", cat:"transition", en:"Long story short, ...", ko:"긴 얘기 짧게 하자면..." },
+  { id:"t4", cat:"transition", en:"To give you an idea, ...", ko:"감을 잡으시라고 예를 들면..." },
+  { id:"t5", cat:"transition", en:"It turned out to be way better than I expected.", ko:"예상보다 훨씬 좋았던 걸로 판명났어요." },
+  { id:"t6", cat:"transition", en:"Out of nowhere, it started pouring.", ko:"난데없이 비가 쏟아지기 시작했어요." },
+  { id:"t7", cat:"transition", en:"On top of that, ...", ko:"게다가..." },
+  // 마무리 (closing)
+  { id:"z1", cat:"closing", en:"So overall, it was a memorable experience.", ko:"그래서 전체적으로 기억에 남는 경험이었어요." },
+  { id:"z2", cat:"closing", en:"All in all, I'd say it was worth it.", ko:"이래저래 그럴 가치가 있었다고 봐요." },
+  { id:"z3", cat:"closing", en:"That's why it means so much to me.", ko:"그래서 저한테 그렇게 큰 의미가 있는 거예요." },
+  { id:"z4", cat:"closing", en:"At the end of the day, that's what matters most.", ko:"결국엔 그게 제일 중요한 거죠." },
+  { id:"z5", cat:"closing", en:"Anyway, that's pretty much the story.", ko:"아무튼 대충 그런 이야기예요." },
+  // 롤플레이 (rp)
+  { id:"r1", cat:"rp", en:"I'm calling to ask about...", ko:"~에 대해 여쭤보려고 전화드렸어요." },
+  { id:"r2", cat:"rp", en:"Is there any way you could...?", ko:"혹시 ~해주실 방법이 있을까요?" },
+  { id:"r3", cat:"rp", en:"That would be a huge help.", ko:"그렇게 해주시면 정말 큰 도움이 될 거예요." },
+  { id:"r4", cat:"rp", en:"Would it be possible to get a refund or an exchange?", ko:"환불이나 교환이 가능할까요?" },
+  { id:"r5", cat:"rp", en:"I totally understand, but here's the thing.", ko:"충분히 이해해요, 근데 문제가 하나 있어요." },
+  { id:"r6", cat:"rp", en:"Actually, something similar happened to me before.", ko:"사실 저도 전에 비슷한 일을 겪었어요." },
+];
+
+let exState = { prog: {}, custom: [] };
+let exQueue = [], exCur = null, exMode = "study";
+
+function exLoad() {
+  try { const s = JSON.parse(localStorage.getItem(LS_EXPR)); if (s && typeof s === "object") exState = Object.assign(exState, s); } catch {}
+  if (!exState.prog || typeof exState.prog !== "object") exState.prog = {};
+  if (!Array.isArray(exState.custom)) exState.custom = [];
+}
+function exSave() { localStorage.setItem(LS_EXPR, JSON.stringify(exState)); }
+function exAll() { return EXPR_DATA.concat(exState.custom); }
+function exProg(id) { return exState.prog[id] || { box: 0, due: null }; }  // box 0 = 아직 안 봄
+function exDueToday(id) {
+  const p = exProg(id);
+  if (p.box === 0) return true;                    // 새 카드
+  return p.due !== null && p.due <= twTodayKey();  // 복습일 도래
+}
+function exBuildQueue() {
+  const due = exAll().filter(it => exDueToday(it.id));
+  // 새 카드는 하루 10개까지만 — 새로고침해도 유지되도록 '오늘 소개된 수'를 저장해서 차감
+  const introToday = (exState.intro && exState.intro[twTodayKey()]) || 0;
+  const fresh = due.filter(it => exProg(it.id).box === 0).slice(0, Math.max(0, 10 - introToday));
+  const review = due.filter(it => exProg(it.id).box > 0);
+  exQueue = review.concat(fresh);
+  // 가벼운 셔플
+  for (let i = exQueue.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [exQueue[i], exQueue[j]] = [exQueue[j], exQueue[i]]; }
+}
+function exAddDays(days) {
+  const d = new Date(); d.setDate(d.getDate() + days);
+  return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
+}
+function exRenderStats() {
+  const all = exAll();
+  const remain = exQueue.length + (exCur ? 1 : 0);
+  const learned = all.filter(it => exProg(it.id).box >= 3).length;
+  document.getElementById("exStats").innerHTML = `
+    <div class="ex-stat"><div class="num">${remain}</div><div class="lab">남은 복습</div></div>
+    <div class="ex-stat"><div class="num">${learned}</div><div class="lab">몸에 붙은 표현</div></div>
+    <div class="ex-stat"><div class="num">${all.length}</div><div class="lab">전체 표현</div></div>`;
+}
+function exShowNext() {
+  const card = document.getElementById("exCard");
+  const doneEl = document.getElementById("exDone");
+  if (!exQueue.length) {
+    exCur = null;
+    exRenderStats();
+    card.style.display = "none";
+    document.getElementById("exRevealRow").style.display = "none";
+    document.getElementById("exGradeRow").style.display = "none";
+    doneEl.style.display = "block";
+    doneEl.innerHTML = `🎉 오늘 복습 완료!<br>내일 다시 오면 잊기 직전의 표현들이 기다리고 있어요.<br><br>
+      <button class="btn" onclick="exRandomReview()">🔁 그래도 랜덤으로 더 복습하기</button>`;
+    return;
+  }
+  exCur = exQueue.shift();
+  exRenderStats();
+  card.style.display = "flex";
+  doneEl.style.display = "none";
+  document.getElementById("exRevealRow").style.display = "block";
+  document.getElementById("exGradeRow").style.display = "none";
+  document.getElementById("exCat").textContent = "【 " + (EX_CATS[exCur.cat] || exCur.cat) + " 】";
+  document.getElementById("exKo").textContent = exCur.ko;
+  const en = document.getElementById("exEn");
+  en.textContent = exCur.en; en.style.display = "none";
+  const box = exProg(exCur.id).box;
+  document.getElementById("exBoxInd").textContent = box === 0 ? "🆕 새 표현" : "●".repeat(box) + "○".repeat(5 - box);
+}
+function exRandomReview() {
+  const all = exAll();
+  exQueue = [];
+  const pool = all.slice();
+  for (let i = 0; i < Math.min(10, pool.length); i++) {
+    exQueue.push(pool.splice(Math.floor(Math.random() * pool.length), 1)[0]);
+  }
+  exShowNext();
+}
+function exReveal() {
+  if (!exCur) return;
+  document.getElementById("exEn").style.display = "block";
+  document.getElementById("exRevealRow").style.display = "none";
+  document.getElementById("exGradeRow").style.display = "block";
+  exSpeak();
+}
+function exSpeak() { if (exCur) speakTTS(exCur.en); }
+function exGrade(g) {
+  if (!exCur) return;
+  const p = exProg(exCur.id);
+  let box = p.box || 0;
+  if (box === 0) {  // 처음 학습하는 새 카드 → 오늘의 신규 소개 수 기록
+    if (!exState.intro || typeof exState.intro !== "object") exState.intro = {};
+    const tk = twTodayKey();
+    exState.intro[tk] = (exState.intro[tk] || 0) + 1;
+  }
+  if (g === 0) { box = 1; exQueue.push(exCur); }        // 몰라요: 1단계로, 오늘 세션에서 다시
+  else if (g === 1) { box = Math.max(box, 1); }          // 애매해요: 단계 유지, 내일 다시
+  else { box = Math.min((box || 0) + 1, 5); }            // 알아요: 다음 단계로
+  const due = g === 0 ? twTodayKey() : g === 1 ? exAddDays(1) : exAddDays(EX_INTERVALS[box - 1]);
+  exState.prog[exCur.id] = { box, due };
+  exSave();
+  exShowNext();
+}
+function setExMode(m) {
+  exMode = m;
+  document.getElementById("exTabStudy").classList.toggle("active", m === "study");
+  document.getElementById("exTabList").classList.toggle("active", m === "list");
+  document.getElementById("exStudy").style.display = m === "study" ? "block" : "none";
+  document.getElementById("exList").style.display = m === "list" ? "block" : "none";
+  if (m === "list") exRenderList();
+}
+function exRenderList() {
+  const groups = {};
+  exAll().forEach(it => { (groups[it.cat] = groups[it.cat] || []).push(it); });
+  let out = "";
+  Object.keys(EX_CATS).forEach(cat => {
+    if (!groups[cat]) return;
+    out += `<div style="font-size:12px; font-weight:800; color:var(--accent); margin:16px 0 4px;">${EX_CATS[cat]}</div>`;
+    out += groups[cat].map(it => {
+      const box = exProg(it.id).box;
+      const dots = box === 0 ? "🆕" : "●".repeat(box) + "○".repeat(5 - box);
+      const isCustom = exState.custom.some(c => c.id === it.id);
+      return `<div class="ex-list-row">
+        <div style="flex:1;"><div class="en">${escapeHtml(it.en)}</div><div class="ko">${escapeHtml(it.ko)}</div></div>
+        <span class="ex-boxdots">${dots}</span>
+        <button class="tts-btn" style="padding:3px 8px;" onclick="speakTTS(${JSON.stringify(it.en).replace(/"/g,"&quot;")})">🔊</button>
+        ${isCustom ? `<button class="ex-del" onclick="exDelete('${it.id}')">🗑</button>` : ""}
+      </div>`;
+    }).join("");
+  });
+  document.getElementById("exListBody").innerHTML = out;
+}
+function exAdd() {
+  const en = document.getElementById("exNewEn").value.trim();
+  const ko = document.getElementById("exNewKo").value.trim();
+  const cat = document.getElementById("exNewCat").value;
+  if (!en || !ko) { alert("영어 표현과 한글 뜻을 모두 입력해주세요."); return; }
+  exState.custom.push({ id: "u" + Date.now(), cat, en, ko });
+  exSave();
+  document.getElementById("exNewEn").value = ""; document.getElementById("exNewKo").value = "";
+  exRenderList(); exRenderStats();
+}
+function exDelete(id) {
+  if (!confirm("이 표현을 삭제할까요?")) return;
+  exState.custom = exState.custom.filter(c => c.id !== id);
+  delete exState.prog[id];
+  exSave(); exRenderList(); exRenderStats();
+}
+function initExpr() { exLoad(); exBuildQueue(); exShowNext(); }
+
+/* ---- 변형 훈련 힌트에 '외운 표현 써먹기' 연결 ---- */
+const TW_EXPR_MAP = { past: ["hook", "emotion", "transition"], compare: ["compare", "closing"], hypo: ["hypo", "closing"], issue: ["emotion", "transition"] };
+function twExprHints(twist) {
+  const cats = TW_EXPR_MAP[twist.id] || [];
+  const pool = exAll().filter(it => cats.includes(it.cat) && exProg(it.id).box >= 3);
+  const picks = [];
+  const p = pool.slice();
+  while (picks.length < 2 && p.length) picks.push(p.splice(Math.floor(Math.random() * p.length), 1)[0]);
+  return picks;
+}
+
+loadState(); renderPills(); showCard(); updateConfigStatus(); newSpeakQ(); initTwist(); twRenderHist(); initExpr();
 </script>
 </body>
 </html>
