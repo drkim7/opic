@@ -502,7 +502,7 @@
         <textarea id="twAnswer" placeholder="영어 답변을 입력하세요..."></textarea>
       </div>
     </div>
-    <button class="btn btn-primary" style="width:100%; margin-top:12px;" onclick="submitTwist()">✨ AL 기준 체크 받기</button>
+    <button class="btn btn-primary" style="width:100%; margin-top:12px;" onclick="submitTwist()">✨ 답변 구조·AI 피드백 받기</button>
     <div id="twFeedback" style="margin-top:14px;"></div>
 
     <details class="tw-hist" id="twHistBox">
@@ -712,7 +712,7 @@ const DEFAULT_CARDS = [
       { en: "He/She is wearing ~", ko: "그/그녀는 ~를 입고 있어요 (특징 묘사)" },
       { en: "Could you please make an announcement?", ko: "방송 좀 해주시겠어요? (정중한 요청)" },
     ] },
-  { cat: "exp", set: "w2", title: "2-3 분실 경험",
+  { cat: "exp", set: "w2", title: "2-3 분실 경험", topicEn: "losing your belongings",
     koreanFlow: "골프장 → 줌 회의 → 이어폰 케이스 없음 → 찾아봄 → 못 찾음 → 새로 삼",
     hint: "장소 → 문제 발생 → 찾으려는 노력 → 결과",
     keyEnglish: "I looked around, but I couldn't find it. In the end, I had to buy a new one.",
@@ -724,7 +724,7 @@ const DEFAULT_CARDS = [
       { en: "I looked around, but I couldn't find it", ko: "찾아봤지만 못 찾았어요 (노력+결과)" },
       { en: "In the end, I had to ~", ko: "결국 ~할 수밖에 없었어요 (마무리)" },
     ] },
-  { cat: "opi", set: "w2", title: "2-4 AI 변화",
+  { cat: "opi", set: "w2", title: "2-4 AI 변화", topicEn: "AI in daily life",
     koreanFlow: "예전엔 단순 기능 → 지금은 AI로 다양화 → 업무에서 사용 → 개인 비서처럼",
     hint: "AI agent 하나의 주제로 기술 변화를 설명 (One Main Point)",
     keyEnglish: "AI has changed technology by making AI agents more practical and useful in daily life.",
@@ -736,7 +736,7 @@ const DEFAULT_CARDS = [
       { en: "What I find really convenient is ~", ko: "내가 정말 편하다고 느끼는 건 ~ (개인 의견)" },
       { en: "So I think ~ is one of the most ~", ko: "그래서 ~가 가장 ~한 것 중 하나라고 생각해요 (Outro)" },
     ] },
-  { cat: "opi", set: "w2", title: "2-5 기술 이슈",
+  { cat: "opi", set: "w2", title: "2-5 기술 이슈", topicEn: "technology and privacy",
     koreanFlow: "프라이버시 → 데이터 수집 → 해킹 위험 → 오용 → 통제권 문제",
     hint: "AI의 가장 큰 문제를 privacy 하나로 잡고 끝까지 유지 (One Main Point)",
     keyEnglish: "I think the biggest issue with AI is privacy, because our personal data could be leaked.",
@@ -748,7 +748,7 @@ const DEFAULT_CARDS = [
       { en: "What worries me the most is ~", ko: "가장 걱정되는 건 ~ (강조)" },
       { en: "So I think ~ is the most serious ~", ko: "그래서 ~가 가장 심각한 ~라고 생각해요 (Outro)" },
     ] },
-  { cat: "desc", set: "exam", title: "🎵 music — 묘사/라이브경험",
+  { cat: "desc", set: "exam", title: "🎵 music — 묘사/라이브경험", topicEn: "listening to music",
     koreanFlow: "한국 록 좋아함 → Silica Gel → 실험적·철학적 가사 → 밤 운전하며 들음 → 다른 세계 느낌",
     hint: "A 묘사: 한 가지로 좁히고 감정으로 끝내기. 라이브 경험은 E형(반전+감정 한 방)",
     keyEnglish: "I'm really into Korean rock these days. It feels like being transported to another world.",
@@ -760,7 +760,7 @@ const DEFAULT_CARDS = [
       { en: "I once ran into ~", ko: "우연히 ~를 마주친 적 있어요 (memorable 도입)" },
       { en: "That's when it hit me — ~", ko: "그때 깨달았어요 — (감정 한 방)" }
     ] },
-  { cat: "desc", set: "exam", title: "🏠 house — 집/최애 방",
+  { cat: "desc", set: "exam", title: "🏠 house — 집/최애 방", topicEn: "your home",
     koreanFlow: "교외·산 근처 조용 → 방 4개 → 미니멀·밝은 벽지 → 최애 안방 extra-king → 넷플릭스 보다 잠드는 루틴",
     hint: "A 묘사: 나열 금지, 한 가지(안방)+감정·루틴 한 줄로 마무리",
     keyEnglish: "My favorite is the master bedroom — perfect for Netflix. That's my favorite routine.",
@@ -772,7 +772,7 @@ const DEFAULT_CARDS = [
       { en: "After work, I love ~ing", ko: "퇴근 후 ~하는 걸 좋아해요 (루틴+감정)" },
       { en: "That's my favorite routine", ko: "그게 제 최애 루틴이에요 (마무리)" }
     ] },
-  { cat: "desc", set: "exam", title: "🛋️ home vacation — 집콕 휴가",
+  { cat: "desc", set: "exam", title: "🛋️ home vacation — 집콕 휴가", topicEn: "spending vacations at home",
     koreanFlow: "프로젝트로 지침 → 여행보다 집에서 충전 → 아내와 드라마 정주행+배달 → 일 생각 안 하는 게 진짜 휴식",
     hint: "B 루틴 + G 이슈(휴가 중요성): 아묻따 #12와 연결",
     keyEnglish: "Not thinking about work at all is exactly the rest I need.",
@@ -784,7 +784,7 @@ const DEFAULT_CARDS = [
       { en: "It's not exciting, but ~", ko: "신나진 않지만 ~ (반전+의미)" },
       { en: "~ is exactly the rest I need", ko: "~가 바로 내게 필요한 휴식이에요 (마무리)" }
     ] },
-  { cat: "exp", set: "exam", title: "✈️ travel — 어릴 적 중국 여행",
+  { cat: "exp", set: "exam", title: "✈️ travel — 어릴 적 중국 여행", topicEn: "traveling abroad",
     koreanFlow: "첫 해외=어릴 때 중국 → 가족 10명 단체 → 만리장성 실물에 압도 → 가팔라서 금방 지침 → 자금성",
     hint: "C 과거경험: When I was ~ 시점 → 상황 → 감정 → 의미. 아묻따 #6 연결",
     keyEnglish: "The Great Wall blew me away; in person it stretched endlessly.",
@@ -796,7 +796,7 @@ const DEFAULT_CARDS = [
       { en: "I'd only seen it in books, but in person ~", ko: "책으로만 봤는데 실물은 ~ (대조)" },
       { en: "the ~ was so steep I got tired fast", ko: "너무 가팔라서 금방 지쳤어요 (디테일)" }
     ] },
-  { cat: "exp", set: "exam", title: "⛺ camping — 캠핑/폭우 에피소드",
+  { cat: "exp", set: "exam", title: "⛺ camping — 캠핑/폭우 에피소드", topicEn: "camping",
     koreanFlow: "텐트·랜턴·의자·고기 필수 → 도시 벗어나 불멍 매력 → 밤 폭우에 텐트 정리 대소동 → 웃긴 추억",
     hint: "A 묘사 + E memorable: 평범→반전(폭우)→감정. 아묻따 #11 연결",
     keyEnglish: "The best part is escaping the city and staring at the campfire.",
@@ -808,7 +808,7 @@ const DEFAULT_CARDS = [
       { en: "One time it suddenly ~", ko: "한번은 갑자기 ~ (반전 도입)" },
       { en: "chaos, but one of my funniest ~ memories", ko: "난리였지만 가장 웃긴 추억 (마무리)" }
     ] },
-  { cat: "opi", set: "exam", title: "🥗 health — 스트레스/회복 (만능)",
+  { cat: "opi", set: "exam", title: "🥗 health — 스트레스/회복 (만능)", topicEn: "managing stress and health",
     koreanFlow: "가장 큰 건 스트레스 → 2년 전 야식→체중↑·불면 → 며칠 쉬며 당·염분 줄임 → 회복+교훈",
     hint: "G 이슈 만능: 아묻따 #12 — 인트로·결론만 질문 따라 교체, 몸통 고정",
     keyEnglish: "I learned that releasing stress and allowing recovery is what protects your health.",
@@ -820,7 +820,7 @@ const DEFAULT_CARDS = [
       { en: "I took a few days off and ~", ko: "며칠 쉬면서 ~했어요 (해결 행동)" },
       { en: "I learned that ~", ko: "~라는 걸 배웠어요 (Outro 교훈)" }
     ] },
-  { cat: "desc", set: "exam", title: "🌐 internet — 용도/변화",
+  { cat: "desc", set: "exam", title: "🌐 internet — 용도/변화", topicEn: "using the internet",
     koreanFlow: "뉴스·유튜브·쇼핑·업무 리서치 → 예전엔 PC, 지금 거의 폰 → 없으면 하루도 못 버팀",
     hint: "A 묘사 + F 비교(PC→폰). 먹통 경험은 아묻따 #9 연결",
     keyEnglish: "I couldn't get through a single day without it.",
@@ -831,7 +831,7 @@ const DEFAULT_CARDS = [
       { en: "I used to ~, but now ~", ko: "예전엔 ~했지만 지금은 ~ (F형 비교 핵심)" },
       { en: "Honestly, I couldn't ~ without it", ko: "솔직히 그것 없인 ~ 못해요 (마무리 강조)" }
     ] },
-  { cat: "desc", set: "exam", title: "🌳 park — 한강공원",
+  { cat: "desc", set: "exam", title: "🌳 park — 한강공원", topicEn: "going to parks",
     koreanFlow: "집 근처 한강공원 → 산책·자전거·돗자리 → 주말 커피 들고 → 노을 보며 멍 때리기",
     hint: "A 묘사: 활동 나열 후 '내 최애 한 가지+감정'으로 좁혀 마무리",
     keyEnglish: "My favorite thing is sitting by the river at sunset and clearing my head.",
@@ -843,7 +843,7 @@ const DEFAULT_CARDS = [
       { en: "My favorite thing is ~ing", ko: "가장 좋아하는 건 ~ (하나로 좁히기)" },
       { en: "the most relaxing part of my week", ko: "한 주 중 가장 힐링되는 시간 (감정 마무리)" }
     ] },
-  { cat: "opi", set: "exam", title: "🤖 tech — AI/스마트홈 변화",
+  { cat: "opi", set: "exam", title: "🤖 tech — AI/스마트홈 변화", topicEn: "smart technology at home",
     koreanFlow: "AI·스마트홈으로 폰으로 가전 제어 → GPS·번역앱으로 여행 쉬워짐 → AI 챗봇 뉴스 자주 봄",
     hint: "G 이슈(14~15번): 현상 한 줄 → 구체 예시 → 내 의견 마무리",
     keyEnglish: "Technology has changed daily life a lot, mostly through AI and smart homes.",
@@ -855,7 +855,7 @@ const DEFAULT_CARDS = [
       { en: "Lately I keep seeing news about ~", ko: "요즘 ~ 뉴스를 자주 봐요 (최신 이슈)" },
       { en: "it makes me wonder how far it'll go", ko: "어디까지 갈지 궁금해져요 (의견 마무리)" }
     ] },
-  { cat: "desc", set: "exam", title: "🏨 hotel — 호캉스/무료 업그레이드",
+  { cat: "desc", set: "exam", title: "🏨 hotel — 호캉스/무료 업그레이드", topicEn: "staying at hotels",
     koreanFlow: "깨끗·서비스 빠름·시티뷰 선호 → 기념일 호캉스 수영장·룸서비스 → 늦은 체크인에 무료 업글",
     hint: "A 묘사 + E memorable(무료 업그레이드 반전). 아묻따 #1·#8 연결",
     keyEnglish: "They upgraded our room for free — it made the whole anniversary feel special.",
@@ -867,7 +867,7 @@ const DEFAULT_CARDS = [
       { en: "the staff upgraded our ~ for free", ko: "직원이 무료로 업그레이드해줬어요 (반전)" },
       { en: "It made the whole ~ feel special", ko: "덕분에 모든 게 특별해졌어요 (감정 마무리)" }
     ] },
-  { cat: "desc", set: "exam", title: "🏖️ beach — 해운대",
+  { cat: "desc", set: "exam", title: "🏖️ beach — 해운대", topicEn: "going to the beach",
     koreanFlow: "해운대 → 회·해산물 → 수영보다 모래사장·노을 → 파도 소리에 머리 비움",
     hint: "A 묘사: 활동보다 '내가 좋아하는 한 가지+감정'. 아묻따 #3 연결",
     keyEnglish: "The sound of the waves completely clears my mind.",
@@ -878,7 +878,7 @@ const DEFAULT_CARDS = [
       { en: "I'm not much of a ~", ko: "저는 ~를 잘하는 편은 아니에요 (솔직 디테일)" },
       { en: "~ completely clears my mind", ko: "~가 머리를 완전히 비워줘요 (감정 마무리)" }
     ] },
-  { cat: "desc", set: "exam", title: "💇 hair shop — 단골 미용실",
+  { cat: "desc", set: "exam", title: "💇 hair shop — 단골 미용실", topicEn: "going to the hair salon",
     koreanFlow: "단골 Juno, 디자이너가 취향 앎 → 커트+가끔 펌 → 새 스타일 도전했다 어색해 후회",
     hint: "A 묘사+B 루틴+E 경험(과감한 스타일 후회담). 아묻따 #13 연결",
     keyEnglish: "My stylist already knows what I like.",
@@ -890,7 +890,7 @@ const DEFAULT_CARDS = [
       { en: "Once I tried ~, but it felt so awkward", ko: "한번 ~ 도전했는데 너무 어색했어요 (반전)" },
       { en: "Lesson learned", ko: "교훈 얻었죠 (마무리 한 방)" }
     ] },
-  { cat: "desc", set: "exam", title: "🎬 movie — Project Hail Mary",
+  { cat: "desc", set: "exam", title: "🎬 movie — Project Hail Mary", topicEn: "watching movies",
     koreanFlow: "SF 좋아함 → Project Hail Mary → 외계인 Rocky와 종 넘은 우정 → 거의 울 뻔, 해피엔딩",
     hint: "A 묘사: 줄거리보다 '내가 좋았던 한 가지(우정)+감정'. 아묻따 #9 연결",
     keyEnglish: "It was so emotional I almost cried at the end.",
@@ -901,7 +901,7 @@ const DEFAULT_CARDS = [
       { en: "It sounds strange, but ~", ko: "이상하게 들리겠지만 ~ (감정 강조 전환)" },
       { en: "I almost cried at the end", ko: "마지막에 거의 울 뻔했어요 (감정 한 방)" }
     ] },
-  { cat: "desc", set: "exam", title: "👗 fashion — 핏·소재 중시",
+  { cat: "desc", set: "exam", title: "👗 fashion — 핏·소재 중시", topicEn: "fashion and clothes",
     koreanFlow: "한국 트렌디·미니멀 → 나는 온라인·베이직 → (변화) 로고 중시 → 핏·소재 중시",
     hint: "A 묘사+F 비교: Back then→But now 구조. 아묻따 #9 연결",
     keyEnglish: "People used to care about brand logos, but now it's more about the fit and fabric.",
@@ -912,7 +912,7 @@ const DEFAULT_CARDS = [
       { en: "People used to ~, but now ~", ko: "예전엔 ~했지만 지금은 ~ (비교 핵심)" },
       { en: "I prefer simple ~", ko: "저는 심플한 ~를 선호해요 (내 취향)" }
     ] },
-  { cat: "desc", set: "exam", title: "📱 phone — 카메라·모바일결제",
+  { cat: "desc", set: "exam", title: "📱 phone — 카메라·모바일결제", topicEn: "using your smartphone",
     koreanFlow: "카메라·모바일 결제 최다 → 통화보다 메신저·유튜브·뱅킹 → 옛 폰은 절반도 못함",
     hint: "A 묘사+F 비교. 롤플(새 폰 결함)은 별도 rp 카드. 아묻따 #9·#10",
     keyEnglish: "My whole life runs through it now.",
@@ -923,7 +923,7 @@ const DEFAULT_CARDS = [
       { en: "My old ~ could barely do half of ~", ko: "옛 ~는 절반도 못했어요 (비교)" },
       { en: "My whole life runs through it", ko: "제 삶 전체가 이걸로 돌아가요 (마무리 강조)" }
     ] },
-  { cat: "desc", set: "exam", title: "📹 video — 유튜브 알고리즘",
+  { cat: "desc", set: "exam", title: "📹 video — 유튜브 알고리즘", topicEn: "watching online videos",
     koreanFlow: "유튜브 다큐·운동 → 일할 땐 강의·튜토리얼 → 어제 알고리즘에 빠져 늦게 잠",
     hint: "B 루틴+D 최근경험('어제 한 일' 단골). 아묻따 #1 연결",
     keyEnglish: "I fell down a YouTube rabbit hole — the algorithm knows me too well.",
@@ -935,7 +935,7 @@ const DEFAULT_CARDS = [
       { en: "one recommendation led to another", ko: "추천이 추천을 불렀어요 (디테일)" },
       { en: "The algorithm knows me too well", ko: "알고리즘이 날 너무 잘 알아요 (유머 마무리)" }
     ] },
-  { cat: "desc", set: "exam", title: "🎊 holiday — 설·추석",
+  { cat: "desc", set: "exam", title: "🎊 holiday — 설·추석", topicEn: "traditional holidays in Korea",
     koreanFlow: "설·추석 차례·성묘 → 전 부치고 큰 식사 → (변화) 명절에 해외여행 가는 가족↑",
     hint: "A 묘사+F 비교. 아묻따 #11 연결",
     keyEnglish: "It's the only time the whole family is together.",
@@ -946,7 +946,7 @@ const DEFAULT_CARDS = [
       { en: "One change is that ~", ko: "한 가지 변화는 ~ (비교)" },
       { en: "I still prefer ~", ko: "그래도 저는 ~가 좋아요 (내 의견 마무리)" }
     ] },
-  { cat: "opi", set: "exam", title: "♻️ recycling — 분리수거 변화",
+  { cat: "opi", set: "exam", title: "♻️ recycling — 분리수거 변화", topicEn: "recycling",
     koreanFlow: "분리수거 엄격(플라스틱·캔·종이·음식물) → 시민의식↑ → 일부 아파트 앱·QR 관리",
     hint: "F 비교+G 이슈(14번 단골). 아묻따 #15 연결",
     keyEnglish: "Some buildings now manage it through apps or QR codes.",
@@ -957,7 +957,7 @@ const DEFAULT_CARDS = [
       { en: "People have become much more aware", ko: "사람들 의식이 많이 높아졌어요 (변화)" },
       { en: "It's a bit of a hassle, but a good habit", ko: "번거롭지만 좋은 습관이죠 (양면+의견)" }
     ] },
-  { cat: "exp", set: "exam", title: "🍔 delivery — 배달 실수 경험",
+  { cat: "exp", set: "exam", title: "🍔 delivery — 배달 실수 경험", topicEn: "ordering food delivery",
     koreanFlow: "바빠서 배달 자주 → 늦고 잘못 옴 → 고객센터 연락 → 환불·재배송 → 요즘 건강식 배달도",
     hint: "J 경험(배달 문제 단골). 아묻따 #14 연결",
     keyEnglish: "I contacted support, and they refunded me quickly.",
@@ -969,7 +969,7 @@ const DEFAULT_CARDS = [
       { en: "they refunded me quickly", ko: "빠르게 환불해줬어요 (해결)" },
       { en: "These days you can even ~", ko: "요즘은 ~까지 가능해요 (트렌드 마무리)" }
     ] },
-  { cat: "opi", set: "exam", title: "🏭 industry — 반도체·AI",
+  { cat: "opi", set: "exam", title: "🏭 industry — 반도체·AI", topicEn: "major industries in your country",
     koreanFlow: "반도체·IT 핵심(금융권이라 관심) → 3년 전보다 AI 급성장 → 신제품 기대 이하 실망 여론",
     hint: "A 묘사+F 비교+G 이슈. 아묻따 #7 연결",
     keyEnglish: "Compared to three years ago, AI fields have grown explosively.",
@@ -980,7 +980,7 @@ const DEFAULT_CARDS = [
       { en: "Compared to ~ years ago, ~ have grown explosively", ko: "~년 전보다 ~가 폭발적으로 성장 (비교)" },
       { en: "it shows how high hopes have gotten", ko: "기대가 그만큼 높아졌단 거죠 (해석 마무리)" }
     ] },
-  { cat: "opi", set: "exam", title: "🏢 workplace — 재택·AI직군",
+  { cat: "opi", set: "exam", title: "🏢 workplace — 재택·AI직군", topicEn: "working environments",
     koreanFlow: "금융권 개방형 오피스 → 재택·하이브리드↑·화상회의 일상 → AI직군 인기",
     hint: "A 묘사+F 비교+G 이슈(14번)",
     keyEnglish: "Remote and hybrid work have grown, so video calls are routine now.",
@@ -991,7 +991,7 @@ const DEFAULT_CARDS = [
       { en: "~ are routine now", ko: "~가 이제 일상이에요 (현재 상태)" },
       { en: "because of AI, ~ have become incredibly popular", ko: "AI 덕분에 ~가 엄청 인기예요 (트렌드)" }
     ] },
-  { cat: "desc", set: "exam", title: "🗺️ geography — 삼면 바다",
+  { cat: "desc", set: "exam", title: "🗺️ geography — 삼면 바다", topicEn: "the geography of your country",
     koreanFlow: "삼면 바다(동해 깊어 수영) → 산 많아 등산 → 일본 화산·온천 이국적",
     hint: "A 묘사+F 비교. 아묻따 #6 연결",
     keyEnglish: "Korea is surrounded by sea on three sides.",
@@ -1002,7 +1002,7 @@ const DEFAULT_CARDS = [
       { en: "We have lots of ~, so ~ is popular", ko: "~가 많아서 ~가 인기예요 (연결)" },
       { en: "~ feels exotic with its ~", ko: "~는 ~ 때문에 이국적이에요 (비교 대상)" }
     ] },
-  { cat: "desc", set: "exam", title: "🔌 home appliance — 스타일러",
+  { cat: "desc", set: "exam", title: "🔌 home appliance — 스타일러", topicEn: "home appliances",
     koreanFlow: "스타일러 극찬 → 냄새·먼지·고양이털 제거 → 회식 후 담배냄새 싹",
     hint: "F 비교+G 이슈(유용한 가전). 아묻따 #4 연결",
     keyEnglish: "It removes odors and dust you can't get rid of otherwise.",
@@ -1013,7 +1013,7 @@ const DEFAULT_CARDS = [
       { en: "my clothes used to reek of ~", ko: "옷에서 ~ 냄새가 진동했어요 (Before)" },
       { en: "it clears it completely", ko: "완전히 없애줘요 (After+감탄)" }
     ] },
-  { cat: "desc", set: "exam", title: "🪑 furniture — 침대·모듈가구",
+  { cat: "desc", set: "exam", title: "🪑 furniture — 침대·모듈가구", topicEn: "furniture in your home",
     koreanFlow: "큰 침대·편한 소파 → (변화) 무거운 원목 → 가볍고 모듈형",
     hint: "A 묘사+F 비교. 오배송 롤플은 rp 카드. 아묻따 #5 연결",
     keyEnglish: "It used to be heavy dark wood, but now it's lighter and more modular.",
@@ -1024,7 +1024,7 @@ const DEFAULT_CARDS = [
       { en: "~ is a must", ko: "~는 필수예요 (강조)" },
       { en: "It used to be ~, but now it's ~", ko: "예전엔 ~였는데 지금은 ~ (F형 비교)" }
     ] },
-  { cat: "opi", set: "exam", title: "☀️ weather — 길어진 여름",
+  { cat: "opi", set: "exam", title: "☀️ weather — 길어진 여름", topicEn: "the weather in your country",
     koreanFlow: "사계절 → 여름 길고 더움·장마 불규칙 → 선선한 가을 등산 제일 좋아함",
     hint: "F 비교+G 이슈(기후 변화 뉴스). 아묻따 #2 연결",
     keyEnglish: "Lately summers are longer and hotter, and the rainy season is less predictable.",
@@ -1035,7 +1035,7 @@ const DEFAULT_CARDS = [
       { en: "~ is less predictable", ko: "~가 예측이 어려워졌어요 (이슈)" },
       { en: "the crisp air is perfect for ~", ko: "선선한 공기가 ~에 딱이에요 (취향 마무리)" }
     ] },
-  { cat: "exp", set: "exam", title: "🏥 clinic — 치과 공포 극복",
+  { cat: "exp", set: "exam", title: "🏥 clinic — 치과 공포 극복", topicEn: "visiting clinics and hospitals",
     koreanFlow: "앱 예약 동네 의원 → 어릴 때 치과 무서워 울음 → 검진 별일 없어 안심 → 지금은 정기검진",
     hint: "A 묘사+C·E 경험(어릴 적 의사 경험 단골). 아묻따 #15 연결",
     keyEnglish: "As a kid I was so scared of the dentist I'd cry.",
@@ -1046,7 +1046,7 @@ const DEFAULT_CARDS = [
       { en: "it turned out fine and I was so relieved", ko: "별일 아니어서 정말 안심했어요 (반전+감정)" },
       { en: "Now I go for regular ~", ko: "지금은 정기적으로 ~해요 (현재 연결)" }
     ] },
-  { cat: "desc", set: "exam", title: "👨‍👩‍👧 friends — 정반대 두 친구",
+  { cat: "desc", set: "exam", title: "👨‍👩‍👧 friends — 정반대 두 친구", topicEn: "your friends",
     koreanFlow: "외향적 vs 차분한 두 친구, 둘 다 의리 → 부동산·재테크 얘기 → 결국 옛 추억",
     hint: "A 묘사(2명 소개·비교 단골 문제)",
     keyEnglish: "One outgoing, one calm, but both incredibly loyal.",
@@ -1057,7 +1057,7 @@ const DEFAULT_CARDS = [
       { en: "one ~, one ~, but both ~", ko: "한 명은 ~, 한 명은 ~, 둘 다 ~ (대조 구조)" },
       { en: "always end up reminiscing about ~", ko: "결국엔 ~ 추억 얘기로 끝나요 (마무리)" }
     ] },
-  { cat: "desc", set: "exam", title: "🕐 free time — 혼자 충전",
+  { cat: "desc", set: "exam", title: "🕐 free time — 혼자 충전", topicEn: "spending free time alone",
     koreanFlow: "책·역사 다큐·드라이브하며 음악 → (변화) 어릴 땐 밖에서 친구와, 지금은 집에서 혼자 충전",
     hint: "A 묘사+F 비교. 아묻따 #11 연결",
     keyEnglish: "You have to rest on purpose these days, or you burn out.",
@@ -1068,7 +1068,7 @@ const DEFAULT_CARDS = [
       { en: "I recharge alone at home", ko: "집에서 혼자 충전해요 (현재 루틴)" },
       { en: "You have to rest on purpose, or you burn out", ko: "일부러 쉬지 않으면 번아웃 와요 (의견 한 방)" }
     ] },
-  { cat: "desc", set: "exam", title: "🚇 transportation — 지하철",
+  { cat: "desc", set: "exam", title: "🚇 transportation — 지하철", topicEn: "public transportation",
     koreanFlow: "지하철 깨끗·정확·앱 확인 → 교통카드 → 모바일 결제 → 출퇴근 혼잡이 문제",
     hint: "A 묘사+F 비교. 아묻따 #2 연결",
     keyEnglish: "It's gone from plastic cards to mobile payments.",
@@ -1079,7 +1079,7 @@ const DEFAULT_CARDS = [
       { en: "It's gone from ~ to ~", ko: "~에서 ~로 바뀌었어요 (변화 압축)" },
       { en: "The one problem is ~", ko: "한 가지 문제는 ~ (이슈+해결 제안)" }
     ] },
-  { cat: "opi", set: "exam", title: "🏘️ community — 동네 축제",
+  { cat: "opi", set: "exam", title: "🏘️ community — 동네 축제", topicEn: "your neighborhood community",
     koreanFlow: "동네잔치 → 플리마켓·페스티벌 → SNS 홍보로 참여↑ → 소음·교통 불만 있지만 동네 모이는 건 긍정",
     hint: "F 비교+G 이슈(양면 짚기). 아묻따 #11 연결",
     keyEnglish: "They can cause noise and traffic, but the upside is they bring the neighborhood together.",
@@ -1090,7 +1090,7 @@ const DEFAULT_CARDS = [
       { en: "They can cause ~, but the upside is ~", ko: "~ 문제도 있지만 장점은 ~ (양면 짚기)" },
       { en: "bring the neighborhood together", ko: "동네를 하나로 모아줘요 (긍정 마무리)" }
     ] },
-  { cat: "desc", set: "exam", title: "💪 gym — 월수금 루틴",
+  { cat: "desc", set: "exam", title: "💪 gym — 월수금 루틴", topicEn: "working out at the gym",
     koreanFlow: "사무실 옆 헬스장 → 월수금 웨이트·화목 조깅 → 살쪄서+아버지 조언으로 시작 → 기다려지는 루틴",
     hint: "A 묘사+C 경험(시작 계기 단골). 아묻따 #12 연결",
     keyEnglish: "Now it's a routine I look forward to.",
@@ -1101,7 +1101,7 @@ const DEFAULT_CARDS = [
       { en: "I started because ~", ko: "~ 때문에 시작했어요 (C형 계기)" },
       { en: "Now it's a routine I look forward to", ko: "이젠 기다려지는 루틴이에요 (감정 마무리)" }
     ] },
-  { cat: "exp", set: "exam", title: "🧹 responsibility — 분리수거 깜빡",
+  { cat: "exp", set: "exam", title: "🧹 responsibility — 분리수거 깜빡", topicEn: "household chores",
     koreanFlow: "나 설거지·쓰레기, 아내 빨래 → 어릴 땐 내 방 청소 → 바빠서 분리수거 일주일 깜빡 → 미안, 알림 설정",
     hint: "B 루틴+J 경험(책임 못 다한 경험 단골). 아묻따 #15 연결",
     keyEnglish: "I felt bad, so now I set a reminder.",
@@ -1304,7 +1304,7 @@ const DEFAULT_CARDS = [
       { en: "Or do something indoors, like ~?", ko: "아니면 실내에서 ~ 어때요? (대안2)" },
       { en: "What do you think? / What works for you?", ko: "어떻게 생각해요? (제안 마무리 고정)" }
     ] },
-  { cat: "desc", set: "day1", title: "⭐D1 집 묘사 — 안방/회복",
+  { cat: "desc", set: "day1", title: "⭐D1 집 묘사 — 안방/회복", topicEn: "your home",
     koreanFlow: "조용한 교외 아파트·산 근처 → 방3+거실, but 최애=안방 하나만 → extra-king·은은한 조명 → 퇴근 후 누워 영상 보다 잠듦 → 집=회복 공간",
     hint: "A 묘사: 모든 방 나열 금지, 안방 하나로 좁히고 '회복' 감정으로 마무리. Day1 우선암기 1",
     keyEnglish: "Home is not just a place to live. It's where I recharge.",
@@ -1316,7 +1316,7 @@ const DEFAULT_CARDS = [
       { en: "It may sound simple, but ~", ko: "단순하게 들리겠지만 ~ (감정 전환)" },
       { en: "It's where I recharge", ko: "제가 충전하는 곳이에요 (마무리 한 방)" }
     ] },
-  { cat: "desc", set: "day1", title: "D1 집에서 가족과 — 아내와 Netflix",
+  { cat: "desc", set: "day1", title: "D1 집에서 가족과 — 아내와 Netflix", topicEn: "spending time at home with family",
     koreanFlow: "퇴근 후 아내와 → 특별할 건 없지만 좋아하는 루틴 → 거실/침실서 넷플릭스+배달 → 하루 얘기하며 이완 → 이게 집을 집답게 함",
     hint: "B 루틴: '특별하진 않지만 의미있다' 구조. 회복 감정으로 마무리",
     keyEnglish: "This simple routine is what makes home feel like home.",
@@ -1328,7 +1328,7 @@ const DEFAULT_CARDS = [
       { en: "It's not a fancy activity, but ~", ko: "화려한 건 아니지만 ~ (반전+의미)" },
       { en: "what makes home feel like home", ko: "집을 집답게 만드는 것 (마무리)" }
     ] },
-  { cat: "desc", set: "day1", title: "⭐D1 옛집 vs 지금집 — 커뮤니티시설",
+  { cat: "desc", set: "day1", title: "⭐D1 옛집 vs 지금집 — 커뮤니티시설", topicEn: "the places you have lived",
     koreanFlow: "가장 큰 차이=커뮤니티 시설 → 옛집은 주거동만, 비올 때 우산 쓰고 외부 상가 → 지금은 단지 내 헬스장·지하통로로 안 젖고 쇼핑 → 핵심=편의성",
     hint: "F 비교: 'one major way'로 한 가지 축만. Back then→But now. Day1 우선암기 2",
     keyEnglish: "The biggest change is convenience.",
@@ -1340,7 +1340,7 @@ const DEFAULT_CARDS = [
       { en: "Especially when it rained, ~", ko: "특히 비 올 때 ~ (구체 불편)" },
       { en: "My old place had memories, but my current place ~", ko: "옛집엔 추억이, 지금집은 ~ (균형 마무리)" }
     ] },
-  { cat: "opi", set: "day1", title: "D1 Housing issue — 입지 불균형",
+  { cat: "opi", set: "day1", title: "D1 Housing issue — 입지 불균형", topicEn: "housing in your country",
     koreanFlow: "집값·렌트가 큰 이슈 → 핵심은 '총량'이 아니라 '입지' → 정부는 짓지만 사람들은 도심·학군·교통 원함 → 인기지역 수요>공급, 비인기지역엔 빈집 → 진짜 문제=짓는 곳과 원하는 곳의 불일치",
     hint: "G 이슈(14~15번): One Main Point=location imbalance. 하나로 끝까지. Day1 우선암기 후보",
     keyEnglish: "The real issue is the imbalance between where homes are built and where people actually want to live.",
@@ -1352,7 +1352,7 @@ const DEFAULT_CARDS = [
       { en: "demand is much higher than supply", ko: "수요가 공급보다 훨씬 많아요 (원인)" },
       { en: "I don't think there is a simple solution", ko: "간단한 해결책은 없다고 봐요 (현실적 마무리)" }
     ] },
-  { cat: "desc", set: "day1", title: "⭐D1 좋아하는 음악 — Hearts2Hearts",
+  { cat: "desc", set: "day1", title: "⭐D1 좋아하는 음악 — Hearts2Hearts", topicEn: "your favorite music",
     koreanFlow: "요즘 K-pop 빠짐, Hearts2Hearts → 가장 좋은 건 '에너지' → 밝고 중독성, 가사 외우기 쉬움 → 칼군무 영상도 좋아함 → 젊은 에너지에 기분 좋아짐",
     hint: "A 묘사: '에너지' 하나로 좁히고 감정 마무리. Day1 우선암기 3",
     keyEnglish: "What I like most about them is their energy.",
@@ -1364,7 +1364,7 @@ const DEFAULT_CARDS = [
       { en: "almost like everyone is moving as one person", ko: "마치 한 사람처럼 움직여요 (칼군무 묘사)" },
       { en: "It just puts me in a good mood", ko: "그냥 기분이 좋아져요 (감정 마무리)" }
     ] },
-  { cat: "desc", set: "day1", title: "D1 언제 음악 듣나 — 운동/반복작업",
+  { cat: "desc", set: "day1", title: "D1 언제 음악 듣나 — 운동/반복작업", topicEn: "listening to music",
     koreanFlow: "에너지 필요할 때 들음 → 대표=운동, 비트가 한 세트 더 하게 함 → 음악 있을 때 운동 더 잘됨 → 파일 정리·청소 같은 반복작업도 → 음악=에너지원",
     hint: "B 루틴: 대표 상황(운동) 하나 깊게+보조(반복작업). 의미로 마무리",
     keyEnglish: "Music is not just entertainment. It gives me energy and helps me keep going.",
@@ -1376,7 +1376,7 @@ const DEFAULT_CARDS = [
       { en: "makes boring tasks feel less boring", ko: "지루한 일을 덜 지루하게 해줘요 (보조 효과)" },
       { en: "It gives me energy and helps me keep going", ko: "에너지를 주고 계속 나아가게 해요 (마무리)" }
     ] },
-  { cat: "desc", set: "day1", title: "D1 음악 취향 변화 — 부르던→에너지받는",
+  { cat: "desc", set: "day1", title: "D1 음악 취향 변화 — 부르던→에너지받는", topicEn: "your taste in music",
     koreanFlow: "많이 변함 → 예전엔 직접 부르는 음악, 고음·샤우팅 록 좋아함 → 지금은 고음 안 되고 록이 시끄럽게 느껴짐 → 에너지 주는 K-pop·팝 → '부르고 싶은 음악→에너지 받는 음악'으로",
     hint: "F 비교: When I was younger→But these days. 한 축(부르기→듣기)으로 압축",
     keyEnglish: "My taste changed from music I wanted to sing to music that gives me energy.",
@@ -1388,7 +1388,7 @@ const DEFAULT_CARDS = [
       { en: "some ~ feel a little too loud now", ko: "이제 ~가 좀 시끄럽게 느껴져요 (현재 감각)" },
       { en: "my taste changed from ~ to ~", ko: "취향이 ~에서 ~로 바뀌었어요 (압축 마무리)" }
     ] },
-  { cat: "exp", set: "day1", title: "⭐D1 라이브 음악 — Santa Monica/Hotel California",
+  { cat: "exp", set: "day1", title: "⭐D1 라이브 음악 — Santa Monica/Hotel California", topicEn: "live music",
     koreanFlow: "유학 시절 산타모니카 피어 → 노을·맥주 보러 갔는데 → 버스킹이 Hotel California 연주 → 바다 옆 라이브는 완전 다름 → 노을·맥주·익숙한 멜로디가 딱 맞음 → 잊을 수 없음",
     hint: "E memorable: 평범(노을·맥주)→반전(즉흥 라이브)→감정 한 방. Day1 우선암기 4",
     keyEnglish: "It wasn't a big concert, but that made it even more special.",
@@ -1400,7 +1400,7 @@ const DEFAULT_CARDS = [
       { en: "hearing it live by the ocean felt completely different", ko: "바다 옆 라이브는 완전히 달랐어요 (감각)" },
       { en: "that made it even more special", ko: "그래서 더 특별했어요 (감정 마무리)" }
     ] },
-  { cat: "desc", set: "day2", title: "D2-1 내 직장 묘사 — 개방형 오피스",
+  { cat: "desc", set: "day2", title: "D2-1 내 직장 묘사 — 개방형 오피스", topicEn: "your workplace",
     koreanFlow: "금융·서울 → open-plan, 벽·개인실 적음 → 책상 가까워 회의 없이 바로 해결 → fast-paced·협업적 → 바쁘지만 활기, 그게 좋음",
     hint: "A 묘사: 한 가지(개방형 분위기)로 좁히고 '활기' 감정 마무리. (블록A)",
     keyEnglish: "That open, lively environment is a big part of why I like my job.",
@@ -1412,7 +1412,7 @@ const DEFAULT_CARDS = [
       { en: "I actually enjoy that kind of energy", ko: "저는 그 활기가 오히려 좋아요 (감정)" },
       { en: "a big part of why I like my job", ko: "제가 일을 좋아하는 큰 이유예요 (마무리)" }
     ] },
-  { cat: "desc", set: "day2", title: "D2-2 직장 과거 vs 현재 — 하이브리드",
+  { cat: "desc", set: "day2", title: "D2-2 직장 과거 vs 현재 — 하이브리드", topicEn: "the way people work",
     koreanFlow: "예전: 매일 출근·대면회의·종이문서 → 지금: 하이브리드·화상회의·클라우드 → 대체로 긍정(효율) but 경계 흐려짐 → 더 유연·디지털하지만 경계 필요",
     hint: "F 비교: In the past→But these days. 양면(장점+downside) 짚고 마무리. (블록A)",
     keyEnglish: "The workplace has become more flexible and digital, but people also need better boundaries.",
@@ -1424,7 +1424,7 @@ const DEFAULT_CARDS = [
       { en: "But there's also a downside — ~", ko: "하지만 단점도 있어요 — ~ (양면 짚기)" },
       { en: "people also need better boundaries", ko: "사람들에게 더 나은 경계가 필요해요 (마무리)" }
     ] },
-  { cat: "opi", set: "day2", title: "D2-3 기술이 바꾼 직장 — AI",
+  { cat: "opi", set: "day2", title: "D2-3 기술이 바꾼 직장 — AI", topicEn: "technology at work",
     koreanFlow: "하나 꼽으면 AI → 보고서·리서치에 써서 시간 대폭 절약 → 반나절→한시간 → 속도보다, 반복작업 대신 '생각·결정'에 집중 가능 → 예전으로 못 돌아감",
     hint: "한 가지+감정: AI 하나로. 속도가 아니라 '사고에 집중'이 핵심. (블록A). #4 EV·#10 AI뉴스와 색 분리",
     keyEnglish: "I can spend my energy on actual thinking and decisions, instead of repetitive tasks.",
@@ -1436,7 +1436,7 @@ const DEFAULT_CARDS = [
       { en: "What I appreciate most isn't just ~, though", ko: "제가 가장 좋은 건 ~만이 아니에요 (전환)" },
       { en: "can't imagine going back to the old way", ko: "예전 방식으론 못 돌아가요 (마무리)" }
     ] },
-  { cat: "opi", set: "day2", title: "⭐D2-4 유망산업 — EV/배터리",
+  { cat: "opi", set: "day2", title: "⭐D2-4 유망산업 — EV/배터리", topicEn: "promising industries",
     koreanFlow: "내가 보는 유망산업=전기차·배터리 → 대기오염·연료비·기후로 중요↑, 자율주행 매력 → 3년 전엔 특별(비싸고 충전소 적음) → 지금 주류, 현대·LG엔솔·삼성SDI 투자 → 미래기술 아닌 일상이 됨",
     hint: "G+F: 한 산업(EV)으로 좁히고 3년전→지금 변화 축. 산업은 EV로(AI 금지). 블록B 우선",
     keyEnglish: "EVs are no longer just a future idea — they're becoming part of normal life.",
@@ -1448,7 +1448,7 @@ const DEFAULT_CARDS = [
       { en: "But now the industry has gone mainstream", ko: "하지만 이제 주류가 됐어요 (변화)" },
       { en: "no longer just a future idea", ko: "더는 미래의 얘기가 아니에요 (마무리)" }
     ] },
-  { cat: "opi", set: "day2", title: "⭐D2-5 유망기업 — 현대차",
+  { cat: "opi", set: "day2", title: "⭐D2-5 유망기업 — 현대차", topicEn: "well-known companies in your country",
     koreanFlow: "EV 유망기업=현대차 → IONIQ에 대거 투자 → 단순 차가 아니라 청정 모빌리티로 전환 → 혜택1 일자리·연구(배터리·SW·충전), 혜택2 도시 오염↓·화석연료↓ → 완벽친 않지만 청정미래 기여",
     hint: "G 이슈: 회사 하나+benefits 2개+지구 기여. 단점도 한 줄 인정해 균형. 블록B",
     keyEnglish: "Hyundai is contributing to a cleaner future by making EVs more practical and affordable.",
@@ -1460,7 +1460,7 @@ const DEFAULT_CARDS = [
       { en: "Of course, ~ aren't perfect, since ~", ko: "물론 ~가 완벽하진 않아요, ~ (균형)" },
       { en: "contributing to a cleaner future", ko: "더 깨끗한 미래에 기여해요 (마무리)" }
     ] },
-  { cat: "opi", set: "day2", title: "⭐D2-6 젊은이 선호 회사 — 대기업 vs 공기업",
+  { cat: "opi", set: "day2", title: "⭐D2-6 젊은이 선호 회사 — 대기업 vs 공기업", topicEn: "the companies young people want to work for",
     koreanFlow: "대기업(삼성·현대) or 공기업 선호 → 대기업: 연봉·복지·시설·자기계발, 이름값 → 공기업: 연봉은 덜해도 안정·복지·연금 → 결국 '고연봉·성장 vs 안정·보장' 사이 선택",
     hint: "F 대조: 두 선택지 균형 비교 후 '둘 중 선택'으로 압축. 블록B",
     keyEnglish: "Young people choose between high salary and growth, or stability and long-term security.",
@@ -1472,7 +1472,7 @@ const DEFAULT_CARDS = [
       { en: "very attractive when the economy feels uncertain", ko: "경제가 불안할 때 매력적이죠 (이유)" },
       { en: "choose between ~ or ~", ko: "~와 ~ 사이에서 선택해요 (압축 마무리)" }
     ] },
-  { cat: "exp", set: "day2", title: "⭐D2-7 직업 위한 노력 — 영어·LA석사",
+  { cat: "exp", set: "day2", title: "⭐D2-7 직업 위한 노력 — 영어·LA석사", topicEn: "preparing for your career",
     koreanFlow: "금융 커리어 위해 다년간 노력 → ①영어(보고서·시장정보가 영어) → ②LA 석사로 글로벌 시장 노출·시야 확장 → ③금융 프로젝트로 경험 단계적 → ④최근 AI 도구로 우위 → 시간 걸렸지만 준비가 빛을 봄",
     hint: "C 경험: First~ Also~ On top of that~ 단계 나열 후 'paid off' 마무리. 블록B. (MBA면 master's→MBA)",
     keyEnglish: "It took time and patience, but looking back, all that preparation paid off.",
@@ -1484,7 +1484,7 @@ const DEFAULT_CARDS = [
       { en: "which gave me an extra edge", ko: "덕분에 추가 강점이 생겼어요 (효과)" },
       { en: "looking back, all that preparation paid off", ko: "돌아보니 그 준비가 빛을 봤어요 (마무리)" }
     ] },
-  { cat: "opi", set: "day2", title: "⭐D2-8 미래 직업 준비 과정 — 구조는 같되 기준↑",
+  { cat: "opi", set: "day2", title: "⭐D2-8 미래 직업 준비 과정 — 구조는 같되 기준↑", topicEn: "how people prepare for jobs",
     koreanFlow: "두 단계: ①일반 교육(대학·전공·자격증·어학) ②입사 후 사내 교육·선배에게 실무 → 구조는 거의 그대로 → 5년간 한 변화: 입사 전부터 실무역량(데이터·AI·인턴) 기대 → 'job-ready' 기준이 높아짐",
     hint: "F+G: 구조 설명 후 'one change'로 변화 한 가지. 블록B",
     keyEnglish: "The structure is similar, but the bar for being 'job-ready' has gotten higher.",
@@ -1496,7 +1496,7 @@ const DEFAULT_CARDS = [
       { en: "if I had to point to one change, it's that ~", ko: "한 가지 변화를 꼽자면 ~ (변화 도입)" },
       { en: "the bar for being job-ready has gotten higher", ko: "'준비된 인재' 기준이 높아졌어요 (마무리)" }
     ] },
-  { cat: "exp", set: "day2", title: "D2-9 새 기술 적용 어려움→극복 — AI 프롬프트",
+  { cat: "exp", set: "day2", title: "D2-9 새 기술 적용 어려움→극복 — AI 프롬프트", topicEn: "learning new technology",
     koreanFlow: "처음 AI 쓸 때 좌절 → 가장 큰 난관=좋은 프롬프트 작성 → 모호·쓸모없는 답, 포기 직전 → 실제 업무(보고서·요약)로 계속 연습 → 어느 순간 click → 이젠 없으면 일 못함 → 새 기술은 인내 뒤 보상",
     hint: "C/E 경험: 좌절→포기 직전→반전(클릭)→교훈. 한 가지+감정. 블록C",
     keyEnglish: "New technology takes patience before it pays off.",
@@ -1508,7 +1508,7 @@ const DEFAULT_CARDS = [
       { en: "at some point it just clicked", ko: "어느 순간 딱 이해됐어요 (반전)" },
       { en: "~ takes patience before it pays off", ko: "~는 보상받기까지 인내가 필요해요 (교훈)" }
     ] },
-  { cat: "opi", set: "day2", title: "D2-10 기술 뉴스 — AI 양면",
+  { cat: "opi", set: "day2", title: "D2-10 기술 뉴스 — AI 양면", topicEn: "technology in the news",
     koreanFlow: "요즘 기술뉴스 대부분 AI, 특히 챗봇 → 금융권이라 리서치·분석·보고서 활용에 관심, 사람보다 빠름 → but 우려: 실수·과의존·일자리 → 신나면서도 약간 무섭 → 뒤처지지 않되 신중히 사용",
     hint: "G 이슈(뉴스+느낌+우려): 양면 균형 후 '신중히'로. 블록C. #4 EV와 색 분리",
     keyEnglish: "I see AI as both exciting and a little scary, so we need to use it carefully.",
@@ -1520,7 +1520,7 @@ const DEFAULT_CARDS = [
       { en: "I see ~ as both exciting and a little scary", ko: "~가 신나면서도 좀 무서워요 (양면 핵심)" },
       { en: "I don't want to fall behind, but ~ carefully", ko: "뒤처지긴 싫지만 신중히 ~ (마무리)" }
     ] },
-  { cat: "desc", set: "day3", title: "⭐D3-1 캠핑 준비 — 날씨→옷",
+  { cat: "desc", set: "day3", title: "⭐D3-1 캠핑 준비 — 날씨→옷", topicEn: "preparing for a camping trip",
     koreanFlow: "폰으로 날씨·예약, but 가장 중요한 건 옷 → 야외라 밤 날씨 급변, 옷 잘못 챙기면 다 불편 → 예보 확인: 추우면 레이어, 비 오면 우비·방수화 → 여분 한 벌 더 → 잘 입으면 텐트·식사·불멍 다 즐김",
     hint: "A 준비: '옷' 하나로 좁힘. It may sound simple but~ 으로 의미 부여. Day3 1순위",
     keyEnglish: "Preparing is really about the clothes; if I'm comfortable, the whole trip becomes much more enjoyable.",
@@ -1532,7 +1532,7 @@ const DEFAULT_CARDS = [
       { en: "just in case", ko: "혹시 몰라서요 (대비)" },
       { en: "if I'm comfortable, the whole trip becomes ~", ko: "편하면 여행 전체가 ~ (마무리)" }
     ] },
-  { cat: "desc", set: "day3", title: "D3-2 캠핑 챙기는 것 — 불멍",
+  { cat: "desc", set: "day3", title: "D3-2 캠핑 챙기는 것 — 불멍", topicEn: "camping gear",
     koreanFlow: "필수: 텐트·랜턴·접이식 의자·침낭 → 고기(한국인은 바베큐가 최고) → but 가장 기대되는 건 불멍 → 바쁜 한 주 뒤 불 보며 아무것도 안 함 → 폰·일·도시소음 없이 머리 비움",
     hint: "A 묘사: 챙길 것 나열 후 '불멍' 하나로 좁혀 감정 마무리",
     keyEnglish: "I'm really preparing for that one quiet moment by the fire.",
@@ -1544,7 +1544,7 @@ const DEFAULT_CARDS = [
       { en: "doing absolutely nothing", ko: "정말 아무것도 안 해요 (불멍 묘사)" },
       { en: "preparing for that one quiet moment", ko: "그 조용한 순간을 준비하는 거예요 (마무리)" }
     ] },
-  { cat: "desc", set: "day3", title: "D3-3 캠핑 음식 — 라면",
+  { cat: "desc", set: "day3", title: "D3-3 캠핑 음식 — 라면", topicEn: "cooking while camping",
     koreanFlow: "거의 항상 라면 → 이유는 단순: 쉽게 조리, 야외선 복잡한 거 싫음 → 이유 모르겠지만 밖에서 먹으면 훨씬 맛있음 → 텐트 치고 돌아다닌 뒤 따뜻한 라면이 위로 → 단순하지만 경험을 더 좋게",
     hint: "A 묘사: simple is the best. 단순함이 곧 매력인 구조",
     keyEnglish: "It's simple, but it makes the whole experience better.",
@@ -1556,7 +1556,7 @@ const DEFAULT_CARDS = [
       { en: "feels incredibly comforting", ko: "정말 위로가 돼요 (감정)" },
       { en: "It's simple, but it makes the whole experience better", ko: "단순하지만 경험을 더 낫게 해요 (마무리)" }
     ] },
-  { cat: "exp", set: "day3", title: "D3-4 최근 캠핑 경험 — 강가",
+  { cat: "exp", set: "day3", title: "D3-4 최근 캠핑 경험 — 강가", topicEn: "camping",
     koreanFlow: "한 달 전 친구들과 → 서울서 2시간 강가 캠핑장 → 도착해 텐트·의자·바로 고기 구움(배고파서) → 밤에 불·술·별 아래 수다 → 와이파이·일정 없어 완전 이완 → 집 올 땐 완전 충전",
     hint: "D 최근경험: 시간순(도착→밤→귀가). 'recharged'로 마무리",
     keyEnglish: "That simple trip reminded me why I love camping.",
@@ -1568,7 +1568,7 @@ const DEFAULT_CARDS = [
       { en: "The best part came at night", ko: "가장 좋은 건 밤이었어요 (하이라이트)" },
       { en: "By the time I got home, I felt totally recharged", ko: "집에 올 땐 완전 충전됐어요 (마무리)" }
     ] },
-  { cat: "exp", set: "day3", title: "D3-5 기억나는 캠핑 — 첫 캠핑+축제",
+  { cat: "exp", set: "day3", title: "D3-5 기억나는 캠핑 — 첫 캠핑+축제", topicEn: "camping",
     koreanFlow: "가장 기억=집 근처 첫 캠핑 → 기대 안 했는데 옆에서 작은 동네 축제 → 고기 굽다 라이브음악 들림, 푸드트럭·이웃들 → 가서 길거리음식 먹고 불빛 아래 밴드 들음 → 화려한 게 아니라 동네가 함께 즐기는 따뜻함 → 잊지 못함",
     hint: "E memorable(아묻따 #11): 평범한 첫 캠핑→반전(축제)→따뜻한 감정. Day3 2순위",
     keyEnglish: "For a first camping trip, it couldn't have been better.",
@@ -1604,7 +1604,7 @@ const DEFAULT_CARDS = [
       { en: "Then could I get a refund instead?", ko: "그럼 대신 환불될까요? (No 받고 대안2)" },
       { en: "In that case, could you send me a similar ~?", ko: "그렇다면 비슷한 걸로 보내주실 수 있나요? (대안3)" }
     ] },
-  { cat: "exp", set: "day3", title: "D3-8 산 물건 하자 경험 (similar exp)",
+  { cat: "exp", set: "day3", title: "D3-8 산 물건 하자 경험 (similar exp)", topicEn: "shopping online",
     koreanFlow: "이거 비슷한 경험 떠오름 → 온라인 침낭 주문(그 주말 캠핑) → 도착해 열어보니 지퍼 옆 찢김+지퍼 걸림 → 며칠 안 남아 짜증 → 고객센터 연락·사진 전송 → 같은 모델 품절, 비슷한 거 익일배송 → 딱 맞게 도착 → 받자마자 확인하는 법 배움",
     hint: "E 경험(#7·#10 13번 자리): This reminds me of~ 로 도입",
     keyEnglish: "After that, I learned to check products as soon as they arrive.",
@@ -1640,7 +1640,7 @@ const DEFAULT_CARDS = [
       { en: "Can I pay for the repair?", ko: "수리비 제가 낼까요? (대안1)" },
       { en: "if they say it can't be fixed, I'll just buy you ~", ko: "못 고치면 새로 사줄게요 (대안2)" }
     ] },
-  { cat: "exp", set: "day3", title: "D3-11 기기 고장 경험 (similar exp)",
+  { cat: "exp", set: "day3", title: "D3-11 기기 고장 경험 (similar exp)", topicEn: "electronic devices breaking down",
     koreanFlow: "폰 비슷한 경험 → 업무 중 화면 갑자기 까맣게 → 파일 생각에 당황 → 재부팅 여러 번 소용없음 → 다음날 서비스센터, 부품 헐거움이라며 빨리 고침+백업 도움 → 안도 → 이후 정기 백업 → 한 기기에 의존 말자",
     hint: "E 경험(13번 자리): 패닉→해결→교훈. This reminds me of~",
     keyEnglish: "It taught me not to rely on one device too much.",
@@ -1652,7 +1652,7 @@ const DEFAULT_CARDS = [
       { en: "At first I panicked, because ~", ko: "처음엔 ~ 때문에 당황했어요 (감정)" },
       { en: "it taught me not to rely on ~ too much", ko: "~에 너무 의존하지 말라는 교훈 (마무리)" }
     ] },
-  { cat: "desc", set: "day4", title: "⭐D4-1 자주 가는 병원 의사 묘사",
+  { cat: "desc", set: "day4", title: "⭐D4-1 자주 가는 병원 의사 묘사", topicEn: "visiting your local clinic",
     koreanFlow: "집 근처 의원, 믿는 의사 → 가장 좋은 건 차분하고 명확 → 대기실 꽉 차도 서두르지 않음 → 증상 걱정될 때 쉬운 말로 설명, 불안 대신 안심하고 나옴 → 진짜 들어줌 → 그래서 계속 감",
     hint: "A 묘사: 시설 나열 금지, '차분히 설명→믿음' 한 가지. Day4 1순위",
     keyEnglish: "He actually listens. That's why I keep going back to the same clinic.",
@@ -1664,7 +1664,7 @@ const DEFAULT_CARDS = [
       { en: "I always leave feeling reassured instead of anxious", ko: "불안 대신 안심하고 나와요 (감정)" },
       { en: "he actually listens", ko: "진짜로 들어줘요 (핵심 마무리)" }
     ] },
-  { cat: "exp", set: "day4", title: "D4-2 병원 memorable — 검진 안도",
+  { cat: "exp", set: "day4", title: "D4-2 병원 memorable — 검진 안도", topicEn: "visiting hospitals",
     koreanFlow: "몇 년 전 검진 → 뭔가 이상한 느낌, 뭔가 잘못된 줄 확신 → 대기실서 긴장 → 결과는 그냥 스트레스+수면부족 → 큰 안도, 어깨 짐 내려감 → 이후 정기검진",
     hint: "E 경험(짧게 OK): 긴장→반전(괜찮음)→안도. #7과 stress 겹치면 이건 '검진 안도'로",
     keyEnglish: "I was so relieved, almost like a weight lifted off my shoulders.",
@@ -1676,7 +1676,7 @@ const DEFAULT_CARDS = [
       { en: "like a weight lifted off my shoulders", ko: "어깨 짐이 내려간 것처럼 (안도 표현)" },
       { en: "Since then, I've tried to ~", ko: "그 후로 ~하려 해요 (교훈)" }
     ] },
-  { cat: "exp", set: "day4", title: "D4-3 어릴 때 병원 — 치과 공포",
+  { cat: "exp", set: "day4", title: "D4-3 어릴 때 병원 — 치과 공포", topicEn: "going to the dentist",
     koreanFlow: "어릴 땐 병원=공포, 특히 치과 → 장비 소리만 들어도 도망치고 싶음 → 한번은 손대기도 전에 울음 → 친절·인내심 의사가 진정시킴 → 돌아보니 그때 의사가 그리 무섭지 않다 느낌 시작",
     hint: "C 경험(아묻따 #15 손 다친 일로 대체 가능): 공포→진정→인식변화. Day4 2순위(dentist만)",
     keyEnglish: "That's when I started to feel that doctors aren't so scary after all.",
@@ -1688,7 +1688,7 @@ const DEFAULT_CARDS = [
       { en: "I started crying before the doctor even touched me", ko: "손대기도 전에 울었어요 (생생)" },
       { en: "that's when I started to feel ~", ko: "그때부터 ~ 느끼기 시작했어요 (인식 변화)" }
     ] },
-  { cat: "desc", set: "day4", title: "⭐D4-4 건강한 사람 — 아버지",
+  { cat: "desc", set: "day4", title: "⭐D4-4 건강한 사람 — 아버지", topicEn: "healthy people around you",
     koreanFlow: "가장 건강한 사람=아버지, 엄청난 자기관리 → 새벽4시 기상, 동네 산(야외운동기구) 1시간+ → 당·기름진 음식 피하고 10년 금주 → 나보다 근육질 → 매일 운동+엄격한 식단이 비결 → 롤모델",
     hint: "A 묘사(인물): 구체 습관 나열 후 '롤모델'로. Day4 1순위",
     keyEnglish: "He's a real role model for me when it comes to health.",
@@ -1700,7 +1700,7 @@ const DEFAULT_CARDS = [
       { en: "he hasn't touched alcohol in over ten years", ko: "10년 넘게 금주했어요 (강한 디테일)" },
       { en: "He's a real role model for me", ko: "제겐 진짜 롤모델이에요 (마무리)" }
     ] },
-  { cat: "desc", set: "day4", title: "⭐D4-5 건강 위해 하는 일 — 현재시제+영양제",
+  { cat: "desc", set: "day4", title: "⭐D4-5 건강 위해 하는 일 — 현재시제+영양제", topicEn: "staying healthy",
     koreanFlow: "몇 가지 단순 습관 → 사무실 근처 헬스장 주3회(웨이트+유산소) → 매일 비타민·영양제(비타민C·오메가3) → 작아 보여도 '나를 챙긴다'는 안정감 → 채소 늘리고 당 줄임 → 극단적이진 않지만 꾸준한 작은 습관이 도움",
     hint: "B 루틴: 반드시 현재시제+영양제(선생님 포인트). Day4 1순위",
     keyEnglish: "Those small, steady habits help me feel healthier and more energetic.",
@@ -1712,7 +1712,7 @@ const DEFAULT_CARDS = [
       { en: "gives me a kind of peace of mind", ko: "일종의 안정감을 줘요 (감정)" },
       { en: "I'm not extreme about it, but ~", ko: "극단적이진 않지만 ~ (균형)" }
     ] },
-  { cat: "opi", set: "day4", title: "⭐D4-6 세대별 건강관 비교",
+  { cat: "opi", set: "day4", title: "⭐D4-6 세대별 건강관 비교", topicEn: "how people think about health",
     koreanFlow: "건강한 사람 개념이 세대별로 변함 → 부모 세대: 담배·술 안 하고 몸 튼튼, 하루종일 일할 체력 → 지금: 몸+마음 둘 다, 워라밸·스트레스 관리·영양제·헬스 → 초점이 몸→마음까지 확장 → 내 생각엔 현대 관점이 더 균형적·건강함",
     hint: "F 비교+G: 예전(몸)↔지금(몸+마음). 내 의견으로 마무리. Day4 1순위",
     keyEnglish: "Real health isn't only about the body — it's about feeling balanced in your whole life.",
@@ -1724,7 +1724,7 @@ const DEFAULT_CARDS = [
       { en: "the focus has expanded from ~ to ~", ko: "초점이 ~에서 ~로 확장됐어요 (변화)" },
       { en: "feeling balanced in your whole life", ko: "삶 전체가 균형잡힌 것 (의견 마무리)" }
     ] },
-  { cat: "opi", set: "day4", title: "⭐D4-7 건강 문제→해결 — 스트레스",
+  { cat: "opi", set: "day4", title: "⭐D4-7 건강 문제→해결 — 스트레스", topicEn: "dealing with stress",
     koreanFlow: "가장 큰 건 스트레스 → 2년 전 과로, 매일 야식으로 나쁘게 대처 → 급격히 체중↑·피로·불면 → 바뀌어야 함 깨달음 → 며칠 쉬며 진짜 휴식+건강식 → 에너지 회복·숙면·기분 밝아짐 → 휴식은 사치 아닌 필수",
     hint: "G 이슈(아묻따 #12 만능): stress→나빠짐→휴식→회복→교훈 고정. Day4 1순위. #2와 stress 겹치면 분배",
     keyEnglish: "That experience taught me that rest isn't a luxury; it's necessary.",
@@ -1736,7 +1736,7 @@ const DEFAULT_CARDS = [
       { en: "At some point I realized something had to change", ko: "바뀌어야 함을 깨달았어요 (전환)" },
       { en: "rest isn't a luxury; it's necessary", ko: "휴식은 사치가 아니라 필수예요 (교훈)" }
     ] },
-  { cat: "desc", set: "day4", title: "D4-8 친구 두 명 비교",
+  { cat: "desc", set: "day4", title: "D4-8 친구 두 명 비교", topicEn: "your friends",
     koreanFlow: "정반대 친한 친구 둘 → 하나는 외향·에너지(여행 계획·웃김), 하나는 차분·사려깊음(잘 듣고 최고의 조언) → 성격 정반대지만 둘 다 의리 → 한 명은 재미, 한 명은 평온 → 균형",
     hint: "A 묘사(2인 대조): one~ the other~ 구조. Day4 3순위",
     keyEnglish: "One brings the fun, and the other brings the calm.",
@@ -1748,7 +1748,7 @@ const DEFAULT_CARDS = [
       { en: "they're both incredibly loyal", ko: "둘 다 정말 의리 있어요 (공통점)" },
       { en: "one brings the fun, and the other brings the calm", ko: "하나는 재미, 하나는 평온 (마무리)" }
     ] },
-  { cat: "desc", set: "day4", title: "D4-9 친구와 최근 대화 주제",
+  { cat: "desc", set: "day4", title: "D4-9 친구와 최근 대화 주제", topicEn: "conversations with friends",
     koreanFlow: "모이면 부동산·투자 얘기로 시작(금융권이라 의견 물음) → 집값·경제 한참 토론 → 그러다 옛 추억(학창시절·여행)으로 흘러감 → 실용+추억 섞임이 좋음 → 그게 만나고 싶은 이유",
     hint: "B 묘사: 실용(부동산)+추억의 믹스. Day4 3순위",
     keyEnglish: "We talk about serious stuff, but we always end the night laughing about the past.",
@@ -1760,7 +1760,7 @@ const DEFAULT_CARDS = [
       { en: "we always drift into old memories", ko: "늘 옛 추억으로 흘러가요 (전환)" },
       { en: "That balance is why I look forward to ~", ko: "그 균형이 ~를 기대하는 이유예요 (마무리)" }
     ] },
-  { cat: "exp", set: "day5", title: "⭐D5-1 날씨로 약속 못 감 — 결혼식",
+  { cat: "exp", set: "day5", title: "⭐D5-1 날씨로 약속 못 감 — 결혼식", topicEn: "weather ruining your plans",
     koreanFlow: "친구 결혼식 가고팠음 → 한 주 내내 폭우 예보 → 일찍 출발했지만 도로 침수·교통지옥 → 못 갈 걸 깨달음, 패닉+죄책감 → 전화로 거듭 사과, 다행히 이해 → 나중에 따로 축하 → 교훈: 악천후엔 지하철",
     hint: "C 경험(아묻따 #2): 상황→문제→감정→수습→교훈. #2(태풍여행)와 다른 사건으로. Day5 1순위",
     keyEnglish: "That day taught me to just take the subway when the weather looks bad.",
@@ -1772,7 +1772,7 @@ const DEFAULT_CARDS = [
       { en: "I felt a mix of panic and guilt", ko: "패닉과 죄책감이 섞였어요 (감정)" },
       { en: "That day taught me to ~", ko: "그날 ~하라는 교훈을 얻었어요 (마무리)" }
     ] },
-  { cat: "exp", set: "day5", title: "⭐D5-2 여행 취소·연기 — 태풍",
+  { cat: "exp", set: "day5", title: "⭐D5-2 여행 취소·연기 — 태풍", topicEn: "canceled travel plans",
     koreanFlow: "친구들과 주말여행 계획 → 며칠 전 태풍 북상 뉴스 → 한참 고민 끝 연기(안전 우선, 갇혀있긴 싫음) → 실망했지만 2주 뒤 재예약 → 그때 날씨 완벽, 오히려 더 좋았음 → 위험한 날씨에 여행은 안 됨",
     hint: "C 경험(아묻따 #2): #1(결혼식)과 다른 사건. 연기 결정→결과 호전. Day5 1순위",
     keyEnglish: "Postponing was the right call — it's never worth risking a trip in dangerous weather.",
@@ -1784,7 +1784,7 @@ const DEFAULT_CARDS = [
       { en: "the trip turned out even better", ko: "여행이 오히려 더 좋았어요 (반전 결과)" },
       { en: "postponing was the right call", ko: "연기가 옳은 선택이었어요 (교훈)" }
     ] },
-  { cat: "exp", set: "day5", title: "D5-3 기억나는 여행 — 중국 가족여행",
+  { cat: "exp", set: "day5", title: "D5-3 기억나는 여행 — 중국 가족여행", topicEn: "traveling abroad",
     koreanFlow: "가장 기억=첫 해외, 10살쯤 중국, 온 가족 → 책으로만 보던 명소 실물 → 만리장성 압도, 산 넘어 끝없이·계단 가팔라 금방 지침 → 자금성 금빛 지붕·끝없는 붉은 벽 → 역사가 실감남 → 지금도 역사적 장소 좋아함",
     hint: "E 경험(아묻따 #6): 명소 두 곳+감각 묘사. Day5 2순위",
     keyEnglish: "Seeing those places in person made history feel real to me.",
@@ -1796,7 +1796,7 @@ const DEFAULT_CARDS = [
       { en: "in person, it stretched endlessly", ko: "실물은 끝없이 펼쳐졌어요 (감각)" },
       { en: "made history feel real to me", ko: "역사가 실감났어요 (의미 마무리)" }
     ] },
-  { cat: "exp", set: "day5", title: "⭐D5-4 여행지 분실 — 파리 소매치기",
+  { cat: "exp", set: "day5", title: "⭐D5-4 여행지 분실 — 파리 소매치기", topicEn: "losing things while traveling",
     koreanFlow: "파리 붐비는 지하철 → 지갑 꺼내려니 사라짐, 소매치기 → 카드·신분증 생각에 패닉 → but 다 망치지 않으려 침착 → 앱으로 카드 즉시 정지, 경찰 신고 → 급한 일 처리 후 남은 여행 안 망치기로 → 교훈: 앞주머니·지퍼백",
     hint: "E 경험(아묻따 #3 변형): 패닉→침착 대응→교훈. Day5 1순위",
     keyEnglish: "Always keep your valuables in a front pocket or a zipped bag.",
@@ -1856,7 +1856,7 @@ const DEFAULT_CARDS = [
       { en: "Then would the weekend work, maybe ~?", ko: "그럼 주말은요, ~ 어때요? (대안2)" },
       { en: "would a short phone consultation be possible instead?", ko: "대신 짧은 전화상담 가능할까요? (대안3)" }
     ] },
-  { cat: "desc", set: "day6", title: "⭐D6-1 hair salon 묘사 — 사무실 근처/실력",
+  { cat: "desc", set: "day6", title: "⭐D6-1 hair salon 묘사 — 사무실 근처/실력", topicEn: "your hair salon",
     koreanFlow: "사무실 근처 Juno Hair, 퇴근 후 들르기 좋음 → 깨끗·잘 관리, 직원 친절 → 환영받는 느낌 → but 핵심: 미용사 실력 좋아 매번 편함 → 몇 달 전 첫 방문에 만족해 단골 됨 → 화려하진 않지만 편안함·믿음이 비결",
     hint: "A 묘사: near office+실력 한 가지. Day6 1순위",
     keyEnglish: "That comfort and trust are exactly why I keep going back.",
@@ -1868,7 +1868,7 @@ const DEFAULT_CARDS = [
       { en: "what I like the most is that ~", ko: "가장 좋은 건 ~ (좁히기)" },
       { en: "that comfort and trust are exactly why ~", ko: "그 편안함과 믿음이 바로 ~ 이유예요 (마무리)" }
     ] },
-  { cat: "desc", set: "day6", title: "D6-2 hair salon 하는 것 — 순서",
+  { cat: "desc", set: "day6", title: "D6-2 hair salon 하는 것 — 순서", topicEn: "getting a haircut",
     koreanFlow: "들어가면 접수에 이름(온라인 예약) → 대기하며 폰 → 미용사에게 스타일 말함(짧게, 이미 앎) → 30분 컷 → 머리 감겨줌 → '맘에 들어요!' → 상쾌하게 나옴",
     hint: "B 묘사: 시간 순서. 마지막 refreshed 감정. Day6 2순위",
     keyEnglish: "Walking out with a fresh haircut always makes me feel refreshed.",
@@ -1880,7 +1880,7 @@ const DEFAULT_CARDS = [
       { en: "I always say, 'It looks great!'", ko: "늘 '맘에 들어요!' 해요 (생생)" },
       { en: "makes me feel refreshed", ko: "상쾌해져요 (감정 마무리)" }
     ] },
-  { cat: "exp", set: "day6", title: "⭐D6-3 hair salon 기억 경험 — 발표 전날",
+  { cat: "exp", set: "day6", title: "⭐D6-3 hair salon 기억 경험 — 발표 전날", topicEn: "getting a haircut",
     koreanFlow: "중요한 발표 전날 → 긴장돼서 컷하러 감 → 발표 얘기하니 미용사가 깔끔·샤프하게 신경 → 거울 보니 자신감↑, 준비된 느낌 → 다음날 그 작은 부스트가 도움 → 사소하지만 큰 차이",
     hint: "E 경험(아묻따 #13 연예인 버전 대체 가능): 긴장→컷→자신감. Day6 1순위",
     keyEnglish: "A good haircut at the right moment can change how you carry yourself.",
@@ -1892,7 +1892,7 @@ const DEFAULT_CARDS = [
       { en: "When I looked in the mirror, I actually felt ~", ko: "거울 보니 정말 ~ 느꼈어요 (감정)" },
       { en: "It sounds minor, but ~", ko: "사소하게 들리지만 ~ (의미 마무리)" }
     ] },
-  { cat: "desc", set: "day6", title: "⭐D6-4 자주 가는 beach 묘사",
+  { cat: "desc", set: "day6", title: "⭐D6-4 자주 가는 beach 묘사", topicEn: "the beach you often visit",
     koreanFlow: "집서 1.5시간 → 몇 달에 한 번, 친한 친구들과 → 바다 바로 옆, 길고 넓은 해안선·고운 모래 → 깨끗·잘 관리 → 편안·이완 → 도심서 멀어 안 붐빔 → 방해 없이 해안 산책 → 화려하진 않지만 그 순간이 남음",
     hint: "A 묘사: 위치·거리·빈도·동행+한 가지(한적함). 돌려막기 표현 풀세트. Day6 1순위",
     keyEnglish: "It's not anything fancy, but those quiet moments by the water always stay with me.",
@@ -1904,7 +1904,7 @@ const DEFAULT_CARDS = [
       { en: "it's clean and well-maintained, so it feels comfortable and relaxing", ko: "깨끗·관리 잘돼 편안해요 (돌려막기)" },
       { en: "those quiet moments always stay with me", ko: "그 조용한 순간이 남아요 (마무리)" }
     ] },
-  { cat: "desc", set: "day6", title: "D6-5 beach 하는 활동",
+  { cat: "desc", set: "day6", title: "D6-5 beach 하는 활동", topicEn: "going to the beach",
     koreanFlow: "느긋하게 → 먼저 해안 산책, 파도 소리 → 핵심은 음식, 그 지역 해산물 유명 → 친구들과 구운 생선·해물탕, 가끔 바베큐 → 저녁엔 노을·사진·바다뷰 → 남들은 수영·모래놀이, 나는 산책+해산물+노을이 리셋",
     hint: "B 묘사: 남들 vs 나. 산책+해산물+노을 핵심. Day6 2순위",
     keyEnglish: "Walking and eating fresh seafood by the sea is the perfect way to reset.",
@@ -1916,7 +1916,7 @@ const DEFAULT_CARDS = [
       { en: "Other people ~, but for me, ~", ko: "남들은 ~, 저는 ~ (대조)" },
       { en: "the perfect way to reset", ko: "완벽한 리셋 방법이에요 (마무리)" }
     ] },
-  { cat: "exp", set: "day6", title: "⭐D6-6 beach memorable — LA Redondo 크랩하우스",
+  { cat: "exp", set: "day6", title: "⭐D6-6 beach memorable — LA Redondo 크랩하우스", topicEn: "going to the beach",
     koreanFlow: "가장 기억=LA 석사 시절 레돈도비치 → 부둣가 해산물 식당 유명, 최애는 크랩하우스(직접 고르면 신선하게) → 나무망치로 직접 게 깨 먹는 재미 → 친구들과 껍질 깨며 엉망 만들고 웃음 → 시간 순삭 → 화려하진 않지만 그 행복한 오후가 남음",
     hint: "E 경험: busking(음악)과 안 겹치게 '바다+게+친구들 웃음'. Day6 1순위",
     keyEnglish: "That simple, happy afternoon by the ocean always stays with me.",
@@ -1928,7 +1928,7 @@ const DEFAULT_CARDS = [
       { en: "time just flew because we were having so much fun", ko: "너무 즐거워 시간이 순삭됐어요 (감정)" },
       { en: "that simple, happy afternoon always stays with me", ko: "그 단순하고 행복한 오후가 남아요 (마무리)" }
     ] },
-  { cat: "exp", set: "day6", title: "⭐D6-7 movie 문제 경험 — 예매 시간 오류",
+  { cat: "exp", set: "day6", title: "⭐D6-7 movie 문제 경험 — 예매 시간 오류", topicEn: "going to the movies",
     koreanFlow: "앱으로 예매했는데 시간 잘못 봄 → 도착하니 영화 이미 시작 → 기대했던 터라 당황 → 카운터에 상황 설명 → 직원이 친절히 1시간 뒤 다음 회차로 무료 변경 → 기다리며 커피 → 오히려 잘 풀림 → 이후 예매 직후 시간·관 재확인",
     hint: "E 경험: 실수→직원 해결→교훈. Day6 1순위",
     keyEnglish: "It taught me to slow down when I'm reserving things.",
@@ -1940,7 +1940,7 @@ const DEFAULT_CARDS = [
       { en: "moved us to the next showing at no extra charge", ko: "무료로 다음 회차로 바꿔줬어요 (해결)" },
       { en: "Since then, I always double-check ~", ko: "그 후로 늘 ~를 재확인해요 (교훈)" }
     ] },
-  { cat: "desc", set: "day6", title: "D6-8 movie 취향 — SF/현실 탈출",
+  { cat: "desc", set: "day6", title: "D6-8 movie 취향 — SF/현실 탈출", topicEn: "watching movies",
     koreanFlow: "가장 좋아하는 장르=SF, 특히 우주물 → 일상 너머 상상하게 함(먼 행성·미래·인류의 미래) → 스트레스 주간 뒤 완벽한 탈출, 2시간 현실 잊음 → 좋은 작품은 생각하게 함 → 며칠 머릿속에 남음 → SF는 오락 넘어 잠시 세상 밖으로",
     hint: "A 묘사: 'sci-fi=현실 탈출' 한 가지. Project Hail Mary 대체 가능. Day6 2순위",
     keyEnglish: "For me, sci-fi isn't just entertainment — it's a way to step outside my normal world.",
@@ -1952,7 +1952,7 @@ const DEFAULT_CARDS = [
       { en: "the good ones make me think, not just watch", ko: "좋은 건 보게만 하지 않고 생각하게 해요 (포인트)" },
       { en: "a way to step outside my normal world", ko: "일상 밖으로 나가는 방법 (마무리)" }
     ] },
-  { cat: "desc", set: "day6", title: "⭐D6-9 집에서 보낸 vacation",
+  { cat: "desc", set: "day6", title: "⭐D6-9 집에서 보낸 vacation", topicEn: "spending vacations at home",
     koreanFlow: "지난 휴가 아무 데도 안 감, 아내와 집 → 딱 필요했던 것 → 넷플릭스 많이·최애 배달·낮잠 → 계획·짐·교통 없음 → 여행은 피곤할 때도, 집은 진짜 휴식 → 끝엔 몸·마음 완충 → '집콕 휴가' 지루해 보여도 완벽",
     hint: "B 묘사+G: 집 활동 재활용. 진짜 휴식 강조. Day6 1순위",
     keyEnglish: "A 'home vacation' might sound boring, but for me, it was perfect.",
@@ -1964,7 +1964,7 @@ const DEFAULT_CARDS = [
       { en: "staying home felt like real rest for once", ko: "집에 있는 게 진짜 휴식 같았어요 (핵심)" },
       { en: "might sound boring, but for me, it was perfect", ko: "지루해 보여도 제겐 완벽했어요 (마무리)" }
     ] },
-  { cat: "exp", set: "day6", title: "D6-10 집 vacation 기억나는 일",
+  { cat: "exp", set: "day6", title: "D6-10 집 vacation 기억나는 일", topicEn: "spending vacations at home",
     koreanFlow: "나가려 계획했던 날 → 아침에 완전 지쳐서 깸 → 그냥 집에 있기로 → 종일 드라마+배달 소파에서 → 처음엔 하루 버리나 싶었지만 오히려 완충 → 가끔 아무것도 안 해도 괜찮음 깨달음, 휴식은 낭비 아님 → 아무것도 안 한 날이 최애 기억",
     hint: "E 경험: 계획 무산→집콕→회복. '휴식은 낭비 아님' 교훈. Day6 2순위",
     keyEnglish: "I realized it's okay to do nothing sometimes — rest isn't wasted time.",
@@ -1976,7 +1976,7 @@ const DEFAULT_CARDS = [
       { en: "it's okay to do nothing sometimes", ko: "가끔 아무것도 안 해도 괜찮아요 (교훈)" },
       { en: "that's exactly why I remember it", ko: "그래서 더 기억나요 (마무리)" }
     ] },
-  { cat: "desc", set: "day6", title: "⭐D6-11 국내여행 어디 가는지 — 강릉·속초",
+  { cat: "desc", set: "day6", title: "⭐D6-11 국내여행 어디 가는지 — 강릉·속초", topicEn: "traveling within your country",
     koreanFlow: "국내여행은 주로 동해안, 강릉·속초 → 한 번에 다 있음: 해변·바다뷰·유명 커피·신선 해산물 → 서울서 2시간인데 바다 보면 멀리 온 느낌 → 해안 드라이브·물가 카페·휴식 → 짧고 쉬운 탈출엔 동해안이 1순위",
     hint: "A 묘사: 동해안 한 곳+감정. 돌려막기. Day6 1순위",
     keyEnglish: "For a short, easy escape, the east coast is always my first choice.",
@@ -1988,7 +1988,7 @@ const DEFAULT_CARDS = [
       { en: "the moment I see the ocean, it feels like ~", ko: "바다 보는 순간 ~ 느낌 (감정)" },
       { en: "the east coast is always my first choice", ko: "동해안이 늘 1순위예요 (마무리)" }
     ] },
-  { cat: "exp", set: "day6", title: "D6-12 국내여행 기억 경험 — 우연한 바닷가 카페",
+  { cat: "exp", set: "day6", title: "D6-12 국내여행 기억 경험 — 우연한 바닷가 카페", topicEn: "traveling within your country",
     koreanFlow: "짧은 동해안 드라이브 → 빡빡한 계획 없이 → 우연히 바닷가 작은 카페 들름 → 유명·화려하진 않아도 조용·뷰 최고·커피 완벽 → 거의 한 시간 파도 보며 별말 없이 → 그 즉흥 정차가 여행의 백미 → 작고 예상 못한 순간이 더 기억남",
     hint: "E 경험: 무계획→우연→평온. '작은 순간>큰 계획' 교훈. Day6 2순위",
     keyEnglish: "The small, unexpected moments are often more memorable than the big, planned ones.",
@@ -2000,7 +2000,7 @@ const DEFAULT_CARDS = [
       { en: "that unplanned stop was the best part", ko: "그 즉흥 정차가 백미였어요 (하이라이트)" },
       { en: "small, unexpected moments are more memorable than ~", ko: "작고 예상 못한 순간이 더 기억나요 (교훈)" }
     ] },
-  { cat: "opi", set: "day6", title: "D6-13 최근 본 건강 뉴스 — 수면·정신건강",
+  { cat: "opi", set: "day6", title: "D6-13 최근 본 건강 뉴스 — 수면·정신건강", topicEn: "health news",
     koreanFlow: "요즘 건강뉴스는 수면·정신건강 → 현대 직장인 수면 부족·고스트레스가 몸·마음에 영향이란 기사 → 주변에서 늘 봐서 공감 → 수면이 집중·기분·체중까지 영향 → 내 생각엔 운동+제대로 된 수면이 영양제보다 기본 → 요즘 수면 지키려 노력",
     hint: "G 이슈(아묻따 #12 연결): 뉴스+내 느낌+의견. Day6 2순위",
     keyEnglish: "Exercise and proper sleep are the real basics of health, more than any supplement.",
@@ -2012,7 +2012,7 @@ const DEFAULT_CARDS = [
       { en: "Personally, I think ~ are the real basics", ko: "제 생각엔 ~가 진짜 기본이에요 (의견)" },
       { en: "I try harder to protect my sleep", ko: "수면을 지키려 더 노력해요 (마무리)" }
     ] },
-  { cat: "opi", set: "day6", title: "D6-14 최근 많이 얘기하는 이슈 — AI",
+  { cat: "opi", set: "day6", title: "D6-14 최근 많이 얘기하는 이슈 — AI", topicEn: "AI in everyday life",
     koreanFlow: "요즘 가장 많이 얘기하는 건 AI → 주변 다들 갑자기 사용(직장·집·온갖 것), 편하고 빨라서 → 동시에 단점 논쟁 많음: 실수·과의존·일자리 → 신나지만 신중히 현명하게 써야 → 직장·친구 거의 모든 대화에 나옴",
     hint: "G 이슈: Day2 #10 재활용. 양면+신중. Day6 2순위(별도 연습 불필요)",
     keyEnglish: "It's the kind of topic that comes up in almost every conversation now.",
@@ -2024,7 +2024,7 @@ const DEFAULT_CARDS = [
       { en: "I find it exciting, but ~ carefully", ko: "신나지만 신중히 ~ (의견)" },
       { en: "comes up in almost every conversation now", ko: "거의 모든 대화에 나와요 (마무리)" }
     ] },
-  { cat: "desc", set: "day6", title: "D6-15 식료품점 묘사 — 한 곳에서 다",
+  { cat: "desc", set: "day6", title: "D6-15 식료품점 묘사 — 한 곳에서 다", topicEn: "grocery shopping",
     koreanFlow: "집 근처 큰 마트, 주말마다 → 가장 좋은 건 한 곳에서 다(신선식품·간식·생활용품) → 밝고 정리 잘돼 헤매지 않고 빨리 찾음 → 최애는 신선식품 코너, 과일·채소 늘 알록달록 → 주말에 한 번에 장보기, 편리 → 특별하진 않지만 주간 루틴이 편해짐",
     hint: "A 묘사: '한 곳에서 다=편리' 한 가지. Day6 추가갭",
     keyEnglish: "It's nothing special, but it makes my weekly routine a lot easier.",
@@ -2036,7 +2036,7 @@ const DEFAULT_CARDS = [
       { en: "My favorite part is ~", ko: "제 최애는 ~ (디테일)" },
       { en: "it makes my weekly routine a lot easier", ko: "주간 루틴을 훨씬 편하게 해요 (마무리)" }
     ] },
-  { cat: "opi", set: "day6", title: "D6-16 식습관 변화 (과거 vs 현재)",
+  { cat: "opi", set: "day6", title: "D6-16 식습관 변화 (과거 vs 현재)", topicEn: "your eating habits",
     koreanFlow: "꽤 변함 → 예전: 아침 거름·패스트푸드·야식(바쁘거나 스트레스 때) → 지금: 규칙적으로·집밥 자주·채소 늘리고 기름진 거 줄임 → 이유는 예전보다 건강 신경 → 완벽친 않고 치팅데이도 → 핵심: 이제 먹는 걸 '생각'함",
     hint: "F 비교: In the past↔these days. '이제 생각한다'로 마무리. Day6 추가갭",
     keyEnglish: "The biggest change is that I actually think about what I eat now.",
@@ -2060,7 +2060,7 @@ const DEFAULT_CARDS = [
       { en: "Should I ~, or should I ~?", ko: "~할까요, 아님 ~할까요? (선택 질문)" },
       { en: "Please hurry — he's pretty scared", ko: "무서워하니 서둘러주세요 (긴급)" }
     ] },
-  { cat: "exp", set: "day6", title: "D6-17B 낯선 사람 도운 경험 (아묻따 #8)",
+  { cat: "exp", set: "day6", title: "D6-17B 낯선 사람 도운 경험 (아묻따 #8)", topicEn: "helping strangers",
     koreanFlow: "이거 비슷한 경험 → 서울서 길 잃은 외국인 관광객 도움 → 지하철역서 헤매며 노선 못 찾음 → 영어로 설명해야 해 처음엔 긴장 → 그래도 돕기로, 맞는 노선까지 데려가 환승 알려줌 → 여러 번 감사 인사 → 기분 좋았음 → 큰일 아니지만 그날을 좋게 만듦",
     hint: "E 경험(아묻따 #8): This reminds me of~. 도움→보람. Day6 추가갭",
     keyEnglish: "Helping a stranger like that honestly made my day.",
@@ -2072,7 +2072,7 @@ const DEFAULT_CARDS = [
       { en: "but I decided to help anyway", ko: "그래도 돕기로 했어요 (행동)" },
       { en: "helping a stranger like that made my day", ko: "그렇게 도우니 하루가 좋았어요 (마무리)" }
     ] },
-  { cat: "opi", set: "amudda", title: "아묻따#1 라이브 음악/공연",
+  { cat: "opi", set: "amudda", title: "아묻따#1 라이브 음악/공연", topicEn: "live performances",
     koreanFlow: "festival → crowd → lights → performance → absorbed → unforgettable",
     hint: "적용: live music/concert/gathering/celebration/memorable visit/community event. 3순위",
     keyEnglish: "I felt completely absorbed in the moment. It was an unforgettable experience.",
@@ -2084,7 +2084,7 @@ const DEFAULT_CARDS = [
       { en: "I felt completely absorbed in the moment", ko: "감정 포인트 (고정)" },
       { en: "it was an exciting and unforgettable experience", ko: "마무리 (고정)" }
     ] },
-  { cat: "opi", set: "amudda", title: "아묻따#2 날씨/교통으로 못 감",
+  { cat: "opi", set: "amudda", title: "아묻따#2 날씨/교통으로 못 감", topicEn: "weather ruining your plans",
     koreanFlow: "presentation → snowstorm → bus → stuck → boss → work from home → lesson",
     hint: "적용: weather/transportation problem, appointment canceled, couldn't make it, scary weather. 2순위",
     keyEnglish: "That day taught me how easily our routines can fall apart when nature steps in.",
@@ -2096,7 +2096,7 @@ const DEFAULT_CARDS = [
       { en: "everything just stopped", ko: "문제 발생" },
       { en: "That day taught me how easily our routines can fall apart", ko: "교훈 마무리" }
     ] },
-  { cat: "exp", set: "amudda", title: "아묻따#3 여행/공원서 폰 분실",
+  { cat: "exp", set: "amudda", title: "아묻따#3 여행/공원서 폰 분실", topicEn: "losing your phone",
     koreanFlow: "beach → pictures → phone gone → bench → lost and found → ruined → careful",
     hint: "적용: lost something/beach/park/travel incident/unexpected trip problem. 2순위",
     keyEnglish: "After that, I became extra careful with my belongings, especially in crowded places.",
@@ -2108,7 +2108,7 @@ const DEFAULT_CARDS = [
       { en: "I checked my bag, my pockets, ... but I couldn't find it", ko: "행동 나열" },
       { en: "I became extra careful with my belongings", ko: "교훈 마무리" }
     ] },
-  { cat: "exp", set: "amudda", title: "⭐아묻따#4 에어컨 고장/Staycation",
+  { cat: "exp", set: "amudda", title: "⭐아묻따#4 에어컨 고장/Staycation", topicEn: "home appliances breaking down",
     koreanFlow: "staycation → heatwave → A/C dead → repair delayed → parents → lesson",
     hint: "적용: home/appliance problem, vacation at home, unexpected weather, staycation. 1순위",
     keyEnglish: "Since then, I always check my A/C before summer comes.",
@@ -2120,7 +2120,7 @@ const DEFAULT_CARDS = [
       { en: "they said it would take more than a week", ko: "악화" },
       { en: "Since then, I always check my A/C before summer", ko: "교훈 마무리" }
     ] },
-  { cat: "exp", set: "amudda", title: "아묻따#5 책상 고장→홈오피스",
+  { cat: "exp", set: "amudda", title: "아묻따#5 책상 고장→홈오피스", topicEn: "furniture problems at home",
     koreanFlow: "desk → wobble → focus → home office → window → organized",
     hint: "적용: furniture problem, change made to home, broke something, home improvement. 2순위",
     keyEnglish: "What started as a broken desk ended up becoming a really positive change in my home.",
@@ -2132,7 +2132,7 @@ const DEFAULT_CARDS = [
       { en: "I decided to turn my study room into a proper home office", ko: "행동" },
       { en: "What started as a broken desk ended up becoming a positive change", ko: "마무리" }
     ] },
-  { cat: "exp", set: "amudda", title: "아묻따#6 어릴 적 중국 여행",
+  { cat: "exp", set: "amudda", title: "아묻따#6 어릴 적 중국 여행", topicEn: "traveling abroad",
     koreanFlow: "China → Great Wall → mountains → steep → Forbidden City → history",
     hint: "적용: childhood trip/geography/foreign country/landmark/free time as a child. 3순위",
     keyEnglish: "Looking back, that trip made history feel real to me.",
@@ -2144,7 +2144,7 @@ const DEFAULT_CARDS = [
       { en: "it looked endless, stretching across the mountains", ko: "감각 묘사" },
       { en: "that trip made history feel real to me", ko: "마무리" }
     ] },
-  { cat: "exp", set: "amudda", title: "⭐아묻따#7 렌트 EV 충전 문제",
+  { cat: "exp", set: "amudda", title: "⭐아묻따#7 렌트 EV 충전 문제", topicEn: "renting a car",
     koreanFlow: "EV → quiet → charging failed → stations → slow → ruined → preparation",
     hint: "적용: rented car, car trouble, product/service disappointment, technology problem. 1순위",
     keyEnglish: "I learned that using new technology requires preparation and patience.",
@@ -2156,7 +2156,7 @@ const DEFAULT_CARDS = [
       { en: "the real problem started when ~", ko: "문제 전환" },
       { en: "using new technology requires preparation and patience", ko: "교훈 마무리" }
     ] },
-  { cat: "exp", set: "amudda", title: "아묻따#8 식당서 외국인 도와줌",
+  { cat: "exp", set: "amudda", title: "아묻따#8 식당서 외국인 도와줌", topicEn: "helping strangers",
     koreanFlow: "restaurant → foreigner → confused → help → order → kindness",
     hint: "적용: restaurant, special meal, hotel restaurant, helped someone, memorable meal. 2순위",
     keyEnglish: "It reminded me that even a small act of kindness can mean a lot.",
@@ -2168,7 +2168,7 @@ const DEFAULT_CARDS = [
       { en: "I gently asked him in English if he needed any help", ko: "행동" },
       { en: "even a small act of kindness can mean a lot", ko: "마무리" }
     ] },
-  { cat: "exp", set: "amudda", title: "아묻따#9 온라인쇼핑 보안 문제",
+  { cat: "exp", set: "amudda", title: "아묻따#9 온라인쇼핑 보안 문제", topicEn: "online shopping security",
     koreanFlow: "birthday → wallet → payment → warning → support → failed → security",
     hint: "적용: website/internet/phone problem, online shopping, failed promise, memorable shopping. 보조",
     keyEnglish: "It taught me to be more careful about mobile security and online payments.",
@@ -2180,7 +2180,7 @@ const DEFAULT_CARDS = [
       { en: "I contacted customer support, but ~", ko: "대응" },
       { en: "it taught me to be more careful about mobile security", ko: "교훈 마무리" }
     ] },
-  { cat: "exp", set: "amudda", title: "⭐아묻따#10 ATM PIN+폰 방전",
+  { cat: "exp", set: "amudda", title: "⭐아묻따#10 ATM PIN+폰 방전", topicEn: "using banks and ATMs",
     koreanFlow: "ATM → PIN blank → teller → mobile ID → dead battery → no cash",
     hint: "적용: bank/ATM/ID problem, phone battery, technology dependence. 1순위",
     keyEnglish: "Since then, I always check my PIN, charge my phone, and carry a physical ID.",
@@ -2192,7 +2192,7 @@ const DEFAULT_CARDS = [
       { en: "my phone battery had completely run out", ko: "악화" },
       { en: "I always check my PIN, charge my phone, and carry a physical ID", ko: "교훈 마무리" }
     ] },
-  { cat: "exp", set: "amudda", title: "아묻따#11 첫 캠핑+지역 축제",
+  { cat: "exp", set: "amudda", title: "아묻따#11 첫 캠핑+지역 축제", topicEn: "camping",
     koreanFlow: "camping → awkward → music → festival → grass → peaceful",
     hint: "적용: camping/first time/concert/community event/holiday/free time. 2순위",
     keyEnglish: "That unexpected concert made my first camping trip unforgettable.",
@@ -2204,7 +2204,7 @@ const DEFAULT_CARDS = [
       { en: "I suddenly heard music coming from a nearby park", ko: "반전" },
       { en: "That unexpected concert made my first camping trip unforgettable", ko: "마무리" }
     ] },
-  { cat: "opi", set: "amudda", title: "⭐아묻따#12 과로→건강식·휴식 (만능)",
+  { cat: "opi", set: "amudda", title: "⭐아묻따#12 과로→건강식·휴식 (만능)", topicEn: "dealing with stress",
     koreanFlow: "overwork → snacks → weight → insomnia → vacation → healthy food → recovery",
     hint: "⚠️만능. 적용: health/stress/rest/vacation benefits/healthy eating/lifestyle. 1순위. 인트로 3종 외우기",
     keyEnglish: "I learned that rest and healthy eating are not luxuries but necessities.",
@@ -2216,7 +2216,7 @@ const DEFAULT_CARDS = [
       { en: "I think one of the biggest health problems we can have is stress", ko: "건강문제 인트로" },
       { en: "rest and healthy eating are not luxuries but necessities", ko: "교훈 마무리 (고정)" }
     ] },
-  { cat: "exp", set: "amudda", title: "아묻따#13 미용실서 유명인",
+  { cat: "exp", set: "amudda", title: "아묻따#13 미용실서 유명인", topicEn: "your hair salon",
     koreanFlow: "salon → haircut → familiar → actor → stay calm → special",
     hint: "적용: celebrity, hair salon incident, unexpected memorable moment. 3순위",
     keyEnglish: "Seeing a famous person in such an ordinary place made the day feel special.",
@@ -2228,7 +2228,7 @@ const DEFAULT_CARDS = [
       { en: "I tried to stay calm because I didn't want to disturb him", ko: "감정 포인트" },
       { en: "seeing a famous person in such an ordinary place made the day special", ko: "마무리" }
     ] },
-  { cat: "exp", set: "amudda", title: "⭐아묻따#14 배달앱 첫 주문 실수",
+  { cat: "exp", set: "amudda", title: "⭐아묻따#14 배달앱 첫 주문 실수", topicEn: "ordering food delivery",
     koreanFlow: "delivery app → confusing → cheeseburger → wrong burger → embarrassed → check",
     hint: "적용: delivery food problem, app, new product/service, wrong order, mistake. 1순위",
     keyEnglish: "I learned to check the order details much more carefully before paying.",
@@ -2240,7 +2240,7 @@ const DEFAULT_CARDS = [
       { en: "when the food arrived, I got a spicy chicken burger instead", ko: "반전" },
       { en: "I learned to check the order details more carefully", ko: "교훈 마무리" }
     ] },
-  { cat: "exp", set: "amudda", title: "아묻따#15 재활용하다 손 다침",
+  { cat: "exp", set: "amudda", title: "아묻따#15 재활용하다 손 다침", topicEn: "recycling",
     koreanFlow: "childhood → recycling → glass bottle → cut finger → clinic → stitches → safety",
     hint: "적용: recycling problem, childhood responsibility, housework, childhood clinic, safety. 3순위",
     keyEnglish: "Since then, I've always been extremely careful when handling glass or sorting recycling.",
@@ -2425,10 +2425,11 @@ function makeRecognizer(onResult, onEnd) {
       sessionFinal = "";
       r.restartCount++;
       try { r.start(); return; } catch (e) {
-        setTimeout(() => { if (!r.manualStop && !r.fatalError) { try { r.start(); return; } catch (e2) {} } onEnd(finalText); }, 250);
+        setTimeout(() => { if (!r.manualStop && !r.fatalError) { try { r.start(); return; } catch (e2) {} } r.stopped = true; onEnd(finalText); }, 250);
         return;
       }
     }
+    r.stopped = true;
     onEnd(finalText);
   };
   r.onerror = (e) => {
@@ -2443,7 +2444,9 @@ function makeRecognizer(onResult, onEnd) {
   r.forceStop = () => {
     r.manualStop = true;
     try { r.stop(); } catch (e) {}
-    try { r.abort(); } catch (e) {}
+    // stop()은 대기 중인 최종 결과를 확정한 뒤 onend를 부른다.
+    // 즉시 abort()하면 마지막 문장이 사라지므로, 1.2초 내 종료 안 될 때만 강제 중단.
+    setTimeout(() => { if (!r.stopped) { try { r.abort(); } catch (e) {} } }, 1200);
   };
   return r;
 }
@@ -2888,15 +2891,8 @@ const TWISTS = [
 ];
 
 let twCard = null, twTwist = null, twCurQ = "";
-const TW_TOPIC_JUNK = new Set(["okay","ok","really","actually","honestly","so","and","great","good","fun","nice","thing","things","stuff"]);
 function twTopicPhrase(card) {
-  const cand = (card && card.keywords || [])
-    .map(k => String(k).replace(/[^\x20-\x7E]/g, "").trim().toLowerCase())
-    .filter(k => /[a-z]/.test(k) && !TW_TOPIC_JUNK.has(k) && k.split(/\s+/).length <= 4);
-  if (!cand.length) return "this topic";
-  // 더 구체적인(긴) 키워드를 토픽으로
-  cand.sort((a, b) => b.length - a.length);
-  return cand[0];
+  return (card && card.topicEn) ? card.topicEn : null;  // topicEn 없으면 일반형 질문 사용
 }
 const TW_CAT_ALLOWED = { exp: ["past","compare","hypo","issue"], desc: ["past","compare","hypo"], opi: ["compare","hypo","issue"] };
 function twAllowedTwists(card) {
@@ -2970,7 +2966,8 @@ function twRender() {
   document.getElementById("twIcon").textContent = twTwist.icon;
   document.getElementById("twLabel").textContent = twTwist.label;
   document.getElementById("twKo").textContent = twTwist.ko;
-  twCurQ = twTwist.enT ? twTwist.enT.replace("{topic}", twTopicPhrase(twCard)) : twTwist.en;
+  const topic = twTopicPhrase(twCard);
+  twCurQ = (topic && twTwist.enT) ? twTwist.enT.replace("{topic}", topic) : twTwist.en;
   document.getElementById("twEn").textContent = twCurQ;
   const exPicks = (typeof twExprHints === "function") ? twExprHints(twTwist) : [];
   document.getElementById("twHints").innerHTML =
@@ -3083,7 +3080,7 @@ function toggleTwMic() {
   if (twRecording) { twRecording = false; btn.classList.remove("recording"); btn.innerHTML = "🎙️ 녹음 시작"; if (twRec) twRec.forceStop(); twStopAudioRec(); return; }
   twRec = makeRecognizer(
     (fin, interim) => { twFinal = fin; document.getElementById("twTranscript").innerHTML = escapeHtml(fin) + `<span class="interim">${escapeHtml(interim)}</span>`; },
-    (fin) => { twRecording = false; btn.classList.remove("recording"); btn.innerHTML = "🎙️ 녹음 시작"; twFinal = fin; }
+    (fin) => { twRecording = false; btn.classList.remove("recording"); btn.innerHTML = "🎙️ 녹음 시작"; twFinal = fin; if (twStopResolve) { twStopResolve(); twStopResolve = null; } }
   );
   if (!twRec) { alert("이 브라우저에서는 음성인식이 지원되지 않습니다. 텍스트 모드를 이용하세요."); setTwMode("text"); return; }
   twFinal = ""; document.getElementById("twTranscript").innerHTML = '<span style="color:var(--accent3)">🔴 듣는 중...</span>';
@@ -3169,6 +3166,8 @@ function twHabitScan(answer) {
     if ((toks[k + 1] || "") === "to") continue;
     like++;
   }
+  // "apps like YouTube" 같은 고유명사 비교 용법 제외 (원문 대소문자 기준)
+  like = Math.max(0, like - cnt(/\blike\s+[A-Z][a-zA-Z]/g));
   const youKnow = cnt(/\byou know\b/gi);
   const soAndStart = cnt(/(?:^|[.!?]\s+)(?:so|and)\b/gi);
   const theCountry = cnt(/\bthe (Korea|Japan|China|Seoul|Busan)\b/gi);
@@ -3176,7 +3175,7 @@ function twHabitScan(answer) {
   const ttr = words.length ? new Set(words).size / words.length : 1;
   const parts = [];
   if (words.length > 60 && ttr < 0.5) parts.push("같은 단어 반복이 많아요 (어휘 다양성 낮음)");
-  if (like) parts.push(`필러성 like ${like}회`);
+  if (like) parts.push(`like 사용 후보 ${like}회 (녹음으로 확인)`);
   if (youKnow) parts.push(`you know ${youKnow}회`);
   if (soAndStart >= 3) parts.push(`so/and로 문장 시작 ${soAndStart}회 (연결어 다양화)`);
   if (theCountry) parts.push(`'the Korea' 류 관사 오류 ${theCountry}회`);
@@ -3185,14 +3184,17 @@ function twHabitScan(answer) {
 
 /* ---- 제출/피드백/재도전 ---- */
 let twAttemptPrev = null;  // 같은 질문 직전 시도 (재도전 비교용)
+let twStopResolve = null;  // 녹음 정지 → 최종 전사 도착 대기용
 async function submitTwist() {
   const fbEl = document.getElementById("twFeedback");
   if (!twCard || !twTwist) { fbEl.innerHTML = `<div class="feedback"><div class="fb-body" style="color:var(--warn)">먼저 '새 조합'으로 카드와 각도를 받아주세요.</div></div>`; return; }
   // 녹음 중 제출: 먼저 녹음을 멈추고 마지막 전사가 도착할 시간을 준다
   if (twMode === "voice" && twRecording) {
+    const settled = new Promise(r => { twStopResolve = r; });
     toggleTwMic();
     fbEl.innerHTML = `<div class="feedback"><div class="fb-body" style="color:var(--dim)">⏳ 마지막 문장 전사 중...</div></div>`;
-    await new Promise(r => setTimeout(r, 900));
+    await Promise.race([settled, new Promise(r => setTimeout(r, 2000))]);
+    twStopResolve = null;
   }
   if (twTimerId || twPhase !== "idle") twResetTimer();
   const answer = twMode === "voice" ? twFinal.trim() : document.getElementById("twAnswer").value.trim();
@@ -3205,7 +3207,7 @@ async function submitTwist() {
     fbEl.innerHTML = `<div class="feedback"><div class="fb-body"><div class="loading"><div class="ld"></div><div class="ld"></div><div class="ld"></div> 평가 중...</div></div></div>`;
     try {
       const res = await callLLM(
-        [{ role: "user", content: `주제 카드: ${twCard.title}\n카드 키워드: ${(twCard.keywords||[]).join(", ")}\n요구된 변형 각도: ${twTwist.label} — ${twTwist.en}\n\n학습자 답변: ${answer}` }],
+        [{ role: "user", content: `주제 카드: ${twCard.title}\n카드 키워드: ${(twCard.keywords||[]).join(", ")}\n실제 출제된 질문: ${twCurQ || twTwist.en}\n요구된 변형 각도: ${twTwist.label}\n\n학습자 답변: ${answer}` }],
         `당신은 OPIc 평가 전문가입니다. 이것은 '변형 훈련'입니다: 외운 스크립트 재생이 아니라 주어진 각도로 즉석에서 이야기를 재구성했는지를, 그 질문 유형에 맞는 기준(과거 경험=시제 일관성·사건 순서·감정·결과 / 비교=명시적 대비·이유 / 가정=조건문·예상 결과·이유 / 이슈=하나의 주장·사례·재확인)으로 평가하세요. 반드시 JSON만 반환하세요. checks의 id는 아래 다섯 개를 그대로 사용하고 순서도 유지하세요. 피드백은 한국어로 짧고 구체적으로.\n{"grade":"AL 또는 IH 또는 IM","checks":[{"id":"angle","label":"요구된 각도(변형) 수행","pass":true},{"id":"tense","label":"이 유형에 필요한 시제의 일관된 관리","pass":true},{"id":"detail","label":"구체적 디테일과 감정","pass":false},{"id":"natural","label":"스크립트 낭독체가 아닌 자연 회화체","pass":true},{"id":"closing","label":"기승전결 (마무리 문장 포함)","pass":true}],"feedback":"짧은 한국어 피드백","primaryFix":"실패 항목 중 가장 먼저 고칠 것 한 줄 (전부 통과면 null)","suggestions":["영어 표현1","영어 표현2"]}`,
         0.2
       );
@@ -3279,7 +3281,7 @@ function twRenderFeedback(data, isAI, habits, prevAttempt) {
 }
 function twLogResult(data, isAI, wc, prevAttempt, answer) {
   if (!Array.isArray(twStats.history)) twStats.history = [];
-  const fails = (data.checks || []).filter(c => !c.pass).map(c => String(c.label).replace(/^🎯 /, "").split(" (")[0]);
+  const fails = (data.checks || []).filter(c => !c.pass && !c.info).map(c => String(c.label).replace(/^🎯 /, "").split(" (")[0]);
   let gained = 0;
   if (prevAttempt) {
     const prevPass = new Set(prevAttempt.checks.filter(c => c.pass).map(twCheckKey));
@@ -3559,9 +3561,13 @@ function exShowNext() {
   document.getElementById("exBoxInd").textContent = box === 0 ? "🆕 새 표현" : "●".repeat(box) + "○".repeat(5 - box);
 }
 function exRandomReview() {
-  const all = exAll();
+  // 이미 한 번 이상 학습한 표현만 — 신규 카드 일일 제한을 우회하지 않도록
+  const pool = exAll().filter(it => exProg(it.id).box >= 1);
+  if (!pool.length) {
+    document.getElementById("exDone").innerHTML = "아직 복습할 학습 표현이 없어요.<br>내일 새 표현 10개가 기다리고 있어요!";
+    return;
+  }
   exQueue = [];
-  const pool = all.slice();
   for (let i = 0; i < Math.min(10, pool.length); i++) {
     exQueue.push(pool.splice(Math.floor(Math.random() * pool.length), 1)[0]);
   }
