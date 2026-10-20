@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OPIc AL Trainer — 스크립트 리콜</title>
+<title>OPIc AL Trainer v14.1 — 오늘의 학습</title>
 <style>
   :root {
     --bg: #0a0a0f; --surface: #12121a; --surface2: #1a1a26;
@@ -304,6 +304,90 @@
   .ex-del { background:none; border:none; color:var(--error); cursor:pointer; font-size:14px; }
   .tw-hint-chip.expr { border-color:var(--accent3); color:var(--accent3); border-style:solid; }
 
+
+  /* ===================== v13: 오늘의 학습 / 통합 기록 / 힌트 단계 ===================== */
+  .home-hero { background: linear-gradient(135deg, rgba(108,99,255,0.16), rgba(255,107,157,0.08)); border:1px solid rgba(108,99,255,0.35); border-radius:16px; padding:20px 18px; margin-bottom:14px; }
+  .home-date { font-size:12px; color:var(--dim); margin-bottom:4px; }
+  .home-title { font-size:21px; font-weight:800; line-height:1.35; margin-bottom:4px; }
+  .home-sub { font-size:13px; color:#c8c8e0; line-height:1.55; }
+  .home-streak { display:flex; align-items:center; gap:14px; background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:14px 16px; margin-bottom:14px; flex-wrap:wrap; }
+  .home-fire { font-size:26px; font-weight:900; color:var(--gold); white-space:nowrap; }
+  .home-fire small { font-size:12px; color:var(--dim); font-weight:600; margin-left:4px; }
+  .week-dots { display:flex; gap:6px; margin-left:auto; }
+  .wd { display:flex; flex-direction:column; align-items:center; gap:3px; font-size:10px; color:var(--dim); }
+  .wd b { width:22px; height:22px; border-radius:50%; border:1.5px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:11px; color:var(--text); }
+  .wd.full b { background:linear-gradient(135deg, var(--gold), #ffaa00); border-color:var(--gold); color:#000; }
+  .wd.part b { background:rgba(108,99,255,0.35); border-color:var(--accent); }
+  .wd.frz b { background:rgba(0,212,170,0.12); border-color:var(--accent3); }
+  .wd.today b { box-shadow:0 0 0 2px rgba(255,215,0,0.35); }
+  .step-list { display:flex; flex-direction:column; gap:10px; margin-bottom:14px; }
+  .step { display:flex; align-items:center; gap:12px; background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:14px; cursor:pointer; transition:all .2s; }
+  .step:hover { border-color:var(--accent); }
+  .step.done { border-color:rgba(34,197,94,0.45); background:rgba(34,197,94,0.06); }
+  .step.next { border-color:var(--accent); box-shadow:0 0 0 1px var(--accent) inset; }
+  .step-no { width:30px; height:30px; flex-shrink:0; border-radius:50%; background:var(--surface2); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:13px; }
+  .step.done .step-no { background:var(--success); border-color:var(--success); color:#000; }
+  .step-body { flex:1; min-width:0; }
+  .step-name { font-size:15px; font-weight:700; margin-bottom:2px; }
+  .step-meta { font-size:12px; color:var(--dim); line-height:1.45; }
+  .step-go { font-size:18px; color:var(--dim); }
+  .home-cta { width:100%; padding:15px; font-size:16px; margin-bottom:10px; }
+  .home-note { font-size:12px; color:var(--dim); text-align:center; line-height:1.6; margin-bottom:16px; }
+  .home-done { text-align:center; padding:18px 14px; border:1px solid rgba(255,215,0,0.4); background:rgba(255,215,0,0.06); border-radius:14px; margin-bottom:14px; line-height:1.6; }
+  .home-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:14px; }
+  .hs { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:10px 6px; text-align:center; }
+  .hs .num { font-size:18px; font-weight:800; color:var(--accent3); }
+  .hs .lab { font-size:11px; color:var(--dim); margin-top:2px; line-height:1.35; }
+  .routine-bar { display:flex; align-items:center; gap:10px; flex-wrap:wrap; background:linear-gradient(135deg, rgba(0,212,170,0.12), rgba(108,99,255,0.1)); border:1px solid rgba(0,212,170,0.4); border-radius:12px; padding:10px 14px; margin:-10px 0 16px; font-size:13px; }
+  .routine-bar .rb-text { flex:1; min-width:160px; line-height:1.5; }
+  .routine-bar .rb-step { font-weight:800; color:var(--accent3); }
+  .routine-bar .btn { padding:7px 12px; font-size:13px; }
+  .hint-ladder { display:flex; gap:6px; margin-bottom:10px; flex-wrap:wrap; }
+  .hint-ladder .btn { flex:1; min-width:92px; padding:8px 6px; font-size:12px; }
+  .hint-ladder .btn.used { opacity:.55; }
+  .hint-state { font-size:12px; color:var(--dim); text-align:center; margin-bottom:10px; }
+  .hint-box { background:var(--surface); border:1px dashed var(--border); border-radius:12px; padding:12px 14px; margin-bottom:14px; font-size:13px; line-height:1.65; display:none; }
+  .hint-box .hl { font-size:11px; font-weight:700; color:var(--accent3); letter-spacing:.5px; margin:4px 0 2px; }
+  .srs-ind { font-size:12px; color:var(--gold); letter-spacing:1px; }
+  .grade-head { font-size:12px; color:var(--dim); text-align:center; margin:14px 0 8px; }
+  .retry-row { display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; }
+  .retry-row .btn { flex:1; min-width:160px; }
+  .cmp-box { background:rgba(255,215,0,0.06); border:1px solid rgba(255,215,0,0.3); border-radius:10px; padding:10px 12px; margin:10px 0; font-size:13px; line-height:1.6; }
+  @media (max-width:480px) { .week-dots { margin-left:0; } .home-title { font-size:19px; } }
+
+  /* ===== v14.0 기억 엔진 (기존 6개 탭·SRS 독립 유지) ===== */
+  .mem-shell { margin:18px 0; padding:15px; border:1px solid rgba(0,212,170,.43); border-radius:16px; background:linear-gradient(145deg,rgba(0,212,170,.08),rgba(108,99,255,.07)); }
+  .mem-header { display:flex; justify-content:space-between; align-items:flex-start; gap:10px; flex-wrap:wrap; margin-bottom:9px; }
+  .mem-heading { font-size:17px; font-weight:800; }
+  .mem-note { font-size:12px; color:var(--dim); line-height:1.6; margin:7px 0 10px; }
+  .mem-mini { font-size:11px; color:var(--accent3); border:1px solid rgba(0,212,170,.35); border-radius:20px; padding:4px 8px; }
+  .mem-inner { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:14px; margin:10px 0; }
+  .mem-label { font-size:12px; font-weight:800; color:var(--accent3); margin-bottom:8px; }
+  .mem-flow { font-size:15px; line-height:1.9; color:var(--text); white-space:pre-wrap; overflow-wrap:anywhere; }
+  .mem-en { color:var(--gold); font-size:16px; line-height:1.85; white-space:pre-wrap; overflow-wrap:anywhere; margin:10px 0; font-weight:650; }
+  .mem-steps { display:flex; flex-wrap:wrap; gap:5px; margin:10px 0; }
+  .mem-step { padding:5px 8px; background:var(--surface2); border-radius:7px; font-size:11px; color:var(--dim); }
+  .mem-step.active { background:rgba(0,212,170,.17); color:var(--accent3); border:1px solid rgba(0,212,170,.4); }
+  .mem-actions { display:flex; flex-wrap:wrap; gap:8px; margin:9px 0; }
+  .mem-actions .btn { flex:1; min-width:125px; padding:10px 9px; font-size:12px; }
+  .mem-list { margin:10px 0; }
+  .mem-piece { padding:12px; background:var(--surface); border:1px solid var(--border); border-radius:10px; margin-bottom:9px; }
+  .mem-piece .ko { color:var(--text); font-size:14px; line-height:1.65; font-weight:650; }
+  .mem-piece .en { color:var(--accent3); margin-top:7px; line-height:1.65; font-size:13px; }
+  .mem-word { display:inline-block; white-space:pre-wrap; min-width:15px; }
+  .mem-rule { border-top:1px solid var(--border); margin:12px 0; }
+  .mem-due { border:1px solid rgba(245,158,11,.4); border-radius:10px; padding:11px; background:rgba(245,158,11,.08); font-size:13px; line-height:1.7; }
+  .mem-home { background:var(--surface); padding:14px; border:1px solid rgba(0,212,170,.35); border-radius:14px; margin-bottom:14px; }
+  .mem-home .btn { width:100%; margin-top:9px; }
+  .mem-exp-row { border-top:1px solid var(--border); padding:10px 0; font-size:13px; line-height:1.65; }
+  .mem-exp-row:first-child { border-top:0; }
+  .mem-exp-en { color:var(--accent3); font-weight:700; margin-top:5px; }
+  .mem-progress { font-size:12px; color:var(--dim); margin:8px 0; }
+  @media(max-width:480px) { .mem-shell{padding:12px} .mem-actions .btn{min-width:115px} }
+  /* v14.1 */
+  .mem-shell { margin:0 0 12px; }
+  .mem-home-row { display:flex; justify-content:space-between; align-items:center; gap:8px; font-size:13px; color:var(--accent3); background:rgba(0,212,170,.07); border:1px dashed rgba(0,212,170,.45); border-radius:12px; padding:11px 14px; margin:-4px 0 14px; cursor:pointer; }
+  .mem-home-row span { font-size:18px; }
 </style>
 </head>
 <body>
@@ -311,7 +395,7 @@
   <header>
     <div class="logo">
       <div class="logo-main">OPIc Trainer</div>
-      <div class="logo-badge">AL · 스크립트 리콜</div>
+      <div class="logo-badge">AL · v14.1</div>
     </div>
     <div class="config-status" id="configStatus" onclick="openConfig()">
       <span class="dot-ind" id="dotInd" style="background:var(--error)"></span>
@@ -320,14 +404,18 @@
   </header>
 
   <div class="tabs">
-    <button class="tab active" onclick="switchTab('cards')">🃏 <span>스크립트 카드</span></button>
+    <button class="tab active" onclick="switchTab('home')">🏠 <span>오늘</span></button>
+    <button class="tab" onclick="switchTab('cards')">🃏 <span>스크립트 카드</span></button>
     <button class="tab" onclick="switchTab('expr')">💬 <span>표현 암기</span></button>
     <button class="tab" onclick="switchTab('twist')">🔀 <span>변형 훈련</span></button>
     <button class="tab" onclick="switchTab('speaking')">🎙️ <span>스피킹 연습</span></button>
     <button class="tab" onclick="switchTab('roleplay')">🎭 <span>롤플레이</span></button>
   </div>
+  <div id="routineBar" class="routine-bar" style="display:none;"></div>
 
-  <div id="panel-cards" class="panel active">
+  <div id="panel-home" class="panel active"><div id="homeBody"></div></div>
+
+  <div id="panel-cards" class="panel">
     <div class="pills" id="catPills"></div>
     <div class="card-wrap">
       <div class="flashcard" id="flashcard" onclick="flipCard(event)">
@@ -345,7 +433,20 @@
         </div>
       </div>
     </div>
-    <div class="flip-hint">💡 카드를 누르면 국문 흐름 ↔ 영어 스크립트가 뒤집힙니다</div>
+    <div id="cardSrs" style="text-align:center; margin-bottom:8px;"></div>
+    <section class="mem-shell" id="memShell" aria-label="오늘의 카드 연습">
+      <div class="mem-header"><div class="mem-heading">🧠 말하기 → 막힌 조각 → 다시 전체</div><span id="memBadge" class="mem-mini"></span></div>
+      <div id="memBody"></div>
+    </section>
+    <div id="gradeMsg" style="text-align:center; font-size:13px; margin:0 0 12px; min-height:18px;"></div>
+    <div id="hintArea">
+    <div class="hint-ladder">
+      <button class="btn" onclick="openHint(1)">🧩 구조 힌트</button>
+      <button class="btn" onclick="openHint(2)">💬 표현 힌트</button>
+      <button class="btn" onclick="openHint(3)">📜 스크립트</button>
+    </div>
+    <div class="hint-state" id="hintState"></div>
+    <div class="hint-box" id="hintBox"></div>
 
     <div class="mustuse-box" id="mustUseBox">
       <div class="mustuse-head" onclick="toggleMustUse()">
@@ -354,12 +455,8 @@
       </div>
       <div class="mustuse-list" id="mustUseList" style="display:none;"></div>
     </div>
-
-    <div class="recall-row">
-      <button class="recall-btn ok" onclick="markRecall('ok')">✅ 바로 말함</button>
-      <button class="recall-btn mid" onclick="markRecall('mid')">⚠️ 버벅임</button>
-      <button class="recall-btn no" onclick="markRecall('no')">❌ 기억 안 남</button>
     </div>
+
     <div class="nav-row">
       <button class="btn" onclick="prevCard()">← 이전</button>
       <span class="counter" id="counter">1 / 1</span>
@@ -373,7 +470,7 @@
 
     <div class="voice-box">
       <div class="voice-head">
-        <span class="voice-title">🎤 음성 리콜 — 국문 흐름 보고 영어로 말하기</span>
+        <span class="voice-title">🎤 (선택) 녹음해서 기준 스크립트와 비교</span>
         <div class="mode-toggle">
           <button class="mode-btn active" id="modeVoice" onclick="setInputMode('voice')">음성</button>
           <button class="mode-btn" id="modeText" onclick="setInputMode('text')">텍스트</button>
@@ -2254,7 +2351,7 @@ const DEFAULT_CARDS = [
     ] }
 ];
 const CATS = [
-  { id: "all", label: "전체" }, { id: "w2", label: "W2 세트" }, { id: "exam", label: "기출 세트" }, { id: "day1", label: "Day1" }, { id: "day2", label: "Day2" }, { id: "day3", label: "Day3" }, { id: "day4", label: "Day4" }, { id: "day5", label: "Day5" }, { id: "day6", label: "Day6" }, { id: "amudda", label: "🎯아묻따" },
+  { id: "today", label: "📅 오늘 복습" }, { id: "mem", label: "🔔 다시 떠올리기" }, { id: "all", label: "전체" }, { id: "w2", label: "W2 세트" }, { id: "exam", label: "기출 세트" }, { id: "day1", label: "Day1" }, { id: "day2", label: "Day2" }, { id: "day3", label: "Day3" }, { id: "day4", label: "Day4" }, { id: "day5", label: "Day5" }, { id: "day6", label: "Day6" }, { id: "amudda", label: "🎯아묻따" },
   { id: "rp", label: "롤플레이" }, { id: "exp", label: "경험 묘사" }, { id: "opi", label: "의견/기술" }, { id: "desc", label: "묘사/루틴" },
   { id: "my", label: "내 카드" }, { id: "weak", label: "취약 카드" },
 ];
@@ -2282,6 +2379,9 @@ function rebuildCards() {
   // 유효한 카드만 사용 (localStorage에 깨진 항목이 있어도 앱이 죽지 않도록 방어)
   const valid = c => c && typeof c === "object" && typeof c.title === "string";
   userCards = (Array.isArray(userCards) ? userCards : []).filter(valid);
+  let idAdded = false;
+  userCards.forEach((c, i) => { if (!c.id) { c.id = "u" + Date.now().toString(36) + "_" + i; idAdded = true; } });
+  if (idAdded) { try { localStorage.setItem(LS_CARDS, JSON.stringify(userCards)); } catch (e) {} }
   CARD_DATA = [...DEFAULT_CARDS, ...userCards].filter(valid);
 }
 function loadState() {
@@ -2296,6 +2396,8 @@ function saveConfigLS() { localStorage.setItem(LS_CFG, JSON.stringify(config)); 
 function saveUserCards() { localStorage.setItem(LS_CARDS, JSON.stringify(userCards)); rebuildCards(); }
 
 function filteredCards() {
+  if (currentCat === "today") return todayCardQueue();
+  if (currentCat === "mem") return memPendingCards();
   if (currentCat === "all") return CARD_DATA;
   if (currentCat === "w2") return CARD_DATA.filter(c => c.set === "w2");
   if (currentCat === "exam") return CARD_DATA.filter(c => c.set === "exam");
@@ -2316,18 +2418,23 @@ function renderPills() {
   document.getElementById("catPills").innerHTML = CATS.map(c => {
     let badge = "";
     if (c.id === "weak" && weakCount > 0) badge = `<span class="count">${weakCount}</span>`;
+    if (c.id === "today") { const tq = todayCardQueue().length; if (tq > 0) badge = `<span class="count" style="background:var(--gold);color:#000">${tq}</span>`; }
+    if (c.id === "mem") { const mq = memPendingCards().length; if (mq > 0) badge = `<span class="count" style="background:var(--accent3);color:#000">${mq}</span>`; }
     if (c.id === "my" && myCount > 0) badge = `<span class="count" style="background:var(--accent3)">${myCount}</span>`;
     return `<div class="pill ${currentCat===c.id?'active':''}" onclick="setCat('${c.id}')">${c.label}${badge}</div>`;
   }).join("");
 }
-function setCat(id) { currentCat = id; cardIdx = 0; renderPills(); showCard(); }
+function setCat(id) { const _gm = document.getElementById("gradeMsg"); if (_gm) _gm.innerHTML = ""; currentCat = id; cardIdx = 0; renderPills(); showCard(); }
 function showCard() {
   const cards = filteredCards();
   const fc = document.getElementById("flashcard");
   fc.classList.remove("flipped");
   if (cards.length === 0) {
     document.getElementById("cardTitle").textContent = "카드 없음";
-    document.getElementById("cardFlow").textContent = currentCat === "weak" ? "아직 취약 카드가 없습니다. ⚠️/❌로 표시하면 여기 모입니다." : "";
+    document.getElementById("cardFlow").textContent = currentCat === "weak" ? "아직 취약 카드가 없습니다. ⚠️/❌로 표시하면 여기 모입니다." : currentCat === "today" ? "🎉 오늘 복습할 카드를 모두 끝냈어요! 더 하고 싶으면 다른 묶음을 골라보세요." : currentCat === "mem" ? "🎉 지금 다시 떠올릴 이야기는 다 했어요. 다음 예약 시간에 홈에 다시 떠요." : "";
+    const cs0 = document.getElementById("cardSrs"); if (cs0) cs0.innerHTML = "";
+    resetHintUI(null);
+    memResetSession(); memRender();
     document.getElementById("cardHint").textContent = "";
     document.getElementById("cardTag").textContent = "";
     document.getElementById("counter").textContent = "0 / 0";
@@ -2335,6 +2442,13 @@ function showCard() {
   }
   if (cardIdx >= cards.length) cardIdx = 0;
   const c = cards[cardIdx];
+  if (cardHintFor !== ck(c)) {
+    resetHintUI(c);
+    cardFinal = ""; const ta0 = document.getElementById("textAnswer"); if (ta0) ta0.value = "";
+    document.getElementById("transcript").innerHTML = '<span style="color:var(--dim)">녹음을 시작하면 영어 음성이 여기에 전사됩니다.</span>';
+    document.getElementById("recallFeedback").innerHTML = "";
+  }
+  const cs = document.getElementById("cardSrs"); if (cs) cs.innerHTML = srsBoxHtml(ck(c));
   const status = progress[c.title];
   const statusIcon = status === "ok" ? " ✅" : status === "mid" ? " ⚠️" : status === "no" ? " ❌" : "";
   document.getElementById("cardTag").textContent = "스크립트 카드" + statusIcon;
@@ -2345,14 +2459,13 @@ function showCard() {
   document.getElementById("cardScript").textContent = c.fullScript;
   document.getElementById("counter").textContent = `${cardIdx + 1} / ${cards.length}`;
   renderMustUse(c);
+  memRender();
   const noteEl = document.getElementById("cardEditNote");
   if (noteEl) noteEl.innerHTML = c._user
     ? `<span style="font-size:12px; color:var(--accent3);">✏️ 내가 추가한 카드 · <a href="#" onclick="openCardManager();setCardTab('list');return false;" style="color:var(--accent2);">관리</a></span>`
     : "";
   document.querySelectorAll(".recall-btn").forEach(b => b.classList.remove("sel-ok","sel-mid","sel-no"));
-  if (status === "ok") document.querySelector(".recall-btn.ok").classList.add("sel-ok");
-  if (status === "mid") document.querySelector(".recall-btn.mid").classList.add("sel-mid");
-  if (status === "no") document.querySelector(".recall-btn.no").classList.add("sel-no");
+
 }
 function renderMustUse(c) {
   const box = document.getElementById("mustUseBox");
@@ -2371,14 +2484,45 @@ function toggleMustUse() {
   const tog = document.getElementById("mustUseToggle");
   const open = list.style.display !== "none";
   list.style.display = open ? "none" : "block";
+  if (!open && cardHintLvl < 2) { cardHintLvl = 2; renderHintState(); }
   tog.textContent = open ? "▼ 펼치기" : "▲ 접기";
 }
-function flipCard() { document.getElementById("flashcard").classList.toggle("flipped"); }
-function nextCard() { const n = filteredCards().length; if (!n) return; cardIdx = (cardIdx + 1) % n; showCard(); }
-function prevCard() { const n = filteredCards().length; if (!n) return; cardIdx = (cardIdx - 1 + n) % n; showCard(); }
+function flipCard() {
+  const fc = document.getElementById("flashcard");
+  fc.classList.toggle("flipped");
+  if (fc.classList.contains("flipped") && typeof memPhase !== "undefined" && ["parts", "weak"].includes(memPhase)) { memPeek = true; return; }
+  if (fc.classList.contains("flipped")) openHint(3);
+}
+function nextCard() { const _gm = document.getElementById("gradeMsg"); if (_gm) _gm.innerHTML = ""; const n = filteredCards().length; if (!n) return; cardIdx = (cardIdx + 1) % n; showCard(); }
+function prevCard() { const _gm = document.getElementById("gradeMsg"); if (_gm) _gm.innerHTML = ""; const n = filteredCards().length; if (!n) return; cardIdx = (cardIdx - 1 + n) % n; showCard(); }
 function markRecall(level) {
   const cards = filteredCards(); if (!cards.length) return;
-  progress[cards[cardIdx].title] = level; saveProgress(); renderPills(); showCard();
+  const c = cards[cardIdx];
+  const key = ck(c);
+  const hint = (cardHintFor === key) ? cardHintLvl : 0;
+  progress[c.title] = level; saveProgress();
+  const res = srsGrade(key, level, hint);
+  logActivity();
+  let msg;
+  if (res.early) msg = `<span style="color:var(--dim)">📝 연습 기록됨 — 복습일(${res.p.due.slice(5)}) 전이라 단계는 그대로예요</span>`;
+  else if (level === "no") msg = `<span style="color:var(--error)">❌ 1단계로 — 오늘 한 번 더 나와요</span>`;
+  else if (level === "mid") msg = `<span style="color:var(--warn)">⚠️ 단계 유지 — 내일 다시</span>`;
+  else if (res.held) msg = `<span style="color:var(--warn)">${HINT_ICONS[hint]} ${HINT_NAMES[hint]} 사용 → 승급 보류, 내일 다시 (힌트 없이 성공해야 올라가요)</span>`;
+  else msg = `<span style="color:var(--success)">✅ ${res.p.box}단계로 승급${hint === 0 ? " · 힌트 없이 성공!" : ""} — 다음 복습 ${res.p.due.slice(5)}</span>`;
+  if (currentCat === "today") {
+    const r = dayRec();
+    if (level === "no" && !r.cr.includes(key)) { r.cr.push(key); r.cq = r.cq.filter(t => t !== key).concat([key]); }
+    else if (!r.cd.includes(key)) r.cd.push(key);
+    dailySave();
+    cardIdx = 0; cardHintFor = null;
+    renderPills(); showCard();
+    if (!todayCardQueue().length && routine.step === "card") completeStep("card");
+    else if (routine.step === "card") renderRoutineBar();
+  } else {
+    renderPills(); showCard();
+  }
+  document.getElementById("gradeMsg").innerHTML = msg;
+  if (currentCat === "today") { try { document.getElementById("flashcard").scrollIntoView({ behavior: "smooth", block: "start" }); } catch (e) {} }
 }
 function resetProgress() {
   if (!confirm("취약 카드 기록을 모두 초기화할까요?")) return;
@@ -2483,6 +2627,7 @@ async function compareRecall() {
   const answer = getRecallText();
   const fbEl = document.getElementById("recallFeedback");
   if (!answer) { fbEl.innerHTML = `<div class="feedback"><div class="fb-body" style="color:var(--warn)">먼저 영어로 말하거나 입력해주세요.</div></div>`; return; }
+  logActivity({ wc: answer.split(/\s+/).filter(Boolean).length });
   if (config.apiUrl && config.modelName) {
     fbEl.innerHTML = `<div class="feedback"><div class="fb-body"><div class="loading"><div class="ld"></div><div class="ld"></div><div class="ld"></div> AI가 기준 스크립트와 비교 중...</div></div></div>`;
     try {
@@ -2521,6 +2666,11 @@ function localCheck(card, answer) {
   return { checks, missing: missingText, feedback: fb, suggestions: [card.keyEnglish] };
 }
 function renderRecallFeedback(data, isAI) {
+  const cardsR = filteredCards(); const cardR = cardsR[cardIdx];
+  const prevR = (cardPrevAttempt && cardR && cardPrevAttempt.title === cardR.title) ? cardPrevAttempt : null;
+  const cmpR = attemptCompareHtml(prevR, data.checks);
+  const fixR = firstFail(data.checks);
+  if (cardR) cardPrevAttempt = { title: cardR.title, checks: data.checks || [], n: prevR ? prevR.n + 1 : 1 };
   const checksHtml = data.checks.map(c => `<div class="check-item"><span class="check-icon">${c.pass ? "✅" : "❌"}</span><span>${escapeHtml(String(c.label))}</span></div>`).join("");
   const sugHtml = (data.suggestions || []).map(s => `<div style="font-size:13px; color:var(--accent3); margin-bottom:6px;">→ ${escapeHtml(String(s))}</div>`).join("");
   document.getElementById("recallFeedback").innerHTML = `
@@ -2533,6 +2683,10 @@ function renderRecallFeedback(data, isAI) {
         <div class="fb-section-title" style="color:var(--accent3)">피드백</div>
         <div style="font-size:14px; line-height:1.6; color:#c8c8e0;">${escapeHtml(String(data.feedback || ""))}</div>
         ${sugHtml ? `<div class="fb-section-title" style="color:var(--accent)">영어 표현 제안</div>${sugHtml}` : ""}
+        ${cmpR}
+        <div class="retry-row">
+          <button class="btn btn-primary" onclick="cardRetry()">${fixR ? `🔁 한 번 더 — 이번엔 '${escapeHtml(fixR)}'` : "🔁 한 번 더 말하며 굳히기"}</button>
+        </div>
       </div>
     </div>`;
 }
@@ -2540,6 +2694,7 @@ function renderRecallFeedback(data, isAI) {
 let spRec = null, spRecording = false, spFinal = "";
 function newSpeakQ() {
   speakCurQ = SPEAK_QS[Math.floor(Math.random() * SPEAK_QS.length)];
+  spPrevAttempt = null;
   document.getElementById("speakQ").textContent = speakCurQ;
   document.getElementById("speakFeedback").innerHTML = "";
 }
@@ -2566,6 +2721,7 @@ async function submitSpeak() {
   const fbEl = document.getElementById("speakFeedback");
   if (!answer) { fbEl.innerHTML = `<div class="feedback"><div class="fb-body" style="color:var(--warn)">먼저 답변을 말하거나 입력해주세요.</div></div>`; return; }
   if (!speakCurQ) newSpeakQ();
+  logActivity({ wc: answer.split(/\s+/).filter(Boolean).length });
   if (config.apiUrl && config.modelName) {
     fbEl.innerHTML = `<div class="feedback"><div class="fb-body"><div class="loading"><div class="ld"></div><div class="ld"></div><div class="ld"></div> OPIc 기준으로 평가 중...</div></div></div>`;
     try {
@@ -2598,6 +2754,9 @@ function renderSpeakFeedback(data) {
   data = Object.assign({}, data, { grade: isScore ? "구조 " + g : g + " 추정" });
   const checksHtml = (data.checks||[]).map(c => `<div class="check-item"><span class="check-icon">${c.pass?"✅":"❌"}</span><span>${escapeHtml(String(c.label))}</span></div>`).join("");
   const sugHtml = (data.suggestions||[]).map(s => `<div style="font-size:13px; color:var(--accent3); margin-bottom:6px;">→ ${escapeHtml(String(s))}</div>`).join("");
+  const cmpS = attemptCompareHtml(spPrevAttempt, data.checks);
+  const fixS = firstFail(data.checks);
+  spPrevAttempt = { checks: data.checks || [], n: spPrevAttempt ? spPrevAttempt.n + 1 : 1 };
   document.getElementById("speakFeedback").innerHTML = `
     <div class="feedback">
       <div class="fb-head"><span style="font-weight:700;">📊 OPIc 기준 피드백</span><span class="grade-badge ${gc}">${escapeHtml(String(data.grade))}</span></div>
@@ -2605,6 +2764,11 @@ function renderSpeakFeedback(data) {
         <div class="fb-section-title" style="color:var(--accent3)">피드백</div>
         <div style="font-size:14px; line-height:1.6; color:#c8c8e0;">${escapeHtml(String(data.feedback || ""))}</div>
         ${sugHtml ? `<div class="fb-section-title" style="color:var(--accent)">영어 표현 제안</div>${sugHtml}` : ""}
+        ${cmpS}
+        <div class="retry-row">
+          <button class="btn btn-primary" onclick="speakRetry()">${fixS ? `🔁 같은 질문 다시 — 이번엔 '${escapeHtml(fixS)}'` : "🔁 같은 질문 한 번 더"}</button>
+          <button class="btn" onclick="newSpeakQ()">🔄 새 문제</button>
+        </div>
       </div>
     </div>`;
 }
@@ -2659,6 +2823,7 @@ async function sendRp() {
   input.value = ""; rpFinal = "";
   document.getElementById("rpTranscript").innerHTML = '<span style="color:var(--dim)">녹음하면 전사 후 대화에 전송됩니다.</span>';
   addRpMsg("user", text);
+  logActivity();
   rpHistory.push({ role: "user", content: text });
   if (config.apiUrl && config.modelName) {
     addRpMsg("ai", "...");
@@ -2759,6 +2924,7 @@ function addCardFromForm() {
   const flow = document.getElementById("ncFlow").value.trim();
   const script = document.getElementById("ncScript").value.trim();
   if (!title || !flow || !script) { alert("제목, 국문 흐름, 전체 스크립트는 필수입니다."); return; }
+  if (CARD_DATA.some(c => c.title === title)) { alert("같은 제목의 카드가 이미 있어요. 제목을 조금 바꿔주세요 (예: 뒤에 '②')."); return; }
   const kw = document.getElementById("ncKeywords").value.split(",").map(s => s.trim()).filter(Boolean);
   const finalKw = kw.length ? kw : autoKeywords(script);
   const mustUse = document.getElementById("ncMustUse").value.split("\n").map(line => {
@@ -2769,7 +2935,7 @@ function addCardFromForm() {
   }).filter(Boolean);
   userCards.push({
     cat: document.getElementById("ncCat").value,
-    title, koreanFlow: flow,
+    id: "u" + Date.now().toString(36), title, koreanFlow: flow,
     hint: document.getElementById("ncHint").value.trim() || "내가 추가한 카드",
     keyEnglish: document.getElementById("ncKey").value.trim() || script.split(".")[0] + ".",
     fullScript: script,
@@ -2804,10 +2970,14 @@ function importCardsFromFile() {
     try {
       const arr = JSON.parse(e.target.result);
       if (!Array.isArray(arr)) throw new Error("배열이 아닙니다");
-      let added = 0;
-      arr.forEach(c => {
+      let added = 0, skipped = 0;
+      const titles = new Set(CARD_DATA.map(x => x.title));
+      arr.forEach((c, i) => {
         if (c.title && c.koreanFlow && c.fullScript) {
+          if (titles.has(c.title)) { skipped++; return; }
+          titles.add(c.title);
           userCards.push({
+            id: "u" + Date.now().toString(36) + "_" + i,
             cat: c.cat || "opi", title: c.title, koreanFlow: c.koreanFlow,
             hint: c.hint || "가져온 카드", keyEnglish: c.keyEnglish || "",
             fullScript: c.fullScript, keywords: Array.isArray(c.keywords) ? c.keywords : [],
@@ -2819,7 +2989,7 @@ function importCardsFromFile() {
       });
       saveUserCards(); renderPills();
       msg.style.color = "var(--success)";
-      msg.textContent = `✅ ${added}개의 카드를 가져왔습니다!`;
+      msg.textContent = `✅ ${added}개의 카드를 가져왔습니다!` + (skipped ? ` (제목이 겹친 ${skipped}개는 건너뜀)` : "");
       setTimeout(() => setCardTab("list"), 800);
     } catch (err) {
       msg.style.color = "var(--error)";
@@ -2858,10 +3028,13 @@ function exportMyCards() {
 function escapeHtml(s) { return String(s).replace(/[&<>"]/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[c])); }
 
 function switchTab(name) {
-  const tabs = ["cards", "expr", "twist", "speaking", "roleplay"];
+  const tabs = ["home", "cards", "expr", "twist", "speaking", "roleplay"];
+  if (name === "home") { routine.step = null; renderRoutineBar(); }
   document.querySelectorAll(".tab").forEach((t, i) => t.classList.toggle("active", tabs[i] === name));
   document.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
   document.getElementById("panel-" + name).classList.add("active");
+  if (name === "home") renderHome();
+  if (name === "expr" && !routine.step && !exCur && !exQueue.length) { exBuildQueue(); exShowNext(); }
 }
 
 
@@ -2943,11 +3116,17 @@ function twRenderStats() {
   const total = Object.values(twStats.days).reduce((a,b) => a + (b||0), 0);
   document.getElementById("twStats").innerHTML = `
     <div class="tw-stat"><div class="num">${today}</div><div class="lab">오늘 훈련</div></div>
-    <div class="tw-stat"><div class="num">${twStreak()}</div><div class="lab">연속 일수</div></div>
+    <div class="tw-stat"><div class="num">${twStreak()}</div><div class="lab">연속 일수(전체)</div></div>
     <div class="tw-stat"><div class="num">${total}</div><div class="lab">누적 훈련</div></div>`;
 }
 
 function twPickCard() {
+  if (routine.step === "speak") {
+    // 루틴: 최근 외운(1~3단계) 카드를 재료로 — 익힌 스토리를 새 각도로 트는 연습
+    const learned = CARD_DATA.filter(c => c && c.cat !== "rp" && srsOf(ck(c)).box >= 1)
+      .sort((a, b) => srsOf(ck(a)).box - srsOf(ck(b)).box).slice(0, 8);
+    if (learned.length) return learned[Math.floor(Math.random() * learned.length)];
+  }
   const pool = CARD_DATA.filter(c => c && c.cat !== "rp");
   const base = pool.length ? pool : CARD_DATA;
   if (twStats.weakFirst) {
@@ -3229,7 +3408,14 @@ async function submitTwist() {
   twAttemptPrev = attempt;
 
   twStats.days[twTodayKey()] = (twStats.days[twTodayKey()] || 0) + 1;
-  twSave(); twRenderStats();
+  twSave();
+  logActivity({ wc });
+  twRenderStats();
+  if (routine.step === "speak") {
+    // 완료 조건: 같은 질문·같은 각도로 재도전(2차 이상) 제출 — 새 조합/각도 변경 시 차수가 1로 초기화됨
+    const rr = dayRec(); rr.sp = (rr.sp || 0) + 1; dailySave();
+    if (twAttemptPrev && twAttemptPrev.n >= 2) completeStep("speak"); else renderRoutineBar();
+  }
 }
 function twRetrySame() {
   twResetTimer(); twClearAnswer();
@@ -3331,9 +3517,9 @@ function speakTTS(text, onDone) {
 }
 
 /* ---- 전체 백업 / 복원 ---- */
-const BACKUP_KEYS = () => [LS_PROG, LS_CARDS, LS_TWIST, LS_EXPR];  // API 키(LS_CFG)는 보안상 제외
+const BACKUP_KEYS = () => [LS_PROG, LS_CARDS, LS_TWIST, LS_EXPR, LS_SRS, LS_DAILY, LS_MEM];  // API 키(LS_CFG)는 보안상 제외
 function exportAll() {
-  const data = { app: "opic-al-trainer", version: 12, exportedAt: new Date().toISOString(), data: {} };
+  const data = { app: "opic-al-trainer", version: 14, exportedAt: new Date().toISOString(), data: {} };
   BACKUP_KEYS().forEach(k => { const v = localStorage.getItem(k); if (v !== null) data.data[k] = v; });
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
   const a = document.createElement("a");
@@ -3350,11 +3536,13 @@ function importAll(input) {
     try {
       const parsed = JSON.parse(reader.result);
       if (!parsed || parsed.app !== "opic-al-trainer" || !parsed.data) { alert("올바른 백업 파일이 아닙니다."); return; }
-      if (!confirm("이 기기의 진도·내 카드·훈련 기록을 백업 파일 내용으로 덮어씁니다. 계속할까요?")) return;
+      const hasMemoryBackup = Object.prototype.hasOwnProperty.call(parsed.data, LS_MEM);
+      if (!confirm("이 기기의 진도·내 카드·훈련 기록을 백업 파일 내용으로 덮어씁니다." + (hasMemoryBackup ? "" : "\n이 백업에는 v14 기억 엔진 기록이 없어 기존 기억 엔진 기록도 초기화됩니다.") + " 계속할까요?")) return;
       Object.entries(parsed.data).forEach(([k, v]) => {
         if (BACKUP_KEYS().includes(k) && typeof v === "string") localStorage.setItem(k, v);
       });
-      loadState(); twLoad(); renderPills(); showCard(); twRenderStats(); twRenderHist(); initExpr();
+      if (!hasMemoryBackup) localStorage.removeItem(LS_MEM);
+      loadState(); srsLoad(); dailyLoad(); twLoad(); memLoad(); memResetSession(); cardHintFor = null; renderPills(); showCard(); twRenderStats(); twRenderHist(); initExpr(); renderHome();
       alert("복원 완료! 진도·카드·훈련 기록을 불러왔습니다.");
     } catch (e) { alert("파일을 읽지 못했습니다: " + e.message); }
     input.value = "";
@@ -3545,10 +3733,12 @@ function exShowNext() {
     doneEl.style.display = "block";
     doneEl.innerHTML = `🎉 오늘 복습 완료!<br>내일 다시 오면 잊기 직전의 표현들이 기다리고 있어요.<br><br>
       <button class="btn" onclick="exRandomReview()">🔁 그래도 랜덤으로 더 복습하기</button>`;
+    if (routine.step === "expr") completeStep("expr");
     return;
   }
   exCur = exQueue.shift();
   exRenderStats();
+  if (routine.step === "expr") renderRoutineBar();
   card.style.display = "flex";
   doneEl.style.display = "none";
   document.getElementById("exRevealRow").style.display = "block";
@@ -3596,6 +3786,7 @@ function exGrade(g) {
   const due = g === 0 ? twTodayKey() : g === 1 ? exAddDays(1) : exAddDays(EX_INTERVALS[box - 1]);
   exState.prog[exCur.id] = { box, due };
   exSave();
+  logActivity();
   exShowNext();
 }
 function setExMode(m) {
@@ -3656,7 +3847,654 @@ function twExprHints(twist) {
   return picks;
 }
 
-loadState(); renderPills(); showCard(); updateConfigStatus(); newSpeakQ(); initTwist(); twRenderHist(); initExpr();
+
+/* =====================================================================
+   v13: 오늘의 학습 · 통합 학습 기록 · 스크립트 간격 반복 · 힌트 단계 · 재도전
+   ===================================================================== */
+const LS_SRS = "opic_cardsrs_v1", LS_DAILY = "opic_daily_v1";
+const CARD_INTERVALS = [1, 3, 7, 14, 30];     // box1~5 통과 시 다음 복습까지 일수
+const ROUTINE_EXPR_MAX = 7, ROUTINE_CARD_MAX = 3, ROUTINE_NEW_CARD_MAX = 2;
+const HINT_NAMES = ["힌트 없음", "구조 힌트", "표현 힌트", "스크립트 봄"];
+const HINT_ICONS = ["🟢", "🟡", "🟠", "🔴"];
+
+let srs = {};                 // { [cardTitle]: { box, due, n, ok, nh, last, lastDate, hint } }
+let daily = { days: {} };     // { days: { "YYYY-MM-DD": { a, s:{expr,card,speak}, cq, cd, cr, sp, rc, nh, wc, wn } } }
+let routine = { step: null }; // 현재 진행 중인 루틴 단계 (메모리)
+let cardHintLvl = 0, cardHintFor = null, cardPrevAttempt = null;
+let spPrevAttempt = null;
+
+/* ---------- 날짜 유틸 ---------- */
+function dKey(d) { return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0"); }
+function dAdd(key, n) { const [y,m,dd] = key.split("-").map(Number); const d = new Date(y, m-1, dd); d.setDate(d.getDate() + n); return dKey(d); }
+function weekMonday(key) { const [y,m,dd] = key.split("-").map(Number); const d = new Date(y, m-1, dd); const wd = (d.getDay() + 6) % 7; d.setDate(d.getDate() - wd); return dKey(d); }
+
+/* ---------- 저장/불러오기 + 마이그레이션 ---------- */
+function srsLoad() {
+  let raw = null;
+  try { raw = localStorage.getItem(LS_SRS); } catch (e) {}
+  if (raw) { try { const s = JSON.parse(raw); srs = (s && typeof s === "object") ? s : {}; } catch { srs = {}; } srsMigrateKeys(); return; }
+  // 첫 실행: 기존 ✅/⚠️/❌ 기록을 간격 반복 단계로 옮긴다
+  srs = {};
+  const today = twTodayKey();
+  let spread = 0;
+  Object.entries(progress || {}).forEach(([title, lv]) => {
+    if (lv === "ok") { spread = (spread % 3) + 1; srs[title] = { box: 2, due: dAdd(today, spread), n: 1, ok: 1, nh: 0, last: "ok", lastDate: null, hint: 0 }; }
+    else if (lv === "mid" || lv === "no") srs[title] = { box: 1, due: today, n: 1, ok: 0, nh: 0, last: lv, lastDate: null, hint: 0 };
+  });
+  srsSave();
+  srsMigrateKeys();
+}
+function srsSave() { try { localStorage.setItem(LS_SRS, JSON.stringify(srs)); } catch (e) {} }
+// 진도 키: 내 카드는 고유 id, 기본 카드는 제목(코드에서만 바뀜 → 바뀌면 CARD_ALIASES에 등록)
+const CARD_ALIASES = {};   // { "옛 제목": "새 제목" }
+function ck(c) { return c ? (c.id || c.title) : null; }
+function srsMigrateKeys() {
+  let changed = false;
+  Object.entries(CARD_ALIASES).forEach(([o, n]) => { if (srs[o] && !srs[n]) { srs[n] = srs[o]; delete srs[o]; changed = true; } });
+  const defaultTitles = new Set(DEFAULT_CARDS.map(c => c.title));
+  userCards.forEach(c => { if (c.id && srs[c.title] && !srs[c.id] && !defaultTitles.has(c.title)) { srs[c.id] = srs[c.title]; delete srs[c.title]; changed = true; } });
+  if (changed) srsSave();
+}
+function srsOf(title) { return srs[title] || { box: 0, due: null, n: 0, ok: 0, nh: 0, last: null, lastDate: null, hint: 0 }; }
+
+function dailyLoad() {
+  let raw = null;
+  try { raw = localStorage.getItem(LS_DAILY); } catch (e) {}
+  if (raw) {
+    try { const s = JSON.parse(raw); daily = (s && typeof s === "object" && s.days) ? s : { days: {} }; } catch { daily = { days: {} }; }
+    return;
+  }
+  // 첫 실행: 변형 훈련·표현 학습 기록을 통합 기록으로 옮겨 연속 일수를 이어준다
+  daily = { days: {} };
+  try {
+    const tw = JSON.parse(localStorage.getItem(LS_TWIST) || "null");
+    if (tw && tw.days) Object.entries(tw.days).forEach(([k, v]) => { if (v > 0) dayRec(k).a += v; });
+  } catch (e) {}
+  try {
+    const ex = JSON.parse(localStorage.getItem(LS_EXPR) || "null");
+    if (ex && ex.intro) Object.entries(ex.intro).forEach(([k, v]) => { if (v > 0) dayRec(k).a += v; });
+  } catch (e) {}
+  dailySave();
+}
+function dailySave() { try { localStorage.setItem(LS_DAILY, JSON.stringify(daily)); } catch (e) {} }
+function dayRec(key) {
+  key = key || twTodayKey();
+  if (!daily.days[key]) daily.days[key] = { a: 0, s: {} };
+  const r = daily.days[key];
+  if (!r.s) r.s = {};
+  return r;
+}
+function logActivity(extra) {
+  const r = dayRec();
+  r.a = (r.a || 0) + 1;
+  if (extra && extra.wc) { r.wc = (r.wc || 0) + extra.wc; r.wn = (r.wn || 0) + 1; }
+  dailySave();
+  if (document.getElementById("panel-home").classList.contains("active")) renderHome();
+}
+
+/* ---------- 연속 기록 (최소 1회 활동 = 인정, 주 1회 자동 프리즈) ---------- */
+function dayActive(k) { const r = daily.days[k]; return !!(r && r.a > 0); }
+function dayFull(k) { const r = daily.days[k]; return !!(r && r.s && r.s.expr && r.s.card && r.s.speak); }
+function streakInfo() {
+  const today = twTodayKey();
+  let n = 0, k = today, frozen = new Set(), frozenWeeks = new Set();
+  if (!dayActive(k)) k = dAdd(k, -1);           // 오늘은 아직 안 했을 수 있음
+  for (let i = 0; i < 3650; i++) {
+    if (dayActive(k)) { n++; }
+    else {
+      const wk = weekMonday(k);
+      const prev = dAdd(k, -1);
+      if (n > 0 || dayActive(prev)) {
+        if (!frozenWeeks.has(wk) && dayActive(prev)) { frozenWeeks.add(wk); frozen.add(k); }
+        else break;
+      } else break;
+    }
+    k = dAdd(k, -1);
+  }
+  return { n, frozen };
+}
+function twStreak() { return streakInfo().n; }   // 변형 탭도 통합 연속 일수를 표시
+
+/* ---------- 스크립트 카드 간격 반복 ---------- */
+function srsGrade(title, level, hint) {
+  const today = twTodayKey();
+  const p = Object.assign({}, srsOf(title));
+  let promoted = false, held = false;
+  const isDue = !p.box || (p.due && p.due <= today);   // 새 카드이거나 복습일이 된 카드만 단계 변화
+  p.n = (p.n || 0) + 1;
+  if (!isDue && level !== "no") {
+    if (level === "mid" && p.due > dAdd(today, 1)) p.due = dAdd(today, 1);   // 버벅이면 복습을 앞당김
+    p.last = level; p.lastDate = today; p.hint = hint;
+    srs[title] = p; srsSave();
+    return { p, promoted, held, early: true };
+  }
+  if (level === "no") { p.box = 1; p.due = today; }
+  else if (level === "mid") { p.box = Math.max(p.box || 0, 1); p.due = dAdd(today, 1); }
+  else {
+    p.ok = (p.ok || 0) + 1;
+    if (hint >= 2) { held = true; p.box = Math.max(p.box || 0, 1); p.due = dAdd(today, 1); }   // 표현 힌트 이상 → 승급 보류
+    else { p.box = Math.min((p.box || 0) + 1, 5); p.due = dAdd(today, CARD_INTERVALS[p.box - 1]); promoted = true; }
+    if (hint === 0) p.nh = (p.nh || 0) + 1;
+  }
+  p.last = level; p.lastDate = today; p.hint = hint;
+  srs[title] = p; srsSave();
+  const r = dayRec();
+  r.rc = (r.rc || 0) + 1;
+  if (level === "ok" && hint === 0) r.nh = (r.nh || 0) + 1;
+  dailySave();
+  return { p, promoted, held, early: false };
+}
+function cardByKey(k) { return CARD_DATA.find(c => c && ck(c) === k); }
+const NEW_SET_PRIORITY = ["amudda", "exam", "day1", "day2", "day3", "day4", "day5", "day6", "w2"];
+function pickNewCards(n, usedCats) {
+  const pr = c => { const i = NEW_SET_PRIORITY.indexOf(c.set); return i === -1 ? NEW_SET_PRIORITY.length : i; };
+  const pool = CARD_DATA.map((c, i) => ({ c, i })).filter(x => x.c && srsOf(ck(x.c)).box === 0)
+    .sort((a, b) => pr(a.c) - pr(b.c) || a.i - b.i).map(x => x.c);
+  const out = [], cats = new Set(usedCats || []);
+  while (out.length < n && pool.length) {
+    let idx = pool.findIndex(c => !cats.has(c.cat));   // 같은 날 같은 유형 겹치지 않게
+    if (idx === -1) idx = 0;
+    const c = pool.splice(idx, 1)[0];
+    out.push(c); cats.add(c.cat);
+  }
+  return out;
+}
+function todayCardQueue() {
+  const r = dayRec();
+  if (!Array.isArray(r.cq)) {
+    const today = twTodayKey();
+    const due = CARD_DATA.filter(c => { const p = srsOf(ck(c)); return p.box > 0 && p.due && p.due <= today; })
+      .sort((a, b) => { const pa = srsOf(ck(a)), pb = srsOf(ck(b)); return pa.due < pb.due ? -1 : pa.due > pb.due ? 1 : pa.box - pb.box; });
+    const dueCards = due.slice(0, ROUTINE_CARD_MAX);
+    const q = dueCards.map(ck);
+    if (q.length < ROUTINE_CARD_MAX) {
+      pickNewCards(Math.min(ROUTINE_NEW_CARD_MAX, ROUTINE_CARD_MAX - q.length), dueCards.map(c => c.cat)).forEach(c => q.push(ck(c)));
+    }
+    r.cq = q; r.cd = []; r.cr = [];
+    dailySave();
+  }
+  if (!Array.isArray(r.cd)) r.cd = [];
+  if (!Array.isArray(r.cr)) r.cr = [];
+  return r.cq.map(k => CARD_ALIASES[k] || k).filter(t => !r.cd.includes(t)).map(cardByKey).filter(Boolean);
+}
+function srsDueTotal() {
+  const today = twTodayKey();
+  return CARD_DATA.filter(c => { const p = srsOf(ck(c)); return p.box > 0 && p.due && p.due <= today; }).length;
+}
+function srsBoxHtml(title) {
+  const p = srsOf(title);
+  if (!p.box) return `<span class="srs-ind">🆕 새 카드</span>`;
+  const dueTxt = p.due ? (p.due <= twTodayKey() ? "오늘 복습" : "다음 복습 " + p.due.slice(5)) : "";
+  return `<span class="srs-ind">${"●".repeat(p.box)}${"○".repeat(5 - p.box)}</span> <span style="font-size:11px;color:var(--dim)">${dueTxt}</span>`;
+}
+
+/* ---------- 힌트 단계 (열어본 단계를 자동 기록) ---------- */
+function resetHintUI(card) {
+  cardHintLvl = 0; cardHintFor = card ? ck(card) : null; cardPrevAttempt = null;
+  const hb = document.getElementById("hintBox"); if (hb) { hb.style.display = "none"; hb.innerHTML = ""; }
+  const ch = document.getElementById("cardHint"); if (ch) ch.style.display = "none";
+  renderHintState();
+}
+function renderHintState() {
+  const el = document.getElementById("hintState");
+  if (el) el.innerHTML = `${HINT_ICONS[cardHintLvl]} 지금까지: <b>${HINT_NAMES[cardHintLvl]}</b>${cardHintLvl >= 2 ? " · 이 카드는 오늘 승급 보류" : ""}`;
+  document.querySelectorAll(".hint-ladder .btn").forEach((b, i) => b.classList.toggle("used", cardHintLvl >= i + 1));
+}
+function openHint(level) {
+  const cards = filteredCards(); if (!cards.length) return;
+  const c = cards[cardIdx];
+  if (level > cardHintLvl) cardHintLvl = level;
+  const hb = document.getElementById("hintBox");
+  let html = "";
+  if (cardHintLvl >= 1) html += `<div class="hl">🧩 구조</div><div>${escapeHtml(c.hint || "(구조 힌트 없음)")}</div>`;
+  if (cardHintLvl >= 2) {
+    const mu = Array.isArray(c.mustUse) && c.mustUse.length ? c.mustUse.map(m => "· " + escapeHtml(m.en)).join("<br>") : escapeHtml(c.keyEnglish || "");
+    html += `<div class="hl" style="margin-top:8px;">💬 표현</div><div style="color:var(--accent3)">${mu}</div>`;
+  }
+  if (hb) { hb.innerHTML = html; hb.style.display = html ? "block" : "none"; }
+  if (level >= 3) { const fc = document.getElementById("flashcard"); if (!fc.classList.contains("flipped")) fc.classList.add("flipped"); }
+  renderHintState();
+}
+
+/* ---------- 재도전 비교 (공통) ---------- */
+function chkKey(c) { return c.id || String(c.label).replace(/\s*\([^)]*\)\s*$/, ""); }
+function attemptCompareHtml(prev, curChecks) {
+  if (!prev) return "";
+  const prevPass = new Set(prev.checks.filter(c => c.pass && !c.info).map(chkKey));
+  const scored = (curChecks || []).filter(c => !c.info);
+  const gained = scored.filter(c => c.pass && !prevPass.has(chkKey(c))).map(c => c.label);
+  const lost = scored.filter(c => !c.pass && prevPass.has(chkKey(c))).map(c => c.label);
+  const now = scored.filter(c => c.pass).length;
+  const before = prev.checks.filter(c => c.pass && !c.info).length;
+  let s = `<div class="cmp-box">🔁 <b>${prev.n}차 → ${prev.n + 1}차</b> · 통과 ${before} → ${now}`;
+  if (gained.length) s += `<br>✅ 새로 해낸 것: ${gained.map(escapeHtml).join(", ")}`;
+  if (lost.length) s += `<br>⚠️ 이번엔 놓친 것: ${lost.map(escapeHtml).join(", ")}`;
+  if (!gained.length && !lost.length) s += `<br>변화 없음 — 고칠 것 하나에만 집중해서 한 번 더!`;
+  return s + `</div>`;
+}
+function firstFail(checks) { const f = (checks || []).find(c => !c.pass && !c.info); return f ? String(f.label).replace(/\s*\([^)]*\)\s*$/, "") : null; }
+
+function cardRetry() {
+  cardFinal = ""; const ta = document.getElementById("textAnswer"); if (ta) ta.value = "";
+  document.getElementById("transcript").innerHTML = '<span style="color:var(--accent3)">🔁 같은 카드 재도전 — 직전에 놓친 것 하나만 고쳐서 다시 말해보세요.</span>';
+  const fc = document.getElementById("flashcard"); fc.classList.remove("flipped");
+  try { document.getElementById("flashcard").scrollIntoView({ behavior: "smooth", block: "start" }); } catch (e) {}
+}
+function speakRetry() {
+  spFinal = ""; const ta = document.getElementById("speakAnswer"); if (ta) ta.value = "";
+  document.getElementById("spTranscript").innerHTML = '<span style="color:var(--accent3)">🔁 같은 질문 재도전 — 고칠 것 하나만 챙겨서 다시.</span>';
+  try { window.scrollTo({ top: 0, behavior: "smooth" }); } catch (e) {}
+}
+
+/* ---------- 루틴 진행 ---------- */
+function exprRoutineQueue() {
+  const due = exAll().filter(it => exDueToday(it.id));
+  const introToday = (exState.intro && exState.intro[twTodayKey()]) || 0;
+  const review = due.filter(it => exProg(it.id).box > 0);
+  for (let i = review.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [review[i], review[j]] = [review[j], review[i]]; }
+  const fresh = due.filter(it => exProg(it.id).box === 0).slice(0, Math.max(0, 10 - introToday));
+  return review.concat(fresh).slice(0, ROUTINE_EXPR_MAX);
+}
+function stepInfo() {
+  const r = dayRec();
+  const exprN = r.s.expr ? 0 : exprRoutineQueue().length;
+  const cards = todayCardQueue();
+  return [
+    { id: "expr", icon: "💬", name: "표현 복습", done: !!r.s.expr, meta: r.s.expr ? "완료" : exprN ? `${exprN}개 · 약 ${Math.max(1, Math.round(exprN * 0.4))}분` : "오늘 복습할 표현 없음 — 눌러서 넘어가기" },
+    { id: "card", icon: "🃏", name: "스크립트 말하기", done: !!r.s.card, meta: r.s.card ? "완료" : cards.length ? `${cards.length}개 · 약 ${cards.length * 2}분 · 먼저 말하고 → 막힌 조각만 → 다시 전체` : "오늘 복습할 카드 없음 — 눌러서 넘어가기" },
+    { id: "speak", icon: "🎯", name: "실전 1문제 + 재도전", done: !!r.s.speak, meta: r.s.speak ? "완료" : "90초 답변 → 피드백 → 같은 질문 한 번 더 · 약 4분" },
+  ];
+}
+function nextStepId() { const s = stepInfo().find(x => !x.done); return s ? s.id : null; }
+function startRoutine() { const id = nextStepId(); if (id) startStep(id); else renderHome(); }
+function startStep(id) {
+  const r = dayRec();
+  routine.step = id;
+  if (id === "expr") {
+    switchTab("expr"); setExMode("study");
+    exQueue = exprRoutineQueue(); exCur = null;
+    if (!exQueue.length) { completeStep("expr"); return; }
+    exShowNext();
+  } else if (id === "card") {
+    switchTab("cards");
+    if (!todayCardQueue().length) { completeStep("card"); return; }
+    setCat("today");
+  } else if (id === "speak") {
+    r.sp = 0; dailySave();
+    switchTab("twist");
+    twNewCombo();
+  }
+  renderRoutineBar();
+  try { window.scrollTo({ top: 0, behavior: "smooth" }); } catch (e) {}
+}
+function completeStep(id) {
+  const r = dayRec();
+  const wasFull = dayFull(twTodayKey());
+  r.s[id] = true; dailySave();
+  routine.step = null;
+  renderRoutineBar(id);
+  if (!wasFull && dayFull(twTodayKey())) { try { speakTTS("Great job! You finished today's routine."); } catch (e) {} }
+}
+function renderRoutineBar(justDone) {
+  const bar = document.getElementById("routineBar");
+  if (!bar) return;
+  const steps = stepInfo();
+  const idx = routine.step ? steps.findIndex(s => s.id === routine.step) : -1;
+  const pills = document.getElementById("catPills"); if (pills) pills.style.display = routine.step === "card" ? "none" : "";
+  if (routine.step) {
+    const s = steps[idx];
+    let extra = "";
+    if (s.id === "expr") extra = ` · 남은 ${exQueue.length + (exCur ? 1 : 0)}개`;
+    if (s.id === "card") { const q = todayCardQueue(); extra = ` · 남은 ${q.length}개`; }
+    if (s.id === "speak") { const n = dayRec().sp || 0; extra = n === 0 ? " · ▶ 시작 → 답변 → 피드백 받기" : " · 피드백의 '같은 질문 다시'로 재도전하면 완료"; }
+    bar.innerHTML = `<div class="rb-text"><span class="rb-step">오늘의 학습 ${idx + 1}/3</span> · ${s.icon} ${s.name}${extra}</div>
+      <button class="btn" onclick="goHome()">🏠 홈</button>`;
+    bar.style.display = "flex";
+  } else if (justDone) {
+    const nx = nextStepId();
+    const nxS = steps.find(s => s.id === nx);
+    bar.innerHTML = nx
+      ? `<div class="rb-text">✅ <b>${steps.find(s => s.id === justDone).name}</b> 완료! 연속 기록은 이미 지켰어요.</div>
+         <button class="btn btn-primary" onclick="startStep('${nx}')">다음: ${nxS.icon} ${nxS.name} →</button>
+         <button class="btn" onclick="goHome()">오늘은 여기까지</button>`
+      : `<div class="rb-text">🎉 <b>오늘 루틴 완료!</b> 내일 이 시간에 또 만나요.</div>
+         <button class="btn btn-primary" onclick="goHome()">🏠 홈에서 확인</button>`;
+    bar.style.display = "flex";
+  } else {
+    bar.style.display = "none"; bar.innerHTML = "";
+  }
+}
+function goHome() { routine.step = null; renderRoutineBar(); switchTab("home"); }
+
+/* ---------- 홈 화면 ---------- */
+function renderHome() {
+  const el = document.getElementById("homeBody"); if (!el) return;
+  const today = twTodayKey();
+  const r = dayRec();
+  const steps = stepInfo();
+  const doneN = steps.filter(s => s.done).length;
+  const nx = steps.find(s => !s.done);
+  const st = streakInfo();
+  const mon = weekMonday(today);
+  const names = ["월","화","수","목","금","토","일"];
+  let weekDone = 0;
+  const dots = names.map((nm, i) => {
+    const k = dAdd(mon, i);
+    let cls = "wd", mark = "";
+    if (dayFull(k)) { cls += " full"; mark = "★"; weekDone++; }
+    else if (dayActive(k)) { cls += " part"; mark = "●"; weekDone++; }
+    else if (st.frozen.has(k)) { cls += " frz"; mark = "❄"; }
+    if (k === today) cls += " today";
+    return `<div class="${cls}"><b>${mark}</b>${nm}</div>`;
+  }).join("");
+  const exN = r.s.expr ? 0 : exprRoutineQueue().length, cdN = r.s.card ? 0 : todayCardQueue().length;
+  const mins = (exN ? Math.max(1, Math.round(exN * 0.4)) : 0) + cdN * 2 + (r.s.speak ? 0 : 4);
+  const d = new Date();
+  const dateTxt = `${d.getMonth()+1}월 ${d.getDate()}일 ${["일","월","화","수","목","금","토"][d.getDay()]}요일`;
+  const title = doneN === 3 ? "오늘 루틴 끝! 🎉" : doneN === 0 ? `오늘은 약 ${mins}분이면 끝나요` : `${doneN}/3 완료 · 남은 건 약 ${mins}분`;
+  const sub = doneN === 3 ? "더 하고 싶으면 아래 탭에서 자유 연습을 이어가세요." : (dayActive(today) ? "✅ 오늘 연속 기록은 이미 지켰어요. 여유 있으면 나머지도!" : "바쁜 날엔 1단계만 해도 연속 기록이 이어져요.");
+
+  // 성장 씨앗 지표 (v15 성장 화면용 데이터 누적)
+  const allTitles = CARD_DATA.map(ck);
+  const settled = allTitles.filter(t => { const p = srsOf(t); return p.box >= 3 && (p.nh || 0) >= 2; }).length;
+  const exSettled = exAll().filter(it => exProg(it.id).box >= 3).length;
+  let rc = 0, nh = 0, wc = 0, wn = 0;
+  for (let i = 0; i < 7; i++) { const x = daily.days[dAdd(today, -i)]; if (x) { rc += x.rc || 0; nh += x.nh || 0; wc += x.wc || 0; wn += x.wn || 0; } }
+  const nhRate = rc ? Math.round(nh / rc * 100) + "%" : "–";
+  const avgWc = wn ? Math.round(wc / wn) : "–";
+
+  el.innerHTML = `
+    <div class="home-hero">
+      <div class="home-date">${dateTxt}</div>
+      <div class="home-title">${title}</div>
+      <div class="home-sub">${sub}</div>
+    </div>
+    <div class="home-streak">
+      <div class="home-fire">🔥 ${st.n}<small>일 연속</small></div>
+      <div style="font-size:12px; color:var(--dim); line-height:1.5;">이번 주 ${weekDone}일<br>❄ 주 1회는 쉬어도 유지</div>
+      <div class="week-dots">${dots}</div>
+    </div>
+    <div class="step-list">
+      ${steps.map((s, i) => `
+        <div class="step ${s.done ? "done" : ""} ${nx && nx.id === s.id ? "next" : ""}" onclick="startStep('${s.id}')">
+          <div class="step-no">${s.done ? "✓" : i + 1}</div>
+          <div class="step-body"><div class="step-name">${s.icon} ${s.name}</div><div class="step-meta">${s.meta}</div></div>
+          <div class="step-go">›</div>
+        </div>`).join("")}
+    </div>
+    ${nx
+      ? `<button class="btn btn-primary home-cta" onclick="startRoutine()">${doneN === 0 ? "▶ 오늘 학습 시작" : "▶ 이어서 하기 — " + nx.name}</button>`
+      : `<div class="home-done">🏆 <b>오늘 3단계 모두 완료</b><br><span style="font-size:13px;color:var(--dim)">스크립트 복습 예정: 내일 ${CARD_DATA.filter(c => { const p = srsOf(ck(c)); return p.box > 0 && p.due && p.due <= dAdd(today, 1); }).length}장</span></div>`}
+    <div class="home-note">단계마다 끝나면 자동으로 다음 단계를 안내해요.<br>어떤 탭에서든 1번이라도 연습하면 오늘은 '인정'이에요.</div>
+    ${memHomeHtml(!nx)}
+    <div class="home-stats">
+      <div class="hs"><div class="num">${settled}<span style="font-size:12px;color:var(--dim)">/${allTitles.length}</span></div><div class="lab">몸에 붙은<br>스크립트</div></div>
+      <div class="hs"><div class="num">${nhRate}</div><div class="lab">7일간<br>힌트 없이 성공</div></div>
+      <div class="hs"><div class="num">${avgWc}</div><div class="lab">7일 평균<br>답변 단어 수</div></div>
+    </div>
+    <div class="home-note" style="margin-bottom:4px;">몸에 붙은 표현 ${exSettled}/${exAll().length} · 밀린 카드 복습 ${srsDueTotal()}장</div>`;
+}
+
+
+/* ========== v14.1 기억 엔진 — 오늘의 학습 2단계에 통합 ==========
+   흐름: ① 전체 이야기 먼저 말하기(이 평가 하나가 카드 복습 일정을 정함, 연 힌트는 자동 기록)
+         ② 막혔으면 조각 연습 — 새 카드: 원문 → 첫 글자 → 한국어만 / 복습: 한국어만 먼저, 막힐 때만 힌트
+         ③ 약한 조각 한 번 더 → ④ 전체 다시 말하기 → 10분 뒤·밤(3시간 이상 뒤) 다시 떠올리기 예약
+   '다음 날' 복습은 카드 간격 반복(⚠️·❌ 카드는 다음 날 루틴에 자동 등장)이 맡는다. */
+const LS_MEM = 'opic_memory_v1';
+let memState = { cards: {}, followups: [], expr: {} };
+let memActiveKey = null, memPhase = 'whole1', memMode = 'srs', memPartMode = 'review',
+    memPartOrder = [], memPartIndex = 0, memStage = 0, memCue = 0, memPeek = false,
+    memWeak = [], memPartResults = {}, memSkipped = 0, memWasNew = false;
+
+function memLoad() {
+  memState = { cards: {}, followups: [], expr: {} };
+  try { const val = JSON.parse(localStorage.getItem(LS_MEM) || 'null');
+    if (val && typeof val === 'object' && !Array.isArray(val)) memState = val;
+  } catch (_) {}
+  if (!memState.cards || typeof memState.cards !== 'object') memState.cards = {};
+  if (!Array.isArray(memState.followups)) memState.followups = [];
+  if (!memState.expr || typeof memState.expr !== 'object') memState.expr = {};
+  if ((memState.v || 0) < 141) {   // v14.0 → v14.1: 자정에 몰리던 '다음 날' 예약은 카드 복습 일정이 대신함
+    memState.followups.forEach(f => { if (!f.done && f.kind === 'next') { f.done = true; f.migrated = true; } });
+    memState.v = 141; memSave();
+  }
+}
+function memSave() { try { localStorage.setItem(LS_MEM, JSON.stringify(memState)); } catch (e) { console.warn('기억 엔진 저장 불가:', e); } }
+function memCard() { const a = filteredCards(); return a.length ? a[cardIdx] : null; }
+function memParts(c) {
+  if (!c) return [];
+  const p = (Array.isArray(c.mustUse) ? c.mustUse : []).filter(x => x && x.en && x.ko);
+  if (p.length) return p.map(x => ({ en: String(x.en), ko: String(x.ko) }));
+  const sentences = String(c.fullScript || '').match(/[^.!?]+(?:[.!?]+|$)/g) || [];
+  return sentences.map((x, i) => ({ en: x.trim(), ko: '국문 흐름의 ' + (i + 1) + '번째 내용' })).filter(x => x.en).slice(0, 6);
+}
+function memOf(k) { if (!memState.cards[k]) memState.cards[k] = { parts: {}, runs: 0 }; if (!memState.cards[k].parts) memState.cards[k].parts = {}; return memState.cards[k]; }
+function memPartOf(k, i) { const c = memOf(k); if (!c.parts[i]) c.parts[i] = { ok: 0, mid: 0, no: 0 }; return c.parts[i]; }
+function memPending(k) { const now = Date.now(); return memState.followups.filter(x => !x.done && x.key === k && Number(x.at) <= now); }
+function memAllPending() {
+  const keys = new Set(CARD_DATA.map(c => ck(c))), now = Date.now();
+  return memState.followups.filter(x => !x.done && keys.has(x.key) && Number(x.at) <= now);
+}
+function memPendingCards() { const ks = new Set(memAllPending().map(x => x.key)); return CARD_DATA.filter(c => ks.has(ck(c))); }
+function memDateTime(ms) { return new Date(ms).toLocaleString('ko-KR', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' }); }
+function memNextTime() { return memState.followups.filter(x => !x.done && cardByKey(x.key) && x.at > Date.now()).sort((a, b) => a.at - b.at)[0]; }
+
+function memResetSession() {
+  memActiveKey = null; memPhase = 'whole1'; memMode = 'srs'; memPartMode = 'review'; memPartOrder = []; memPartIndex = 0;
+  memStage = 0; memCue = 0; memPeek = false; memWeak = []; memPartResults = {}; memSkipped = 0; memWasNew = false;
+}
+function memSetHintArea(show) { const el = document.getElementById('hintArea'); if (el) el.style.display = show ? '' : 'none'; }
+
+// 홈: 루틴이 남았으면 작은 줄로, 루틴이 끝났으면 주 버튼으로 (시작 버튼은 항상 하나)
+function memHomeHtml(routineDone) {
+  const n = memPendingCards().length;
+  if (n) {
+    return routineDone
+      ? `<button class="btn btn-accent3 home-cta" onclick="memGo()">🔔 다시 떠올리기 ${n}개 · 약 ${n}분</button>
+         <div class="home-note">아까 막혔던 이야기를 잊기 전에 한 번 더 꺼내는 시간이에요.</div>`
+      : `<div class="mem-home-row" onclick="memGo()">🔔 다시 떠올릴 이야기 ${n}개 · 루틴 끝나고 해도 돼요 <span>›</span></div>`;
+  }
+  const nx = memNextTime();
+  return nx ? `<div class="home-note" style="margin-top:-6px;">🧠 다음 '다시 떠올리기' ${memDateTime(nx.at)} · 앱을 열면 여기에 떠요</div>` : '';
+}
+function memGo() {
+  routine.step = null; renderRoutineBar();
+  currentCat = 'mem'; cardIdx = 0; cardHintFor = null;
+  switchTab('cards'); renderPills(); showCard();
+  try { document.getElementById('flashcard').scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (_) {}
+}
+
+// ① 전체 이야기 평가
+function memGradeWhole(level) {
+  const c = memCard(); if (!c) return;
+  const key = ck(c);
+  if (memActiveKey !== key) { memResetSession(); memActiveKey = key; memMode = memPending(key).length ? 'followup' : 'srs'; }
+  const gm = document.getElementById('gradeMsg');
+  if (memMode === 'followup') {
+    const r = memOf(key); r.lastFollowGrade = level; r.lastFollowAt = Date.now();
+    if (level === 'ok') {
+      memMarkDue(key); memSave(); logActivity();
+      if (gm) gm.innerHTML = `<span style="color:var(--success)">✅ 잊지 않았어요! 다시 떠올리기 완료</span>`;
+      memCardDone(key); return;
+    }
+    memSave();
+    if (gm) gm.innerHTML = `<span style="color:var(--warn)">막힌 조각만 짚고 갈게요</span>`;
+    memBeginParts(); return;
+  }
+  const hint = (cardHintFor === key) ? cardHintLvl : 0;
+  memWasNew = srsOf(key).box === 0;
+  progress[c.title] = level; saveProgress();
+  const res = srsGrade(key, level, hint);
+  logActivity();
+  let msg;
+  if (res.early) msg = `<span style="color:var(--dim)">📝 연습 기록됨 — 복습일(${res.p.due.slice(5)}) 전이라 단계는 그대로예요</span>`;
+  else if (level === 'no') msg = `<span style="color:var(--error)">❌ 1단계로 — 조각 연습 후 10분 뒤에 다시 떠올려요</span>`;
+  else if (level === 'mid') msg = `<span style="color:var(--warn)">⚠️ 단계 유지 — 막힌 조각을 짚고, 내일 다시</span>`;
+  else if (res.held) msg = `<span style="color:var(--warn)">${HINT_ICONS[hint]} ${HINT_NAMES[hint]} 사용 → 승급 보류, 조각을 짚고 내일 다시</span>`;
+  else msg = `<span style="color:var(--success)">✅ ${res.p.box}단계로 승급${hint === 0 ? ' · 힌트 없이 성공!' : ''} — 다음 복습 ${res.p.due.slice(5)}</span>`;
+  if (gm) gm.innerHTML = msg;
+  if (level === 'ok' && !res.held) { memCardDone(key); return; }
+  memBeginParts();
+}
+
+// ② 조각 연습
+function memBeginParts() {
+  const c = memCard(); if (!c) return;
+  const key = ck(c), parts = memParts(c), rec = memOf(key);
+  let order = parts.map((_, i) => i);
+  memPartMode = (memMode === 'srs' && memWasNew) ? 'new' : 'review';   // 처음 보는 카드만 원문부터
+  memSkipped = 0;
+  if (memPartMode === 'review') {   // 지난번에 힌트 없이 바로 말한 조각은 건너뛴다
+    const rest = order.filter(i => { const p = rec.parts[i]; return !(p && p.last === 'ok' && !p.lastHint); });
+    if (rest.length) { memSkipped = order.length - rest.length; order = rest; }
+  }
+  memPartOrder = order; memPartIndex = 0; memWeak = []; memPartResults = {};
+  memPhase = order.length ? 'parts' : 'whole2';
+  const fc = document.getElementById('flashcard'); if (fc) fc.classList.remove('flipped');   // 조각 연습 중엔 스크립트 면을 덮는다
+  memStartPart(); memRender();
+  try { document.getElementById('memShell').scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (_) {}
+}
+function memStartPart() { memPeek = false; memCue = 0; memStage = (memPhase === 'parts' && memPartMode === 'new') ? 0 : 3; }
+function memAdvance() { memStage = memStage === 0 ? 2 : 3; memRender(); }          // 새 카드: 원문 → 첫 글자 → 한국어만
+function memShowAnswer() { memPeek = true; memRender(); }
+function memMoreCue() { if (memCue < 3) memCue++; memRender(); }                   // 복습: 첫 글자 → 빈칸 → 원문
+function memPartGrade(grade, helped) {
+  const c = memCard(); if (!c || !['parts', 'weak'].includes(memPhase)) return;
+  const key = ck(c), ix = memPartOrder[memPartIndex]; if (ix === undefined) return;
+  const p = memPartOf(key, ix); p[grade] = (p[grade] || 0) + 1;
+  p.last = grade; p.lastAt = Date.now(); p.lastHint = !!helped;
+  memPartResults[ix] = { grade, helped: !!helped };
+  if (memPhase === 'parts' && (grade !== 'ok' || helped)) memWeak.push(ix);
+  memSave(); memPartIndex++;
+  if (memPartIndex >= memPartOrder.length) {
+    if (memPhase === 'parts' && memWeak.length) { memPhase = 'weak'; memPartOrder = [...new Set(memWeak)]; memPartIndex = 0; }
+    else { memPhase = 'whole2'; memPartIndex = 0; }
+  }
+  memStartPart(); memRender();
+}
+
+// ④ 전체 다시 → 예약
+function memFinish() {
+  const c = memCard(); if (!c || memPhase !== 'whole2') return;
+  const key = ck(c), rec = memOf(key), now = Date.now();
+  rec.runs = (rec.runs || 0) + 1; rec.lastAt = now; rec.lastPartResults = Object.assign({}, memPartResults);
+  if (memMode === 'followup') memMarkDue(key);
+  else memSchedule(key, now);
+  memSave(); logActivity();
+  const gm = document.getElementById('gradeMsg'), nx = memState.followups.filter(f => f.key === key && !f.done).sort((a, b) => a.at - b.at)[0];
+  if (gm && memMode !== 'followup') gm.innerHTML = `<span style="color:var(--accent3)">🧠 조각 연습 완료 — ${nx ? memDateTime(nx.at) + '에 다시 떠올려요' : '내일 루틴에서 다시 만나요'}</span>`;
+  if (gm && memMode === 'followup') gm.innerHTML = `<span style="color:var(--accent3)">🧠 다시 떠올리기 완료</span>`;
+  memCardDone(key);
+}
+function memSchedule(key, now) {
+  const add = (kind, at) => {
+    if (memState.followups.some(f => f.key === key && f.kind === kind && !f.done)) return;
+    memState.followups.push({ key, kind, at, done: false });
+  };
+  add('10m', now + 10 * 60 * 1000);
+  const eight = new Date(now); eight.setHours(20, 0, 0, 0);
+  const limit = new Date(now); limit.setHours(23, 0, 0, 0);
+  const night = Math.max(now + 3 * 3600 * 1000, eight.getTime());   // 공부하고 3시간 이상 지난 저녁
+  if (night <= limit.getTime()) add('night', night);
+  if (memState.followups.length > 2000) memState.followups = memState.followups.filter(x => !x.done).slice(-800);
+}
+function memMarkDue(key) { const now = Date.now(); memState.followups.forEach(f => { if (f.key === key && !f.done && f.at <= now) f.done = true; }); }
+function memCardDone(key) {
+  if (currentCat === 'today') {
+    const r = dayRec(); if (!Array.isArray(r.cd)) r.cd = [];
+    if (!r.cd.includes(key)) r.cd.push(key);
+    dailySave(); cardIdx = 0; cardHintFor = null; memResetSession();
+    renderPills(); showCard();
+    if (!todayCardQueue().length && routine.step === 'card') completeStep('card');
+    else if (routine.step === 'card') renderRoutineBar();
+  } else if (currentCat === 'mem') {
+    cardIdx = 0; cardHintFor = null; memResetSession(); renderPills(); showCard();
+  } else {
+    memPhase = 'done'; renderPills(); showCard();
+  }
+  try { document.getElementById('flashcard').scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (_) {}
+}
+
+function memFade(en, stage) {   // stage 0 원문 · 1 빈칸(절반) · 2 첫 글자 · 3 숨김
+  const tokens = String(en).split(/(\s+)/);
+  if (stage === 0) return escapeHtml(en);
+  if (stage === 3) return '';
+  let pos = 0;
+  return tokens.map(t => {
+    if (/^\s+$/.test(t) || !/[a-z]/i.test(t)) return escapeHtml(t);
+    const m = t.match(/[A-Za-z]+(?:'[A-Za-z]+)?/), rank = pos++;
+    if (!m) return escapeHtml(t);
+    if (stage === 1 && rank % 2 === 0) return escapeHtml(t);
+    const concealed = stage === 1 ? '____' : (m[0][0] + '_'.repeat(Math.min(m[0].length - 1, 9)));
+    return escapeHtml(t.replace(m[0], concealed));
+  }).join('');
+}
+
+function memRender() {
+  const body = document.getElementById('memBody'), badge = document.getElementById('memBadge'); if (!body) return;
+  const c = memCard();
+  if (!c) { body.innerHTML = ''; if (badge) badge.textContent = ''; memSetHintArea(false); return; }
+  const key = ck(c);
+  if (memActiveKey !== key) { memResetSession(); memActiveKey = key; memMode = memPending(key).length ? 'followup' : 'srs'; }
+  memSetHintArea(memPhase === 'whole1');
+  const parts = memParts(c);
+  if (badge) badge.textContent = memMode === 'followup' ? '🔔 다시 떠올리기' : memPhase === 'whole1' ? '1 · 전체 말하기' : memPhase === 'whole2' ? '3 · 다시 전체' : memPhase === 'done' ? '완료' : '2 · 막힌 조각';
+  const btns = (fn) => `<div class="recall-row" style="margin:12px 0 4px;">
+      <button class="recall-btn ok" onclick="${fn}('ok')">✅ 바로 말함</button>
+      <button class="recall-btn mid" onclick="${fn}('mid')">⚠️ 버벅임</button>
+      <button class="recall-btn no" onclick="${fn}('no')">❌ 기억 안 남</button></div>`;
+
+  if (memPhase === 'whole1') {
+    body.innerHTML = memMode === 'followup'
+      ? `<div class="mem-label">🔔 아까 연습한 이야기, 기억나요?</div>
+         <div class="mem-note">위 국문 흐름만 보고 처음부터 끝까지 말해보세요. 이 평가는 카드 단계에 영향을 주지 않아요.</div>${btns('memGradeWhole')}`
+      : `<div class="mem-label">1 · 국문 흐름만 보고 이야기 전체를 영어로 말해보세요</div>
+         <div class="mem-note">막히면 아래 힌트를 한 단계씩 여세요(연 단계는 자동 기록). 다 말한 뒤 평가하면 — 바로 말했으면 끝, 막혔으면 막힌 조각만 짚어요.</div>${btns('memGradeWhole')}`;
+    return;
+  }
+  if (memPhase === 'parts' || memPhase === 'weak') {
+    const ix = memPartOrder[memPartIndex], part = parts[ix];
+    if (!part) { memPhase = 'whole2'; return memRender(); }
+    const n = memPartOrder.length;
+    const head = `<div class="mem-label">2 · ${memPhase === 'weak' ? '⚠️ 약한 조각 한 번 더' : '막힌 조각 짚기'} ${memPartIndex + 1}/${n}${memSkipped && memPhase === 'parts' ? ` <span style="color:var(--dim);font-weight:600;">(지난번 바로 말한 ${memSkipped}개는 건너뜀)</span>` : ''}</div>`;
+    const ko = `<div class="mem-inner"><div class="mem-label">🇰🇷 한국어 의미 / 역할</div><div class="mem-flow">${escapeHtml(part.ko)}</div>`;
+    if (memPhase === 'parts' && memPartMode === 'new') {
+      const labels = ['원문 따라 말하기', '첫 글자만 보고', '한국어만 보고'];
+      const si = memStage === 0 ? 0 : memStage === 2 ? 1 : 2;
+      body.innerHTML = head + `<div class="mem-steps">${labels.map((x, j) => `<span class="mem-step ${si === j ? 'active' : ''}">${j + 1}. ${x}</span>`).join('')}</div>` + ko +
+        (memStage < 3 ? `<div class="mem-en">${memFade(part.en, memStage)}</div>` : '') +
+        (memPeek ? `<div class="mem-en">${escapeHtml(part.en)}</div>` : '') +
+        `<div class="mem-note">${memStage === 0 ? '처음 보는 조각이에요. 소리 내서 한 번 따라 말하세요.' : memStage === 2 ? '첫 글자만 보고 입으로 채워보세요.' : '이제 한국어만 보고 말해보세요.'}</div>` +
+        (memStage < 3 ? `<div class="mem-actions"><button class="btn btn-primary" onclick="memAdvance()">다음 →</button></div>`
+          : `<div class="mem-actions"><button class="btn" onclick="memPartGrade('ok', memPeek)">✅ 말했어요</button><button class="btn" onclick="memPartGrade('mid', true)">⚠️ 버벅였어요</button>${memPeek ? '' : `<button class="btn" onclick="memShowAnswer()">👀 원문 확인</button>`}</div>`) + `</div>`;
+      return;
+    }
+    // 복습(그리고 약한 조각 재도전): 한국어만 먼저 → 막힐 때만 힌트
+    const cueStage = [3, 2, 1, 0][memCue];
+    const cueName = ['', '첫 글자', '빈칸', '원문'][memCue];
+    body.innerHTML = head + ko +
+      (memCue > 0 ? `<div class="mem-en">${memFade(part.en, cueStage)}</div><div class="mem-note">💡 힌트: ${cueName}</div>` : `<div class="mem-note">한국어만 보고 영어로 말해보세요.</div>`) +
+      `<div class="mem-actions">` +
+      (memCue === 0 ? `<button class="btn btn-accent3" onclick="memPartGrade('ok', memPeek)">✅ 바로 말함</button><button class="btn" onclick="memMoreCue()">💡 힌트</button>`
+        : memCue < 3 ? `<button class="btn" onclick="memPartGrade('mid', true)">🗣 힌트 보고 말함</button><button class="btn" onclick="memMoreCue()">💡 힌트 더</button>`
+        : `<button class="btn" onclick="memPartGrade('no', true)">🗣 따라 말함</button>`) +
+      `</div></div>`;
+    return;
+  }
+  if (memPhase === 'whole2') {
+    body.innerHTML = `<div class="mem-label">3 · 조각을 넣어 이야기 전체를 다시 말해보세요 (60~90초)</div>
+      <div class="mem-note">위 국문 흐름을 보며 처음부터 끝까지. 문장을 똑같이 외울 필요는 없어요 — 방금 짚은 표현을 넣는 게 목표예요.</div>
+      <div class="mem-actions"><button class="btn btn-accent3" onclick="memFinish()">✅ 다시 말해봤어요</button></div>`;
+    return;
+  }
+  if (memPhase === 'done') {
+    body.innerHTML = `<div class="mem-note">✅ 이 카드는 끝났어요.</div>
+      <div class="mem-actions"><button class="btn btn-accent3" onclick="nextCard()">다음 카드 →</button></div>`;
+  }
+}
+
+memLoad(); loadState(); dailyLoad(); srsLoad(); renderPills(); showCard(); updateConfigStatus(); newSpeakQ(); initTwist(); twRenderHist(); initExpr(); renderHome();
 </script>
 </body>
 </html>
