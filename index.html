@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OPIc AL Trainer v14.1 — 오늘의 학습</title>
+<title>OPIc AL Trainer v14.2.1 — 오픽 여행 지도</title>
 <style>
   :root {
     --bg: #0a0a0f; --surface: #12121a; --surface2: #1a1a26;
@@ -388,6 +388,37 @@
   .mem-shell { margin:0 0 12px; }
   .mem-home-row { display:flex; justify-content:space-between; align-items:center; gap:8px; font-size:13px; color:var(--accent3); background:rgba(0,212,170,.07); border:1px dashed rgba(0,212,170,.45); border-radius:12px; padding:11px 14px; margin:-4px 0 14px; cursor:pointer; }
   .mem-home-row span { font-size:18px; }
+  /* v14.2 여행 지도 */
+  .game-story { margin-top:10px; padding-top:10px; border-top:1px solid rgba(255,255,255,.08); font-size:13px; color:#d8d8ee; line-height:1.6; }
+  .game-day { display:inline-block; margin-left:4px; font-size:11px; color:var(--accent3); border:1px solid rgba(0,212,170,.35); border-radius:20px; padding:1px 8px; cursor:pointer; }
+  .game-quest { background:rgba(255,215,0,.06); border:1px solid rgba(255,215,0,.35); border-radius:12px; padding:13px 14px; margin:-4px 0 14px; }
+  .game-map { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:14px; margin-bottom:14px; }
+  .game-map-head { display:flex; justify-content:space-between; align-items:baseline; gap:8px; flex-wrap:wrap; margin-bottom:6px; font-size:15px; }
+  .game-map-head span { font-size:12px; color:var(--dim); }
+  .game-grid { display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:8px; }
+  .game-tile { position:relative; border:1px solid var(--border); border-radius:12px; padding:10px 8px 9px; text-align:center; cursor:pointer; background:var(--surface2); min-width:0; }
+  .game-tile.lv0 { opacity:.55; }
+  .game-tile.lv1 { border-color:rgba(108,99,255,.5); }
+  .game-tile.lv2 { border-color:rgba(0,212,170,.6); background:rgba(0,212,170,.07); }
+  .game-tile.lv3 { border-color:var(--gold); background:linear-gradient(145deg, rgba(255,215,0,.14), rgba(255,170,0,.05)); }
+  .gt-icon { font-size:24px; line-height:1.2; }
+  .gt-name { font-size:12px; font-weight:800; margin-top:2px; }
+  .gt-lv { font-size:11px; color:var(--dim); margin-top:1px; }
+  .game-tile.lv3 .gt-lv { color:var(--gold); font-weight:700; }
+  .gt-bar { height:4px; border-radius:3px; background:rgba(255,255,255,.08); margin-top:6px; overflow:hidden; }
+  .gt-bar i { display:block; height:100%; background:linear-gradient(90deg, var(--accent3), var(--gold)); }
+  .gt-goal { font-size:10px; color:var(--dim); margin-top:5px; line-height:1.35; overflow-wrap:anywhere; }
+  .game-dice { position:absolute; top:4px; right:4px; background:none; border:none; font-size:14px; cursor:pointer; padding:2px; }
+  .game-toast { position:fixed; left:50%; bottom:22px; transform:translate(-50%, 24px); opacity:0; visibility:hidden; pointer-events:none; max-width:min(92vw,440px); background:#1d1d2c; border:1px solid var(--gold); color:var(--text); border-radius:14px; padding:12px 16px; font-size:14px; box-shadow:0 10px 30px rgba(0,0,0,.45); transition:transform .3s ease, opacity .3s ease, visibility .3s; z-index:200; text-align:center; }
+  .game-toast.show { transform:translate(-50%, 0); opacity:1; visibility:visible; }
+  .game-tile.lv0 .gt-goal, .game-tile.lv0 .gt-bar { display:none; }
+  .game-pass { border:1px solid var(--gold); background:rgba(255,215,0,.08); border-radius:10px; padding:10px 12px; margin-bottom:10px; font-size:14px; line-height:1.6; }
+  .game-rw { display:flex; align-items:center; gap:8px; border-top:1px dashed var(--border); padding:9px 0; font-size:13px; }
+  .game-rw.claimed { opacity:.6; }
+  .game-rw-form { display:flex; gap:6px; flex-wrap:wrap; margin-top:8px; }
+  .game-rw-form input, .game-rw-form select { padding:8px 10px; background:var(--surface2); border:1px solid var(--border); border-radius:9px; color:var(--text); font-size:13px; }
+  .game-rw-form #rwText { flex:1; min-width:150px; }
+  @media (max-width:380px) { .game-grid { grid-template-columns:repeat(2, minmax(0,1fr)); } }
 </style>
 </head>
 <body>
@@ -395,7 +426,7 @@
   <header>
     <div class="logo">
       <div class="logo-main">OPIc Trainer</div>
-      <div class="logo-badge">AL · v14.1</div>
+      <div class="logo-badge">AL · v14.2.1</div>
     </div>
     <div class="config-status" id="configStatus" onclick="openConfig()">
       <span class="dot-ind" id="dotInd" style="background:var(--error)"></span>
@@ -544,6 +575,7 @@
   </div>
 
   <div id="panel-twist" class="panel">
+    <div id="gameMissionBar" class="routine-bar" style="display:none;"></div>
     <div class="tw-stats" id="twStats"></div>
 
     <div class="tw-zone">
@@ -672,6 +704,7 @@
   </div>
 </div>
 
+<div id="gameToast" class="game-toast" role="status" aria-live="polite"></div>
 <div class="modal-bg" id="configModal">
   <div class="modal">
     <h3>⚙️ AI 연결 설정 (선택)</h3>
@@ -2398,6 +2431,7 @@ function saveUserCards() { localStorage.setItem(LS_CARDS, JSON.stringify(userCar
 function filteredCards() {
   if (currentCat === "today") return todayCardQueue();
   if (currentCat === "mem") return memPendingCards();
+  if (String(currentCat).startsWith("place:")) { const pid = currentCat.slice(6); return CARD_DATA.filter(c => gamePlaceOf(c) === pid); }
   if (currentCat === "all") return CARD_DATA;
   if (currentCat === "w2") return CARD_DATA.filter(c => c.set === "w2");
   if (currentCat === "exam") return CARD_DATA.filter(c => c.set === "exam");
@@ -2415,7 +2449,7 @@ function filteredCards() {
 function renderPills() {
   const weakCount = CARD_DATA.filter(c => c && (progress[c.title] === "mid" || progress[c.title] === "no")).length;
   const myCount = userCards.length;
-  document.getElementById("catPills").innerHTML = CATS.map(c => {
+  document.getElementById("catPills").innerHTML = gamePlacePill() + CATS.map(c => {
     let badge = "";
     if (c.id === "weak" && weakCount > 0) badge = `<span class="count">${weakCount}</span>`;
     if (c.id === "today") { const tq = todayCardQueue().length; if (tq > 0) badge = `<span class="count" style="background:var(--gold);color:#000">${tq}</span>`; }
@@ -2448,7 +2482,7 @@ function showCard() {
     document.getElementById("transcript").innerHTML = '<span style="color:var(--dim)">녹음을 시작하면 영어 음성이 여기에 전사됩니다.</span>';
     document.getElementById("recallFeedback").innerHTML = "";
   }
-  const cs = document.getElementById("cardSrs"); if (cs) cs.innerHTML = srsBoxHtml(ck(c));
+  const cs = document.getElementById("cardSrs"); if (cs) cs.innerHTML = srsBoxHtml(ck(c)) + gameCardBadge(c);
   const status = progress[c.title];
   const statusIcon = status === "ok" ? " ✅" : status === "mid" ? " ⚠️" : status === "no" ? " ❌" : "";
   document.getElementById("cardTag").textContent = "스크립트 카드" + statusIcon;
@@ -3081,7 +3115,7 @@ function twAllowedTwists(card) {
 let twStats = { days: {}, weakFirst: false };
 let twRec = null, twRecording = false, twFinal = "", twMode = "voice";
 let twTimerId = null, twTimeLeft = 90;
-const TW_TOTAL = 90;
+let TW_TOTAL = 90;   // 돌발 미션 중에는 45초
 
 function twLoad() {
   try { const s = JSON.parse(localStorage.getItem(LS_TWIST)); if (s && typeof s === "object") twStats = Object.assign(twStats, s); } catch {}
@@ -3157,6 +3191,7 @@ function twRender() {
   document.getElementById("twFeedback").innerHTML = "";
 }
 function twNewCombo() {
+  gameEndMission();
   twCard = twPickCard();
   const allowed = twAllowedTwists(twCard);
   twTwist = allowed[Math.floor(Math.random() * allowed.length)];
@@ -3165,6 +3200,7 @@ function twNewCombo() {
   twResetTimer(); twClearAnswer(); twRender();
 }
 function twNewTwist() {
+  if (gameMission) { gameEndMission(); twNewCombo(); return; }
   if (!twCard) { twNewCombo(); return; }
   const others = twAllowedTwists(twCard).filter(t => t !== twTwist);
   if (!others.length) return;
@@ -3283,7 +3319,8 @@ function twLocalCheck(card, twist, answer) {
   const detail = count(/\b(when|where|with|at|years? ago|last|during)\b/g);
   const closing = /(so overall|all in all|that's why|in the end|to sum up|anyway,? that's|at the end of the day)/.test(lower);
   const ending = closing || /\b(eventually|finally|in the end)\b/.test(lower);
-  const lenCheck = { id: "len", label: `분량 ${wc}단어 (연습 기준 80+ · 참고용)`, pass: wc >= 80, info: true };
+  const minWords = gameMission ? MISSION_MIN_WORDS : 80;
+  const lenCheck = { id: "len", label: `분량 ${wc}단어 (연습 기준 ${minWords}+ · 참고용)`, pass: wc >= minWords, info: true };
 
   let checks, fixMap;
   if (twist.id === "past") {
@@ -3416,6 +3453,7 @@ async function submitTwist() {
     const rr = dayRec(); rr.sp = (rr.sp || 0) + 1; dailySave();
     if (twAttemptPrev && twAttemptPrev.n >= 2) completeStep("speak"); else renderRoutineBar();
   }
+  if (gameMission) gameMissionResult(result, { isAI, wc });
 }
 function twRetrySame() {
   twResetTimer(); twClearAnswer();
@@ -3517,9 +3555,9 @@ function speakTTS(text, onDone) {
 }
 
 /* ---- 전체 백업 / 복원 ---- */
-const BACKUP_KEYS = () => [LS_PROG, LS_CARDS, LS_TWIST, LS_EXPR, LS_SRS, LS_DAILY, LS_MEM];  // API 키(LS_CFG)는 보안상 제외
+const BACKUP_KEYS = () => [LS_PROG, LS_CARDS, LS_TWIST, LS_EXPR, LS_SRS, LS_DAILY, LS_MEM, LS_GAME];  // API 키(LS_CFG)는 보안상 제외
 function exportAll() {
-  const data = { app: "opic-al-trainer", version: 14, exportedAt: new Date().toISOString(), data: {} };
+  const data = { app: "opic-al-trainer", version: 1421, exportedAt: new Date().toISOString(), data: {} };
   BACKUP_KEYS().forEach(k => { const v = localStorage.getItem(k); if (v !== null) data.data[k] = v; });
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
   const a = document.createElement("a");
@@ -3542,7 +3580,9 @@ function importAll(input) {
         if (BACKUP_KEYS().includes(k) && typeof v === "string") localStorage.setItem(k, v);
       });
       if (!hasMemoryBackup) localStorage.removeItem(LS_MEM);
-      loadState(); srsLoad(); dailyLoad(); twLoad(); memLoad(); memResetSession(); cardHintFor = null; renderPills(); showCard(); twRenderStats(); twRenderHist(); initExpr(); renderHome();
+      if (!Object.prototype.hasOwnProperty.call(parsed.data, LS_GAME)) localStorage.removeItem(LS_GAME);
+      gameEndMission(); gameQuestOpen = false; gameQuestPeek = false; routine.step = null;
+      loadState(); srsLoad(); dailyLoad(); twLoad(); memLoad(); memResetSession(); gameLoad(); gameCheck(true); cardHintFor = null; renderPills(); showCard(); twRenderStats(); twRenderHist(); initExpr(); renderHome();
       alert("복원 완료! 진도·카드·훈련 기록을 불러왔습니다.");
     } catch (e) { alert("파일을 읽지 못했습니다: " + e.message); }
     input.value = "";
@@ -3930,11 +3970,12 @@ function logActivity(extra) {
   if (extra && extra.wc) { r.wc = (r.wc || 0) + extra.wc; r.wn = (r.wn || 0) + 1; }
   dailySave();
   if (document.getElementById("panel-home").classList.contains("active")) renderHome();
+  if (typeof gameCheck === "function") setTimeout(() => gameCheck(false), 0);
 }
 
 /* ---------- 연속 기록 (최소 1회 활동 = 인정, 주 1회 자동 프리즈) ---------- */
 function dayActive(k) { const r = daily.days[k]; return !!(r && r.a > 0); }
-function dayFull(k) { const r = daily.days[k]; return !!(r && r.s && r.s.expr && r.s.card && r.s.speak); }
+function dayFull(k) { const r = daily.days[k]; return !!(r && r.s && r.s.expr && r.s.card && (r.cb || r.s.speak)); }
 function streakInfo() {
   const today = twTodayKey();
   let n = 0, k = today, frozen = new Set(), frozenWeeks = new Set();
@@ -4002,16 +4043,12 @@ function pickNewCards(n, usedCats) {
 function todayCardQueue() {
   const r = dayRec();
   if (!Array.isArray(r.cq)) {
-    const today = twTodayKey();
-    const due = CARD_DATA.filter(c => { const p = srsOf(ck(c)); return p.box > 0 && p.due && p.due <= today; })
-      .sort((a, b) => { const pa = srsOf(ck(a)), pb = srsOf(ck(b)); return pa.due < pb.due ? -1 : pa.due > pb.due ? 1 : pa.box - pb.box; });
-    const dueCards = due.slice(0, ROUTINE_CARD_MAX);
-    const q = dueCards.map(ck);
-    if (q.length < ROUTINE_CARD_MAX) {
-      pickNewCards(Math.min(ROUTINE_NEW_CARD_MAX, ROUTINE_CARD_MAX - q.length), dueCards.map(c => c.cat)).forEach(c => q.push(ck(c)));
-    }
-    r.cq = q; r.cd = []; r.cr = [];
+    r.cq = gameBuildQueue(); r.cd = []; r.cr = []; r.qv = 1421;
     dailySave();
+  } else if (r.qv !== 1421) {
+    // 완료 기록은 보존하고, 남은 큐만 오늘 목표 안에서 보정한다.
+    if (!r.s.card) gameRefreshQueue(r);
+    r.qv = 1421; dailySave();
   }
   if (!Array.isArray(r.cd)) r.cd = [];
   if (!Array.isArray(r.cr)) r.cr = [];
@@ -4093,7 +4130,7 @@ function exprRoutineQueue() {
   const review = due.filter(it => exProg(it.id).box > 0);
   for (let i = review.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [review[i], review[j]] = [review[j], review[i]]; }
   const fresh = due.filter(it => exProg(it.id).box === 0).slice(0, Math.max(0, 10 - introToday));
-  return review.concat(fresh).slice(0, ROUTINE_EXPR_MAX);
+  return review.concat(fresh).slice(0, gameComeback() ? 3 : ROUTINE_EXPR_MAX);
 }
 function stepInfo() {
   const r = dayRec();
@@ -4101,8 +4138,8 @@ function stepInfo() {
   const cards = todayCardQueue();
   return [
     { id: "expr", icon: "💬", name: "표현 복습", done: !!r.s.expr, meta: r.s.expr ? "완료" : exprN ? `${exprN}개 · 약 ${Math.max(1, Math.round(exprN * 0.4))}분` : "오늘 복습할 표현 없음 — 눌러서 넘어가기" },
-    { id: "card", icon: "🃏", name: "스크립트 말하기", done: !!r.s.card, meta: r.s.card ? "완료" : cards.length ? `${cards.length}개 · 약 ${cards.length * 2}분 · 먼저 말하고 → 막힌 조각만 → 다시 전체` : "오늘 복습할 카드 없음 — 눌러서 넘어가기" },
-    { id: "speak", icon: "🎯", name: "실전 1문제 + 재도전", done: !!r.s.speak, meta: r.s.speak ? "완료" : "90초 답변 → 피드백 → 같은 질문 한 번 더 · 약 4분" },
+    { id: "card", icon: "🃏", name: "스크립트 말하기", done: !!r.s.card, meta: r.s.card ? "완료" : cards.length ? `${gameCardStepMeta(cards)} · 약 ${cards.length * 2}분 · 먼저 말하고 → 막힌 조각만 → 다시 전체` : "오늘 복습할 카드 없음 — 눌러서 넘어가기" },
+    ...(gameComeback() ? [] : [{ id: "speak", icon: "🎯", name: "실전 1문제 + 재도전", done: !!r.s.speak, meta: r.s.speak ? "완료" : "90초 답변 → 피드백 → 같은 질문 한 번 더 · 약 4분" }]),
   ];
 }
 function nextStepId() { const s = stepInfo().find(x => !x.done); return s ? s.id : null; }
@@ -4131,6 +4168,7 @@ function completeStep(id) {
   const r = dayRec();
   const wasFull = dayFull(twTodayKey());
   r.s[id] = true; dailySave();
+  setTimeout(() => gameCheck(false), 0);
   routine.step = null;
   renderRoutineBar(id);
   if (!wasFull && dayFull(twTodayKey())) { try { speakTTS("Great job! You finished today's routine."); } catch (e) {} }
@@ -4147,7 +4185,7 @@ function renderRoutineBar(justDone) {
     if (s.id === "expr") extra = ` · 남은 ${exQueue.length + (exCur ? 1 : 0)}개`;
     if (s.id === "card") { const q = todayCardQueue(); extra = ` · 남은 ${q.length}개`; }
     if (s.id === "speak") { const n = dayRec().sp || 0; extra = n === 0 ? " · ▶ 시작 → 답변 → 피드백 받기" : " · 피드백의 '같은 질문 다시'로 재도전하면 완료"; }
-    bar.innerHTML = `<div class="rb-text"><span class="rb-step">오늘의 학습 ${idx + 1}/3</span> · ${s.icon} ${s.name}${extra}</div>
+    bar.innerHTML = `<div class="rb-text"><span class="rb-step">오늘의 학습 ${idx + 1}/${steps.length}</span> · ${s.icon} ${s.name}${extra}</div>
       <button class="btn" onclick="goHome()">🏠 홈</button>`;
     bar.style.display = "flex";
   } else if (justDone) {
@@ -4188,11 +4226,12 @@ function renderHome() {
     return `<div class="${cls}"><b>${mark}</b>${nm}</div>`;
   }).join("");
   const exN = r.s.expr ? 0 : exprRoutineQueue().length, cdN = r.s.card ? 0 : todayCardQueue().length;
-  const mins = (exN ? Math.max(1, Math.round(exN * 0.4)) : 0) + cdN * 2 + (r.s.speak ? 0 : 4);
+  const mins = (exN ? Math.max(1, Math.round(exN * 0.4)) : 0) + cdN * 2 + (steps.some(s => s.id === 'speak' && !s.done) ? 4 : 0);
   const d = new Date();
   const dateTxt = `${d.getMonth()+1}월 ${d.getDate()}일 ${["일","월","화","수","목","금","토"][d.getDay()]}요일`;
-  const title = doneN === 3 ? "오늘 루틴 끝! 🎉" : doneN === 0 ? `오늘은 약 ${mins}분이면 끝나요` : `${doneN}/3 완료 · 남은 건 약 ${mins}분`;
-  const sub = doneN === 3 ? "더 하고 싶으면 아래 탭에서 자유 연습을 이어가세요." : (dayActive(today) ? "✅ 오늘 연속 기록은 이미 지켰어요. 여유 있으면 나머지도!" : "바쁜 날엔 1단계만 해도 연속 기록이 이어져요.");
+  const cb = gameComeback();
+  const title = doneN === steps.length ? "오늘 루틴 끝! 🎉" : cb && doneN === 0 ? "🧭 돌아온 걸 환영해요!" : doneN === 0 ? `오늘은 약 ${mins}분이면 끝나요` : `${doneN}/${steps.length} 완료 · 남은 건 약 ${mins}분`;
+  const sub = doneN === steps.length ? "지도에서 다음 목표를 골라보세요." : cb && !dayActive(today) ? `오늘은 가볍게 — 표현 3개와 쉬운 카드 하나, 약 ${mins}분. 밀린 건 신경 쓰지 마세요.` : (dayActive(today) ? "✅ 오늘 연속 기록은 이미 지켰어요. 여유 있으면 나머지도!" : "바쁜 날엔 30초 퀘스트나 1단계만 해도 연속 기록이 이어져요.");
 
   // 성장 씨앗 지표 (v15 성장 화면용 데이터 누적)
   const allTitles = CARD_DATA.map(ck);
@@ -4208,6 +4247,7 @@ function renderHome() {
       <div class="home-date">${dateTxt}</div>
       <div class="home-title">${title}</div>
       <div class="home-sub">${sub}</div>
+      ${gameHomeStoryLine()}
     </div>
     <div class="home-streak">
       <div class="home-fire">🔥 ${st.n}<small>일 연속</small></div>
@@ -4224,15 +4264,19 @@ function renderHome() {
     </div>
     ${nx
       ? `<button class="btn btn-primary home-cta" onclick="startRoutine()">${doneN === 0 ? "▶ 오늘 학습 시작" : "▶ 이어서 하기 — " + nx.name}</button>`
-      : `<div class="home-done">🏆 <b>오늘 3단계 모두 완료</b><br><span style="font-size:13px;color:var(--dim)">스크립트 복습 예정: 내일 ${CARD_DATA.filter(c => { const p = srsOf(ck(c)); return p.box > 0 && p.due && p.due <= dAdd(today, 1); }).length}장</span></div>`}
+      : `<div class="home-done">🏆 <b>오늘 ${steps.length}단계 모두 완료${cb ? ' · 복귀 퀘스트' : ''}</b><br><span style="font-size:13px;color:var(--dim)">스크립트 복습 예정: 내일 ${CARD_DATA.filter(c => { const p = srsOf(ck(c)); return p.box > 0 && p.due && p.due <= dAdd(today, 1); }).length}장</span></div>`}
     <div class="home-note">단계마다 끝나면 자동으로 다음 단계를 안내해요.<br>어떤 탭에서든 1번이라도 연습하면 오늘은 '인정'이에요.</div>
+    ${gameQuestHtml(!nx)}
     ${memHomeHtml(!nx)}
+    ${gameMissionHtml(!nx, !memPendingCards().length)}
+    ${gameMapHtml()}
+    ${gameRewardsHtml()}
     <div class="home-stats">
       <div class="hs"><div class="num">${settled}<span style="font-size:12px;color:var(--dim)">/${allTitles.length}</span></div><div class="lab">몸에 붙은<br>스크립트</div></div>
       <div class="hs"><div class="num">${nhRate}</div><div class="lab">7일간<br>힌트 없이 성공</div></div>
       <div class="hs"><div class="num">${avgWc}</div><div class="lab">7일 평균<br>답변 단어 수</div></div>
     </div>
-    <div class="home-note" style="margin-bottom:4px;">몸에 붙은 표현 ${exSettled}/${exAll().length} · 밀린 카드 복습 ${srsDueTotal()}장</div>`;
+    <div class="home-note" style="margin-bottom:4px;">몸에 붙은 표현 ${exSettled}/${exAll().length}${cb ? '' : ` · 밀린 카드 복습 ${srsDueTotal()}장`}</div>`;
 }
 
 
@@ -4494,7 +4538,422 @@ function memRender() {
   }
 }
 
-memLoad(); loadState(); dailyLoad(); srsLoad(); renderPills(); showCard(); updateConfigStatus(); newSpeakQ(); initTwist(); twRenderHist(); initExpr(); renderHome();
+/* ========== v14.2 오픽 여행 지도 — 오늘의 이야기 · 지도 · 30초 퀘스트 · 돌발 미션 · 복귀 퀘스트 · 내 보상 ==========
+   원칙: 보상은 버튼이 아니라 '실제로 달라졌을 때'(승급·정복·미션 통과) 준다. 한 번 얻은 단계는 사라지지 않는다.
+         장소는 잠그지 않는다 — 지도는 시험 준비도가 칠해지는 그림이다. 경험치(XP)는 쓰지 않는다. */
+const LS_GAME = 'opic_game_v1';
+const GAME_DEFAULT_START = '2026-10-21';              // 텔레그램 봇 START_DATE 기본값과 같아야 Day가 맞는다
+let gameState = { v: 1, startDate: '', places: {}, missions: {}, missionDay: {}, quest30: {}, rewards: [], init: false };
+let gameMission = null;                               // 진행 중인 돌발 미션 {place, en, label}
+let gameQuestOpen = false, gameQuestPeek = false;
+
+function gameLoad() {
+  gameState = { v: 1, startDate: '', places: {}, missions: {}, missionDay: {}, quest30: {}, rewards: [], init: false };
+  try { const v = JSON.parse(localStorage.getItem(LS_GAME) || 'null'); if (v && typeof v === 'object') gameState = Object.assign(gameState, v); } catch (_) {}
+  ['places', 'missions', 'missionDay', 'quest30'].forEach(k => { if (!gameState[k] || typeof gameState[k] !== 'object') gameState[k] = {}; });
+  if (!Array.isArray(gameState.rewards)) gameState.rewards = [];
+}
+function gameSave() { try { localStorage.setItem(LS_GAME, JSON.stringify(gameState)); } catch (e) { console.warn('게임 기록 저장 불가', e); } }
+
+/* ---------- 오늘의 이야기: 텔레그램 봇과 같은 순서표 ---------- */
+const BOT_SET_PRIORITY = ['amudda', 'exam', 'day1', 'day2', 'day3', 'day4', 'day5', 'day6', 'w2'];
+let _botOrder = null;
+function botOrder() {                                 // tools/build_content.py 와 똑같은 규칙 (우선순위 + 전날과 다른 유형)
+  if (_botOrder) return _botOrder;
+  const pr = c => { const i = BOT_SET_PRIORITY.indexOf(c.set); return i === -1 ? BOT_SET_PRIORITY.length : i; };
+  const pool = DEFAULT_CARDS.map((c, i) => ({ c, i })).sort((a, b) => pr(a.c) - pr(b.c) || a.i - b.i);
+  const order = []; let last = null;
+  while (pool.length) {
+    let j = pool.findIndex(x => x.c.cat !== last); if (j === -1) j = 0;
+    const x = pool.splice(j, 1)[0]; order.push(x.c); last = x.c.cat;
+  }
+  return (_botOrder = order);
+}
+function gameValidDate(value) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value || '')) return false;
+  const date = new Date(value + 'T00:00:00Z');
+  return Number.isFinite(date.getTime()) && date.toISOString().slice(0, 10) === value;
+}
+function gameStartDate() { return gameValidDate(gameState.startDate) ? gameState.startDate : GAME_DEFAULT_START; }
+function gameDayIndex(key) {
+  const [y1, m1, d1] = gameStartDate().split('-').map(Number), [y2, m2, d2] = key.split('-').map(Number);
+  return Math.max(0, Math.round((Date.UTC(y2, m2 - 1, d2) - Date.UTC(y1, m1 - 1, d1)) / 86400000));
+}
+function todayStory() { const n = gameDayIndex(twTodayKey()), o = botOrder(); return { card: cardByKey(o[n % o.length].title) || o[n % o.length], day: n + 1 }; }
+function gameFirstSentence(c) {
+  const s = String(c.fullScript || '').trim().replace(/^\(\w+[^)]*\)\s*/, '');
+  const m = s.match(/^(.+?[.!?])(\s|$)/); return (m ? m[1] : s).slice(0, 160);
+}
+function gameSetStartDate() {
+  const v = prompt('텔레그램 봇의 START_DATE (GitHub Variables에 넣은 날짜)\n예: 2026-10-21', gameStartDate());
+  if (v === null) return;
+  const t = v.trim();
+  if (!gameValidDate(t)) { alert('실제로 존재하는 날짜를 YYYY-MM-DD 형식으로 입력해주세요.'); return; }
+  const before = ck(todayStory().card);
+  gameState.startDate = t; gameSave();
+  const after = ck(todayStory().card), r = dayRec();
+  if (Array.isArray(r.cq) && before !== after && !r.s.card && !gameComeback()) {
+    if (!(r.cd || []).includes(before)) r.cq = r.cq.filter(k => k !== before);
+    gameRefreshQueue(r); dailySave();
+  }
+  renderPills(); renderHome();
+}
+
+/* ---------- 복귀 퀘스트: 이틀 이상 쉬고 돌아온 날은 가볍게 ---------- */
+function gameComeback() {
+  const r = dayRec();
+  if (r.cb === undefined) {
+    const t = twTodayKey(), y1 = dAdd(t, -1), y2 = dAdd(t, -2);
+    const hasHistory = Object.keys(daily.days).some(k => k < y2 && dayActive(k));
+    r.cb = hasHistory && !dayActive(y1) && !dayActive(y2);
+    dailySave();
+  }
+  return !!r.cb;
+}
+function gamePickNew(n, usedCats, exclude) {          // 새 카드 고르기 (앱 기존 규칙과 같음) + 제외 목록
+  const pr = c => { const i = NEW_SET_PRIORITY.indexOf(c.set); return i === -1 ? NEW_SET_PRIORITY.length : i; };
+  const pool = CARD_DATA.map((c, i) => ({ c, i })).filter(x => x.c && srsOf(ck(x.c)).box === 0 && !exclude.has(ck(x.c)))
+    .sort((a, b) => pr(a.c) - pr(b.c) || a.i - b.i).map(x => x.c);
+  const out = [], cats = new Set(usedCats || []);
+  while (out.length < n && pool.length) {
+    let idx = pool.findIndex(c => !cats.has(c.cat)); if (idx === -1) idx = 0;
+    const c = pool.splice(idx, 1)[0]; out.push(c); cats.add(c.cat);
+  }
+  return out;
+}
+function gameBuildQueue() {                           // 루틴 2단계 카드 큐: 오늘의 이야기 + 복습 + 새 카드 (최대 3장)
+  const today = twTodayKey(), story = todayStory().card, sk = ck(story);
+  const due = CARD_DATA.filter(c => { const p = srsOf(ck(c)); return p.box > 0 && p.due && p.due <= today; })
+    .sort((a, b) => { const pa = srsOf(ck(a)), pb = srsOf(ck(b)); return pa.due < pb.due ? -1 : pa.due > pb.due ? 1 : pa.box - pb.box; });
+  if (gameComeback()) {                               // 복귀한 날: 가장 쉬운(단계가 높은) 복습 카드 하나, 없으면 오늘의 이야기
+    const easy = due.slice().sort((a, b) => srsOf(ck(b)).box - srsOf(ck(a)).box)[0];
+    return [easy ? ck(easy) : sk];
+  }
+  const q = [sk], used = [story.cat];
+  for (const c of due) { if (q.length >= ROUTINE_CARD_MAX) break; if (ck(c) !== sk) { q.push(ck(c)); used.push(c.cat); } }
+  if (q.length < ROUTINE_CARD_MAX) {
+    const newAllowed = ROUTINE_NEW_CARD_MAX - (srsOf(sk).box === 0 ? 1 : 0);
+    gamePickNew(Math.max(0, Math.min(newAllowed, ROUTINE_CARD_MAX - q.length)), used, new Set(q)).forEach(c => q.push(ck(c)));
+  }
+  return q;
+}
+function gameRefreshQueue(r) {
+  const completed = [...new Set(r.cd || [])];
+  if (gameComeback()) {
+    r.cq = completed.length ? completed : gameBuildQueue();
+    return;
+  }
+  const story = ck(todayStory().card);
+  let fresh = 0;
+  const pending = [...new Set([story, ...r.cq])].filter(k => {
+    if (completed.includes(k) || !cardByKey(k)) return false;
+    if (srsOf(k).box === 0 && ++fresh > ROUTINE_NEW_CARD_MAX) return false;
+    return true;
+  });
+  r.cq = completed.concat(pending.slice(0, Math.max(0, ROUTINE_CARD_MAX - completed.length)));
+}
+function gameCardStepMeta(cards) {
+  const sk = ck(todayStory().card), has = cards.some(c => ck(c) === sk);
+  return has ? `📍 오늘의 이야기${cards.length > 1 ? ` + ${cards.length - 1}개` : ''}` : `${cards.length}개${gameComeback() ? ' (돌아온 날 · 쉬운 카드)' : ''}`;
+}
+function gameCardBadge(c) {
+  const s = todayStory();
+  return ck(c) === ck(s.card) ? ` <span style="font-size:11px;color:var(--gold);font-weight:700;">📍 오늘의 이야기 · 텔레그램 Day ${s.day}</span>` : '';
+}
+
+/* ---------- 여행 지도 ---------- */
+const PLACES = [
+  { id: 'home', icon: '🏠', name: '우리 집' }, { id: 'music', icon: '🎵', name: '공연장' }, { id: 'camp', icon: '🏕️', name: '캠핑장' },
+  { id: 'beach', icon: '🏖️', name: '바닷가' }, { id: 'travel', icon: '✈️', name: '여행' }, { id: 'health', icon: '🏥', name: '병원·건강' },
+  { id: 'movie', icon: '🎬', name: '영화관' }, { id: 'work', icon: '💼', name: '회사' }, { id: 'tech', icon: '📱', name: '테크 거리' },
+  { id: 'town', icon: '🛍️', name: '시내' }, { id: 'local', icon: '🌳', name: '동네·사람' }, { id: 'korea', icon: '🌏', name: '날씨·명절' },
+  { id: 'rp', icon: '🎭', name: '롤플레이 광장', noMission: true }, { id: 'mine', icon: '📒', name: '내 이야기', noMission: true },
+];
+const PLACE_RULES = [   // 위에서부터 처음 맞는 장소 (제목 + 영어 주제로 판단)
+  ['music', /music|음악|공연|\blive\b/], ['camp', /camp|캠핑/], ['korea', /geograph|weather|날씨|holiday|명절/],
+  ['beach', /beach|해변|해운대/], ['travel', /travel|trip|여행|hotel|호텔|호캉스|\brent|렌트|abroad/],
+  ['health', /health|건강|clinic|병원|치과|dentist|doctor|의사|stress|스트레스|gym|헬스장|eating|식습관|sleep|과로|nutrition/],
+  ['movie', /movie|영화|video|유튜브|youtube/], ['town', /shop|쇼핑|grocery|delivery|배달|fashion|clothes|hair|미용실|salon|bank|atm|은행/],
+  ['work', /work|직장|compan|회사|industr|산업|career|job/], ['tech', /tech|기술|\bai\b|internet|인터넷|smart|phone|폰|device|기기|online|electronic/],
+  ['home', /home|house|집|furniture|가구|appliance|가전|chore|lived|housing/],
+  ['local', /park|공원|friend|친구|community|동네|recycl|재활용|transport|지하철|free time|stranger|conversation|belonging/],
+];
+function gamePlaceOf(c) {
+  if (!c) return 'local';
+  if (c._user) return 'mine';
+  if (c.cat === 'rp') return 'rp';
+  const t = (c.title + ' ' + (c.topicEn || '')).toLowerCase();
+  for (const [id, re] of PLACE_RULES) if (re.test(t)) return id;
+  return 'local';
+}
+const PLACE_MISSIONS = {   // 장소별 돌발 미션 (id는 변형 훈련의 채점 기준: past·hypo·compare·issue)
+  home: [['past', "Tell me about a time something went wrong at home, like something broke or a big mess happened. What happened, and how did you fix it?"],
+         ['hypo', "Imagine you could completely redesign one room in your home. Which room would you choose, and what would you change?"],
+         ['compare', "Compare the home you grew up in with the home you live in now. What are the biggest differences?"]],
+  music: [['past', "Tell me about a concert or performance that didn't go as planned. What happened, and how did you feel?"],
+          ['hypo', "Imagine the concert you've been waiting for for months is canceled at the last minute. What would you do instead?"],
+          ['issue', "Your friend says concert tickets are way too expensive these days. Convince them that live music is worth it."]],
+  camp: [['past', "Tell me about a camping trip where something unexpected happened. What happened, and how did you deal with it?"],
+         ['hypo', "Imagine it suddenly starts pouring rain on your first night of camping. What would you do?"],
+         ['issue', "Your friend thinks camping is uncomfortable and not worth the trouble. Persuade them to give it a try."]],
+  korea: [['past', "Tell me about a time the weather completely changed your plans. What happened, and what did you do instead?"],
+          ['compare', "How have holidays in your country changed compared to when you were a child? Give me two big differences."],
+          ['issue', "A foreign friend asks whether they should visit your country in summer or in fall. Give them your advice and explain why."]],
+  beach: [['past', "Tell me about a beach trip that didn't go well. What went wrong, and how did it end?"],
+          ['hypo', "Imagine a heat wave hits on the weekend you planned to go to the beach. What would you do instead?"],
+          ['issue', "Your friend prefers the mountains to the beach. Convince them to join you on a beach trip."]],
+  travel: [['past', "Tell me about a time you had a problem while traveling, like a lost item or a delayed flight. What happened?"],
+           ['hypo', "If you could take a two-week trip anywhere in the world, where would you go, and what would you do there?"],
+           ['compare', "How is traveling today different from traveling ten years ago? Talk about two big changes."]],
+  health: [['past', "Tell me about a time you were really sick or exhausted. What happened, and how did you get better?"],
+           ['hypo', "If you had one free month to get healthier, what would you change in your daily routine?"],
+           ['issue', "Your friend says they're too busy to exercise. Convince them to start with one small healthy habit."]],
+  movie: [['past', "Tell me about a movie experience that went wrong, like a bad seat or a noisy audience. What happened?"],
+          ['hypo', "Imagine you could be a character in any movie for one day. Which movie would you choose, and what would you do?"],
+          ['compare', "How have the ways people watch movies and videos changed over the years? Compare the past with today."]],
+  work: [['past', "Tell me about a really stressful day at work. What happened, and how did you handle it?"],
+         ['hypo', "If you could change one thing about the way people work in your country, what would it be, and why?"],
+         ['issue', "Your younger friend is choosing between a big company and a startup. Give them your advice."]],
+  tech: [['past', "Tell me about a time technology failed you at a bad moment. What happened, and what did you do?"],
+         ['hypo', "Imagine you had to live without your smartphone for a whole week. How would your life change?"],
+         ['issue', "Your parents think AI is dangerous and refuse to use it. Convince them to try one simple AI tool."]],
+  town: [['past', "Tell me about a time you had a problem with something you bought or ordered. What happened, and how was it resolved?"],
+         ['hypo', "Imagine you got a completely different haircut by mistake right before an important event. What would you do?"],
+         ['compare', "How has the way people shop changed compared to ten years ago? Talk about two big differences."]],
+  local: [['past', "Tell me about a time you helped a stranger, or a stranger helped you. What happened?"],
+          ['hypo', "If you could add one new place or facility to your neighborhood, what would it be, and why?"],
+          ['issue', "Your friend never recycles because they think it doesn't make a difference. Convince them otherwise."]],
+};
+const MISSION_STYLE = {
+  past: { label: '😱 최악의 순간', ko: '가장 곤란했던 경험을 과거 시제로 — 무슨 일 → 어떻게 해결 → 지금 생각' },
+  hypo: { label: '🔮 만약에', ko: '가정해서 would/could로 — 무엇을 할지 + 이유' },
+  compare: { label: '⏳ 그때 vs 지금', ko: '예전과 지금 — 차이 두 가지 + 이유' },
+  issue: { label: '🗣 설득하기', ko: '내 의견 + 이유 + 예시 하나로 설득' },
+};
+const MISSION_SECONDS = 45, MISSION_MIN_WORDS = 30;
+
+function gamePlaceStats() {
+  const st = {}; PLACES.forEach(p => st[p.id] = { total: 0, visited: 0, regular: 0, conquered: 0 });
+  CARD_DATA.forEach(c => {
+    const s = st[gamePlaceOf(c)]; if (!s) return; s.total++;
+    const p = srsOf(ck(c)), m = memState.cards[ck(c)];
+    if ((p.n || 0) > 0 || (m && m.runs > 0)) s.visited++;
+    if (p.box >= 2) s.regular++;
+    if (p.box >= 3 && (p.nh || 0) >= 2) s.conquered++;
+  });
+  PLACES.forEach(p => {
+    const s = st[p.id], need = Math.min(3, s.total), mission = p.noMission || !!gameState.missions[p.id];
+    s.need = need; s.mission = mission;
+    s.level = s.total === 0 ? -1 : (s.conquered >= need && mission) ? 3 : (s.regular >= need) ? 2 : s.visited > 0 ? 1 : 0;
+    s.best = Math.max(s.level, gameState.places[p.id] || 0);      // 한 번 얻은 단계는 유지
+  });
+  return st;
+}
+const LEVEL_NAME = ['아직 안 가봄', '👣 방문', '🏠 단골', '🏆 정복'];
+function gameNextGoal(p, s) {
+  if (s.best >= 3) return '정복 완료';
+  if (s.best < 1) return '이야기 하나 연습하면 방문';
+  if (s.best < 2) return `단골까지: 이야기 ${Math.max(0, s.need - s.regular)}개 더 2단계로`;
+  const left = Math.max(0, s.need - s.conquered), parts = [];
+  if (left) parts.push(`이야기 ${left}개 더 몸에 붙이기`);
+  if (!s.mission) parts.push('돌발 미션 통과');
+  return '정복까지: ' + (parts.join(' + ') || '조금만 더');
+}
+
+/* ---------- 상태 변화 → 축하 (버튼이 아니라 실제 변화에만) ---------- */
+let gameToastQ = [], gameToastBusy = false;
+function gameToast(msg) { gameToastQ.push(msg); if (gameToastQ.length > 3) gameToastQ = gameToastQ.slice(-3); if (!gameToastBusy) gameToastNext(); }
+function gameToastNext() {
+  const el = document.getElementById('gameToast'); const m = gameToastQ.shift();
+  if (!el || !m) { gameToastBusy = false; return; }
+  gameToastBusy = true; el.innerHTML = m; el.classList.add('show');
+  setTimeout(() => { el.classList.remove('show'); setTimeout(gameToastNext, 350); }, 3200);
+}
+function gameCheck(silent) {
+  const st = gamePlaceStats(); let changed = false;
+  PLACES.forEach(p => {
+    const s = st[p.id], prev = gameState.places[p.id] || 0;
+    if (s.level > prev) {
+      gameState.places[p.id] = s.level; changed = true;
+      if (!silent && s.level >= 1) gameToast(`${p.icon} <b>${p.name}</b> ${LEVEL_NAME[s.level]}${s.level === 3 ? '! 🎉' : ''}`);
+    }
+  });
+  gameRewardCheck(silent);
+  if (changed) gameSave();
+  if (!silent && document.getElementById('panel-home').classList.contains('active')) renderHome();
+}
+
+/* ---------- 내 보상 ---------- */
+const REWARD_TYPES = { conquer: '정복한 장소', regular: '단골 이상 장소', routine: '루틴 완료한 날', streak: '연속 일수' };
+function gameRewardValue(type, st) {
+  st = st || gamePlaceStats();
+  if (type === 'conquer') return PLACES.filter(p => st[p.id].best >= 3).length;
+  if (type === 'regular') return PLACES.filter(p => st[p.id].best >= 2).length;
+  if (type === 'routine') return Object.keys(daily.days).filter(k => dayFull(k)).length;
+  if (type === 'streak') return streakInfo().n;
+  return 0;
+}
+function gameRewardCheck(silent) {
+  const st = gamePlaceStats();
+  gameState.rewards.forEach(r => {
+    if (!r.reached && gameRewardValue(r.type, st) >= r.n) { r.reached = true; gameSave(); if (!silent) gameToast(`🎁 보상 달성: <b>${escapeHtml(r.text)}</b>`); }
+  });
+}
+function gameRewardAdd() {
+  const text = (document.getElementById('rwText').value || '').trim();
+  const type = document.getElementById('rwType').value, n = parseInt(document.getElementById('rwN').value, 10);
+  if (!text || !REWARD_TYPES[type] || !(n > 0)) { alert('보상 내용과 목표 숫자를 넣어주세요.'); return; }
+  gameState.rewards.push({ id: 'r' + Date.now().toString(36), text, type, n, reached: false, claimed: false });
+  gameSave(); gameRewardCheck(false); renderHome();
+}
+function gameRewardClaim(id) { const r = gameState.rewards.find(x => x.id === id); if (r) { r.claimed = true; r.claimedAt = Date.now(); gameSave(); gameToast(`🎉 <b>${escapeHtml(r.text)}</b> — 즐기세요!`); renderHome(); } }
+function gameRewardDel(id) { if (!confirm('이 보상을 지울까요?')) return; gameState.rewards = gameState.rewards.filter(x => x.id !== id); gameSave(); renderHome(); }
+
+/* ---------- 30초 퀘스트 ---------- */
+function gameQuestToggle() { gameQuestOpen = !gameQuestOpen; gameQuestPeek = false; renderHome(); }
+function gameQuestPeekNow() { gameQuestPeek = true; renderHome(); }
+function gameQuestDone() {
+  if (gameState.quest30[twTodayKey()]) return;
+  gameState.quest30[twTodayKey()] = true; gameSave();
+  gameQuestOpen = false; logActivity();
+  gameToast('🔥 30초 퀘스트 완료 — 오늘 연속 기록 지켰어요!');
+  renderHome();
+}
+
+/* ---------- 돌발 미션 ---------- */
+function gameMissionPlace() {                          // 오늘의 이야기 장소 → 미션 없는 곳이면 최근 연습한 일반 장소
+  const sp = gamePlaceOf(todayStory().card);
+  if (PLACE_MISSIONS[sp]) return sp;
+  const recent = CARD_DATA.filter(c => PLACE_MISSIONS[gamePlaceOf(c)] && srsOf(ck(c)).lastDate)
+    .sort((a, b) => (srsOf(ck(b)).lastDate || '').localeCompare(srsOf(ck(a)).lastDate || ''))[0];
+  return recent ? gamePlaceOf(recent) : 'music';
+}
+function gameMissionStart(placeId) {
+  const place = placeId || gameMissionPlace(), list = PLACE_MISSIONS[place]; if (!list) return;
+  const seed = Number(twTodayKey().replace(/-/g, '')) + PLACES.findIndex(p => p.id === place);
+  const [tid, en] = list[seed % list.length];
+  const base = TWISTS.find(t => t.id === tid) || TWISTS[0], style = MISSION_STYLE[tid];
+  const story = todayStory().card;
+  const card = gamePlaceOf(story) === place ? story
+    : (CARD_DATA.filter(c => gamePlaceOf(c) === place && srsOf(ck(c)).n > 0)[0] || CARD_DATA.find(c => gamePlaceOf(c) === place) || story);
+  routine.step = null; renderRoutineBar();
+  switchTab('twist');
+  TW_TOTAL = MISSION_SECONDS;
+  twCard = card;
+  twTwist = Object.assign({}, base, { icon: '🎲', label: '돌발 미션 · ' + style.label, ko: style.ko, en, enT: undefined });
+  twAttemptPrev = null; twClearAudioAll(); twResetTimer(); twClearAnswer(); twRender();
+  const p = PLACES.find(x => x.id === place);
+  gameMission = { place, en, tid };
+  const bar = document.getElementById('gameMissionBar');
+  if (bar) {
+    bar.innerHTML = `<div class="rb-text"><span class="rb-step">🎲 돌발 미션</span> · ${p.icon} ${p.name} · ${MISSION_SECONDS}초 · ${MISSION_MIN_WORDS}단어 이상 + 각도·보조 기준 2개 (선택)</div><button class="btn" onclick="goHome()">🏠 홈</button>`;
+    bar.style.display = 'flex';
+  }
+  try { window.scrollTo({ top: 0, behavior: 'smooth' }); } catch (_) {}
+}
+function gameEndMission() {
+  if (!gameMission && TW_TOTAL === 90) return;
+  gameMission = null; TW_TOTAL = 90;
+  const bar = document.getElementById('gameMissionBar'); if (bar) { bar.style.display = 'none'; bar.innerHTML = ''; }
+}
+function gameMissionResult(result, evidence) {
+  if (!gameMission) return;
+  const checks = (result && result.checks) || [];
+  const angle = checks.find(c => c.id === 'angle');
+  const support = checks.filter(c => c.id !== 'angle' && !c.info && c.pass === true);
+  const pass = !!(evidence && evidence.wc >= MISSION_MIN_WORDS && angle && angle.pass === true && support.length >= 2);
+  const p = PLACES.find(x => x.id === gameMission.place);
+  const fb = document.getElementById('twFeedback');
+  if (pass) {
+    const previous = gameState.missions[p.id], first = !previous;
+    const newDay = !previous || previous.day !== twTodayKey();
+    gameState.missions[p.id] = { at: Date.now(), day: twTodayKey(), en: gameMission.en, mode: evidence.isAI ? 'ai' : 'structure', wc: evidence.wc };
+    gameState.missionDay[twTodayKey()] = p.id; gameSave();
+    if (fb) fb.insertAdjacentHTML('afterbegin', `<div class="game-pass">🎲 <b>${evidence.isAI ? '돌발 미션 통과!' : '돌발 미션 구조 체크 통과!'}</b> ${p.icon} ${p.name}${first ? ' — 정복 조건 하나 달성' : ''}${evidence.isAI ? '' : '<br><small>단어·구조 기준의 간이 체크예요. 질문에 맞는 내용과 발음은 직접 확인해주세요.</small>'}</div>`);
+    if (newDay) gameToast(`🎲 돌발 미션 ${evidence.isAI ? '' : '구조 체크 '}통과 · ${p.icon} <b>${p.name}</b>`);
+    setTimeout(() => gameCheck(false), 0);
+  } else if (fb) {
+    fb.insertAdjacentHTML('afterbegin', `<div class="game-pass" style="border-color:var(--warn);background:rgba(245,158,11,.08);">🎲 아직 통과 전 — ${MISSION_MIN_WORDS}단어 이상으로 미션 각도(${MISSION_STYLE[gameMission.tid].label})와 보조 체크 2개 이상을 채워보세요. '같은 질문 다시'로 한 번 더!</div>`);
+  }
+}
+
+/* ---------- 홈 화면 조각 ---------- */
+function gameHomeStoryLine() {
+  const s = todayStory(), p = PLACES.find(x => x.id === gamePlaceOf(s.card));
+  return `<div class="game-story">📍 오늘의 장소 <b>${p.icon} ${p.name}</b> · 「${escapeHtml(s.card.title)}」
+    <span class="game-day" onclick="gameSetStartDate()">텔레그램 Day ${s.day} · 날짜 맞추기</span></div>`;
+}
+function gameQuestHtml(routineDone) {
+  const today = twTodayKey();
+  if (routineDone || dayActive(today)) return '';
+  if (!gameQuestOpen) return `<div class="mem-home-row" onclick="gameQuestToggle()">⏱ 바쁜 날엔 30초 퀘스트 — 첫 문장 하나만 말해도 연속 기록 인정 <span>›</span></div>`;
+  const c = todayStory().card, flow = String(c.koreanFlow || '').split('→')[0].trim();
+  return `<div class="game-quest">
+    <div style="font-weight:800;margin-bottom:6px;">⏱ 30초 퀘스트</div>
+    <div class="mem-note" style="margin:0 0 8px;">「${escapeHtml(c.title)}」의 <b>첫 문장</b>을 영어로 소리 내서 말해보세요.<br>흐름 시작: ${escapeHtml(flow)} →</div>
+    ${gameQuestPeek ? `<div class="mem-en" style="font-size:14px;">${escapeHtml(gameFirstSentence(c))}</div>` : ''}
+    <div class="mem-actions">${gameQuestPeek ? '' : `<button class="btn" onclick="gameQuestPeekNow()">👀 첫 문장 보기</button>`}<button class="btn btn-accent3" onclick="gameQuestDone()">✅ 말했어요</button></div>
+  </div>`;
+}
+function gameMissionHtml(routineDone, primary) {
+  const today = twTodayKey(), cleared = gameState.missionDay[today];
+  if (cleared) { const p = PLACES.find(x => x.id === cleared); return `<div class="home-note" style="margin-top:-6px;">🎲 오늘 돌발 미션 통과 · ${p ? p.icon + ' ' + p.name : ''} ✓</div>`; }
+  if (!routineDone) return '';
+  const p = PLACES.find(x => x.id === gameMissionPlace());
+  return primary
+    ? `<button class="btn btn-accent3 home-cta" onclick="gameMissionStart()">🎲 돌발 미션 · ${p.icon} ${p.name} (선택, ${MISSION_SECONDS}초)</button><div class="home-note">오픽 돌발 질문처럼 이야기를 비틀어 답해요. 통과하면 그 장소 정복 조건이 채워져요.</div>`
+    : `<div class="mem-home-row" onclick="gameMissionStart()">🎲 돌발 미션 · ${p.icon} ${p.name} (선택, ${MISSION_SECONDS}초) <span>›</span></div>`;
+}
+function gameMapHtml() {
+  const st = gamePlaceStats();
+  const shown = PLACES.filter(p => st[p.id].total > 0);
+  const conq = shown.filter(p => st[p.id].best >= 3).length, reg = shown.filter(p => st[p.id].best >= 2).length, vis = shown.filter(p => st[p.id].best >= 1).length;
+  const tiles = shown.map(p => {
+    const s = st[p.id], pct = Math.round(s.conquered / s.total * 100);
+    const dice = PLACE_MISSIONS[p.id] && !gameState.missions[p.id] && s.best >= 1
+      ? `<button class="game-dice" title="이 장소 돌발 미션" onclick="event.stopPropagation();gameMissionStart('${p.id}')">🎲</button>` : '';
+    return `<div class="game-tile lv${Math.max(0, s.best)}" onclick="gameOpenPlace('${p.id}')">${dice}
+      <div class="gt-icon">${p.icon}</div><div class="gt-name">${p.name}</div>
+      <div class="gt-lv">${LEVEL_NAME[Math.max(0, s.best)]}</div>
+      <div class="gt-bar"><i style="width:${pct}%"></i></div>
+      <div class="gt-goal">${gameNextGoal(p, s)}</div></div>`;
+  }).join('');
+  return `<div class="game-map">
+    <div class="game-map-head"><b>🗺 오픽 여행 지도</b><span>🏆 ${conq} · 🏠 ${reg} · 👣 ${vis} / ${shown.length}곳</span></div>
+    <div class="mem-note" style="margin:0 0 10px;">이야기가 몸에 붙을수록 칠해져요. 장소를 누르면 그곳 이야기를 연습해요. 배지는 달성 기록으로 유지돼요. 막대 = 현재 몸에 붙은 이야기 비율</div>
+    <div class="game-grid">${tiles}</div></div>`;
+}
+function gameRewardsHtml() {
+  const st = gamePlaceStats();
+  const rows = gameState.rewards.map(r => {
+    const v = Math.min(gameRewardValue(r.type, st), r.n);
+    return `<div class="game-rw ${r.claimed ? 'claimed' : ''}"><div style="flex:1;min-width:0;"><div><b>${escapeHtml(r.text)}</b></div>
+      <div class="mem-note" style="margin:2px 0 0;">${REWARD_TYPES[r.type]} ${v}/${r.n}${r.claimed ? ' · 받음 ✓' : ''}</div>
+      <div class="gt-bar" style="margin-top:5px;"><i style="width:${Math.round(v / r.n * 100)}%"></i></div></div>
+      ${r.reached && !r.claimed ? `<button class="btn btn-accent3" onclick="gameRewardClaim('${r.id}')">🎁 받기</button>` : ''}
+      <button class="ex-del" onclick="gameRewardDel('${r.id}')">✕</button></div>`;
+  }).join('');
+  return `<div class="game-map"><div class="game-map-head"><b>🎁 내 보상</b><span>직접 정하는 진짜 보상</span></div>
+    ${rows || `<div class="mem-note" style="margin:0 0 8px;">예: '정복한 장소 3곳 → 좋아하는 디저트', '루틴 완료한 날 10일 → 사고 싶던 책'</div>`}
+    <div class="game-rw-form"><input id="rwText" placeholder="보상 (예: 좋아하는 디저트)">
+      <select id="rwType">${Object.entries(REWARD_TYPES).map(([k, v]) => `<option value="${k}">${v}</option>`).join('')}</select>
+      <input id="rwN" type="number" min="1" value="3" style="width:64px;"><button class="btn" onclick="gameRewardAdd()">추가</button></div></div>`;
+}
+function gameOpenPlace(id) {
+  routine.step = null; renderRoutineBar();
+  const _gm = document.getElementById('gradeMsg'); if (_gm) _gm.innerHTML = '';
+  currentCat = 'place:' + id; cardIdx = 0; cardHintFor = null;
+  switchTab('cards'); renderPills(); showCard();
+  try { window.scrollTo({ top: 0, behavior: 'smooth' }); } catch (_) {}
+}
+function gamePlacePill() {
+  if (!String(currentCat).startsWith('place:')) return '';
+  const p = PLACES.find(x => x.id === currentCat.slice(6)); if (!p) return '';
+  const n = CARD_DATA.filter(c => gamePlaceOf(c) === p.id).length;
+  return `<div class="pill active" onclick="setCat('all')">🗺 ${p.icon} ${p.name} ${n}개 ✕</div>`;
+}
+
+gameLoad(); memLoad(); loadState(); dailyLoad(); srsLoad(); renderPills(); showCard(); updateConfigStatus(); newSpeakQ(); initTwist(); twRenderHist(); initExpr(); gameCheck(true); if (!gameState.init) { gameState.init = true; gameSave(); } renderHome();
 </script>
 </body>
 </html>
