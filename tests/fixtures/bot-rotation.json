@@ -1,0 +1,550 @@
+[
+ {
+  "title": "아묻따#1 라이브 음악/공연",
+  "q": "Tell me about a time you went to a live performance or a festival. What did you see, and how did you feel?"
+ },
+ {
+  "title": "아묻따#3 여행/공원서 폰 분실",
+  "q": "Have you ever lost your phone? Tell me where you lost it, what you did to find it, and what you learned from it."
+ },
+ {
+  "title": "아묻따#2 날씨/교통으로 못 감",
+  "q": "Tell me about a time when bad weather or traffic kept you from getting somewhere important. What happened, and how did you handle it?"
+ },
+ {
+  "title": "⭐아묻따#4 에어컨 고장/Staycation",
+  "q": "Have you ever had a problem with a home appliance? Tell me what happened, how you dealt with it, and how it turned out."
+ },
+ {
+  "title": "⭐아묻따#12 과로→건강식·휴식 (만능)",
+  "q": "Tell me about a time when stress or overwork affected your health. What happened, and how did you recover?"
+ },
+ {
+  "title": "아묻따#5 책상 고장→홈오피스",
+  "q": "Have you ever had a problem with furniture in your home? Tell me what happened, and what you did about it."
+ },
+ {
+  "title": "🎵 music — 묘사/라이브경험",
+  "q": "In your survey, you indicated that you like listening to music. What kind of music do you enjoy, and who are your favorite musicians? Tell me why you like them."
+ },
+ {
+  "title": "아묻따#6 어릴 적 중국 여행",
+  "q": "Tell me about a trip you took when you were a child. Where did you go, and what do you remember about it?"
+ },
+ {
+  "title": "🏠 house — 집/최애 방",
+  "q": "Please describe your home. What does it look like, and which room do you like the most? Why?"
+ },
+ {
+  "title": "⭐아묻따#7 렌트 EV 충전 문제",
+  "q": "Have you ever rented a car while traveling? Tell me about a memorable or unexpected experience you had with a rental car."
+ },
+ {
+  "title": "🛋️ home vacation — 집콕 휴가",
+  "q": "You indicated that you spend your vacations at home. What do you usually do during your vacations at home, and who do you spend time with?"
+ },
+ {
+  "title": "아묻따#8 식당서 외국인 도와줌",
+  "q": "Tell me about a time you helped someone who was visiting from another country. What happened?"
+ },
+ {
+  "title": "🥗 health — 스트레스/회복 (만능)",
+  "q": "What is the biggest health issue for you or the people around you? Tell me about a time you had a health problem, and how you overcame it."
+ },
+ {
+  "title": "아묻따#9 온라인쇼핑 보안 문제",
+  "q": "Have you ever had a problem while shopping online? Tell me what happened, and how it turned out."
+ },
+ {
+  "title": "🌐 internet — 용도/변화",
+  "q": "How do you usually use the internet? What do you do online, and how has the way you use the internet changed over the years?"
+ },
+ {
+  "title": "⭐아묻따#10 ATM PIN+폰 방전",
+  "q": "Tell me about a problem you had at a bank or an ATM. What happened, and what did you do?"
+ },
+ {
+  "title": "🌳 park — 한강공원",
+  "q": "You indicated that you go to parks. Tell me about a park you often go to. What does it look like, and what do you usually do there?"
+ },
+ {
+  "title": "아묻따#11 첫 캠핑+지역 축제",
+  "q": "Tell me about the first time you went camping. Where did you go, who were you with, and what happened?"
+ },
+ {
+  "title": "🤖 tech — AI/스마트홈 변화",
+  "q": "Tell me about the technology people use at home these days. How has it changed people's daily lives compared to the past?"
+ },
+ {
+  "title": "아묻따#13 미용실서 유명인",
+  "q": "Tell me about a memorable experience you had at a hair salon. What happened, and why do you still remember it?"
+ },
+ {
+  "title": "🏨 hotel — 호캉스/무료 업그레이드",
+  "q": "Tell me about the hotels in your country. What are they like? Also, tell me about a memorable experience you had while staying at a hotel."
+ },
+ {
+  "title": "⭐아묻따#14 배달앱 첫 주문 실수",
+  "q": "Tell me about the first time you used a food delivery app. How did it go?"
+ },
+ {
+  "title": "🏖️ beach — 해운대",
+  "q": "You indicated that you go to the beach. Tell me about your favorite beach. Where is it, what is it like, and what do you usually do there?"
+ },
+ {
+  "title": "아묻따#15 재활용하다 손 다침",
+  "q": "Tell me about a time when something unexpected happened while you were recycling or doing chores. What happened?"
+ },
+ {
+  "title": "💇 hair shop — 단골 미용실",
+  "q": "Tell me about the hair salon you usually go to. What is it like, and what do you usually get done there? Have you ever had a bad experience there?"
+ },
+ {
+  "title": "✈️ travel — 어릴 적 중국 여행",
+  "q": "Tell me about your first trip abroad. Where did you go, who were you with, and what do you remember most about that trip?"
+ },
+ {
+  "title": "🎬 movie — Project Hail Mary",
+  "q": "What kinds of movies do you like? Tell me about a movie you saw recently. What was it about, and how did you feel about it?"
+ },
+ {
+  "title": "⛺ camping — 캠핑/폭우 에피소드",
+  "q": "You indicated that you go camping. What do you usually bring when you go camping? Also, tell me about something unexpected that happened on a camping trip."
+ },
+ {
+  "title": "☕ cafe — 사무실 근처 카페",
+  "q": "You indicated that you go to coffee shops. Tell me about a coffee shop you often go to. What does it look like, and why do you like it?"
+ },
+ {
+  "title": "👗 fashion — 핏·소재 중시",
+  "q": "Tell me about fashion in your country. What kinds of clothes do people usually wear? How has your own style changed over time?"
+ },
+ {
+  "title": "☕ cafe — 평일과 주말 루틴",
+  "q": "What do you usually do when you go to a coffee shop? Tell me about your routine, from the moment you walk in until you leave."
+ },
+ {
+  "title": "♻️ recycling — 분리수거 변화",
+  "q": "Tell me about recycling in your country. How do people recycle, and how has recycling changed over the years?"
+ },
+ {
+  "title": "🌧 산책 중 소나기와 카페",
+  "q": "Tell me about a memorable experience you had at a coffee shop. When was it, and what happened?"
+ },
+ {
+  "title": "📱 phone — 카메라·모바일결제",
+  "q": "Tell me about your smartphone. What features do you use the most, and how has the way people use phones changed over the years?"
+ },
+ {
+  "title": "🏃 walking — 저녁 산책",
+  "q": "You indicated that you go walking and jogging. Where do you usually go, and when did you start? Tell me about your routine."
+ },
+ {
+  "title": "🍔 delivery — 배달 실수 경험",
+  "q": "Do you often order food delivery? Tell me about a time when something went wrong with your order. What happened, and how did you deal with it?"
+ },
+ {
+  "title": "👋 자기소개 — 균형",
+  "q": "Let's start the interview now. Tell me a little bit about yourself."
+ },
+ {
+  "title": "📹 video — 유튜브 알고리즘",
+  "q": "You indicated that you watch videos online. What kinds of videos do you usually watch, and when do you watch them? Tell me about something you watched recently."
+ },
+ {
+  "title": "🏭 industry — 반도체·AI",
+  "q": "What are the major industries in your country? Tell me about one of them, how it has changed over the past few years, and what people say about it these days."
+ },
+ {
+  "title": "🎊 holiday — 설·추석",
+  "q": "Tell me about a traditional holiday in your country. What do people usually do on that day, and how have holidays changed compared to the past?"
+ },
+ {
+  "title": "🏢 workplace — 재택·AI직군",
+  "q": "Describe the working environment at your company. How have work environments in your country changed in recent years?"
+ },
+ {
+  "title": "🗺️ geography — 삼면 바다",
+  "q": "Tell me about the geography of your country. What are some of its natural features, and how does the geography affect what people do there?"
+ },
+ {
+  "title": "☀️ weather — 길어진 여름",
+  "q": "Describe the weather in your country. What are the seasons like, and how has the weather changed compared to when you were young?"
+ },
+ {
+  "title": "🔌 home appliance — 스타일러",
+  "q": "Tell me about a home appliance that people in your country often use. What is it, what does it do, and why do people like it?"
+ },
+ {
+  "title": "🏥 clinic — 치과 공포 극복",
+  "q": "Tell me about the clinics or hospitals you go to. Also, tell me about a memorable experience you had at a hospital when you were a child."
+ },
+ {
+  "title": "🪑 furniture — 침대·모듈가구",
+  "q": "Describe the furniture in your home. What is your favorite piece, and how has furniture changed over the years?"
+ },
+ {
+  "title": "🏘️ community — 동네 축제",
+  "q": "Tell me about community events in your neighborhood. How have these events changed over the years, and what do people think about them?"
+ },
+ {
+  "title": "👨‍👩‍👧 friends — 정반대 두 친구",
+  "q": "Tell me about one or two of your close friends. What are they like, and what do you usually talk about when you get together?"
+ },
+ {
+  "title": "🧹 responsibility — 분리수거 깜빡",
+  "q": "Who does the household chores in your home, and how do you divide them? Tell me about a time when you forgot to do a chore. What happened?"
+ },
+ {
+  "title": "🕐 free time — 혼자 충전",
+  "q": "What do you usually do in your free time? How is the way you spend your free time now different from when you were younger?"
+ },
+ {
+  "title": "🎧 RP: MP3 (11·12·13)",
+  "q": "I'm sorry, but there's a problem I need you to resolve. You borrowed your friend's MP3 player, and now it's broken. Call your friend, explain what happened, and offer two or three options to solve the problem."
+ },
+ {
+  "title": "🚇 transportation — 지하철",
+  "q": "Describe the public transportation in your city. How do people usually get around, and what are some of the problems with it?"
+ },
+ {
+  "title": "🎉 RP: party (11·12·13)",
+  "q": "I'm sorry, but there's a problem I need you to resolve. You can't go to your friend's party because of a family emergency. Call your friend, explain the situation, and suggest two or three alternatives."
+ },
+ {
+  "title": "💪 gym — 월수금 루틴",
+  "q": "You indicated that you go to the gym. Describe the gym you go to and your workout routine. When and why did you start working out?"
+ },
+ {
+  "title": "🏨 RP: hotel/택시 분실 (11·12·13)",
+  "q": "I'm sorry, but there's a problem. You left your bag in a taxi on your way to the hotel. Call the taxi company, describe your bag, and offer two or three ways to get it back."
+ },
+ {
+  "title": "⭐D1 집 묘사 — 안방/회복",
+  "q": "Tell me about the place where you live. Describe it in as much detail as possible, and tell me about your favorite room."
+ },
+ {
+  "title": "✈️ RP: 렌터카/환불 (11·12·13)",
+  "q": "I'm sorry, but there's a problem I need you to resolve. Your tour was canceled, and you want a refund. Call the travel agency, explain the situation, and offer two or three alternatives."
+ },
+ {
+  "title": "D1 집에서 가족과 — 아내와 Netflix",
+  "q": "What do you usually do at home with your family? Tell me about a typical evening at home."
+ },
+ {
+  "title": "🏥 RP: 영양사 약속 (11·12·13)",
+  "q": "I'm sorry, but there's a problem. You can't make it to your appointment with the nutritionist because you have to work late. Call the office, explain the situation, and suggest two or three alternatives."
+ },
+ {
+  "title": "⭐D1 옛집 vs 지금집 — 커뮤니티시설",
+  "q": "Compare the home you lived in before with the home you live in now. What are the biggest differences between them?"
+ },
+ {
+  "title": "🛒 RP: 가게/지갑 (11·12·13)",
+  "q": "I'm sorry, but there's a problem I need you to resolve. You think you left your wallet at a new store you visited today. Call the store, explain where you were sitting, and ask them to help you."
+ },
+ {
+  "title": "D1 Housing issue — 입지 불균형",
+  "q": "What are some issues related to housing in your country? Tell me about one issue in detail, and why people are concerned about it."
+ },
+ {
+  "title": "🎬 RP: 티켓 오류 (11·12·13)",
+  "q": "I'm sorry, but there's a problem. The tickets you bought show the wrong time, and the seats aren't together. Call the ticket office, explain the problem, and offer two or three ways to fix it."
+ },
+ {
+  "title": "⭐D1 좋아하는 음악 — Hearts2Hearts",
+  "q": "What kind of music do you like, and who is your favorite singer or group? Why do you like them?"
+ },
+ {
+  "title": "📱 RP: 새 폰 결함 (11·12·13)",
+  "q": "I'm sorry, but there's a problem I need you to resolve. The new phone you bought a week ago keeps overheating, and the battery drains quickly. Call the store, explain the problem, and ask about your options."
+ },
+ {
+  "title": "D1 언제 음악 듣나 — 운동/반복작업",
+  "q": "When and where do you usually listen to music? Tell me about your music listening habits."
+ },
+ {
+  "title": "🌐 RP: 인터넷 먹통 (11·12·13)",
+  "q": "I'm sorry, but there's a problem. Your internet has been down for an hour, and you need to work from home today. Call your internet provider, explain the problem, and ask for a quick solution."
+ },
+ {
+  "title": "D1 음악 취향 변화 — 부르던→에너지받는",
+  "q": "How has your taste in music changed since you were younger? What kind of music did you like back then, and what do you like now?"
+ },
+ {
+  "title": "🏦 RP: 은행 계좌·카드 (11·12·13)",
+  "q": "I'd like to give you a situation and ask you to act it out. You want to open a new bank account. Call the bank and ask three or four questions about opening an account."
+ },
+ {
+  "title": "⭐D1 라이브 음악 — Santa Monica/Hotel California",
+  "q": "Tell me about the most memorable live music performance you've ever seen. Where was it, who was performing, and what made it so special?"
+ },
+ {
+  "title": "♻️ RP: 분리수거·소음 사과 (11·12·13)",
+  "q": "I'm sorry, but there's a problem I need you to resolve. After your party last night, your neighbor complained about the noise and the trash. Talk to your neighbor, apologize, and offer two or three ways to make it right."
+ },
+ {
+  "title": "D2-1 내 직장 묘사 — 개방형 오피스",
+  "q": "Please describe your workplace. What does your office look like, and what is the atmosphere like?"
+ },
+ {
+  "title": "🏠 RP: 친척 집 열쇠 (11·12·13)",
+  "q": "I'd like to give you a situation and ask you to act it out. You're looking after a relative's house, but you can't find the spare key. Call the hotel where your relative is staying, leave a message, and explain the situation."
+ },
+ {
+  "title": "D2-2 직장 과거 vs 현재 — 하이브리드",
+  "q": "How have workplaces in your country changed over the past few years? Compare the way people worked in the past with how they work today."
+ },
+ {
+  "title": "🎤 RP: 인터뷰 (11·12·13)",
+  "q": "I'd like to give you a situation and ask you to act it out. You're interviewing a famous person for a magazine. Ask them three or four questions about their career."
+ },
+ {
+  "title": "D2-3 기술이 바꾼 직장 — AI",
+  "q": "How has technology changed the way you work? Tell me about one technology that has made a big difference in your job."
+ },
+ {
+  "title": "⛺ RP: 캠핑장 미아 (11·13)",
+  "q": "I'd like to give you a situation and ask you to act it out. You found a lost boy at a campsite. Call the campsite office, describe the boy, and ask them to make an announcement."
+ },
+ {
+  "title": "⭐D2-4 유망산업 — EV/배터리",
+  "q": "What is one promising industry in your country? Why is it important, and how has it changed over the last few years?"
+ },
+ {
+  "title": "🪑 RP: 오배송·카드 두고옴 (12·13)",
+  "q": "I'm sorry, but there's a problem I need you to resolve. The sofa that was delivered to your home is the wrong color. Call the furniture store, explain the problem, and offer two or three solutions."
+ },
+ {
+  "title": "⭐D2-5 유망기업 — 현대차",
+  "q": "Tell me about a well-known company in that industry. What does the company do, and how does it benefit people or society?"
+ },
+ {
+  "title": "🏖️🌳 RP: 폭염·공사 취소 (12·13)",
+  "q": "I'm sorry, but there's a problem. You planned a beach trip with a friend this weekend, but a heat wave is coming. Call your friend, explain the situation, and suggest two or three alternatives."
+ },
+ {
+  "title": "⭐D2-6 젊은이 선호 회사 — 대기업 vs 공기업",
+  "q": "What kinds of companies do young people in your country want to work for? Why are those companies so popular?"
+ },
+ {
+  "title": "⭐D2-7 직업 위한 노력 — 영어·LA석사",
+  "q": "What have you done to prepare for your career? Tell me about the efforts you made to get where you are today."
+ },
+ {
+  "title": "⭐D2-8 미래 직업 준비 과정 — 구조는 같되 기준↑",
+  "q": "How do people in your country prepare for their future jobs? How has this process changed over the past several years?"
+ },
+ {
+  "title": "D2-9 새 기술 적용 어려움→극복 — AI 프롬프트",
+  "q": "Tell me about a time when you had difficulty learning a new technology. What was the problem, and how did you overcome it?"
+ },
+ {
+  "title": "D2-10 기술 뉴스 — AI 양면",
+  "q": "Tell me about a technology-related news story you heard recently. What was it about, and how did you feel about it?"
+ },
+ {
+  "title": "⭐D3-1 캠핑 준비 — 날씨→옷",
+  "q": "How do you prepare for a camping trip? Tell me, step by step, what you do before you leave."
+ },
+ {
+  "title": "D3-4 최근 캠핑 경험 — 강가",
+  "q": "Tell me about the last time you went camping. Where did you go, who did you go with, and what did you do there?"
+ },
+ {
+  "title": "D3-2 캠핑 챙기는 것 — 불멍",
+  "q": "What do you usually bring when you go camping? Which item is the most important to you, and why?"
+ },
+ {
+  "title": "D3-5 기억나는 캠핑 — 첫 캠핑+축제",
+  "q": "Tell me about your most memorable camping trip. What happened that made it so special?"
+ },
+ {
+  "title": "D3-3 캠핑 음식 — 라면",
+  "q": "What kind of food do you usually eat when you go camping? Why do you like eating that food outdoors?"
+ },
+ {
+  "title": "⭐D3-6 RP 슬리핑백 구매문의 (대화형)",
+  "q": "I'd like to give you a situation and ask you to act it out. You want to buy a sleeping bag for a camping trip. Call the store and ask three or four questions about the sleeping bag."
+ },
+ {
+  "title": "D3-8 산 물건 하자 경험 (similar exp)",
+  "q": "Have you ever bought something that turned out to be broken or defective? Tell me what happened, and how you handled the situation."
+ },
+ {
+  "title": "⭐D3-7 RP 슬리핑백 하자 (대화형·대안체인)",
+  "q": "I'm sorry, but there's a problem I need you to resolve. The sleeping bag you bought yesterday has a hole, and the zipper is broken. Call the store, explain the problem, and offer two or three solutions."
+ },
+ {
+  "title": "D3-11 기기 고장 경험 (similar exp)",
+  "q": "Have you ever had an electronic device break down at a bad time? Tell me what happened, and how you solved the problem."
+ },
+ {
+  "title": "D3-9 RP MP3 구매문의 (대화형·친구)",
+  "q": "I'd like to give you a situation and ask you to act it out. Your friend just bought a new MP3 player, and you want to buy one too. Call your friend and ask three or four questions about it."
+ },
+ {
+  "title": "⭐D4-1 자주 가는 병원 의사 묘사",
+  "q": "Tell me about a doctor you often visit. What is the doctor like, and why do you keep going back?"
+ },
+ {
+  "title": "D3-10 RP MP3 고장알림 (대화형·대안체인)",
+  "q": "I'm sorry, but there's a problem I need you to resolve. You borrowed your friend's MP3 player, but you dropped it, and now it won't turn on. Call your friend, explain what happened, and offer two or three solutions."
+ },
+ {
+  "title": "D4-2 병원 memorable — 검진 안도",
+  "q": "Tell me about a memorable experience you had at a hospital or clinic. What happened, and how did you feel?"
+ },
+ {
+  "title": "⭐D4-4 건강한 사람 — 아버지",
+  "q": "Who is the healthiest person you know? Describe that person, and tell me what they do to stay healthy."
+ },
+ {
+  "title": "D4-3 어릴 때 병원 — 치과 공포",
+  "q": "Tell me about a time you went to the hospital or the dentist when you were a child. What happened, and how did you feel?"
+ },
+ {
+  "title": "⭐D4-5 건강 위해 하는 일 — 현재시제+영양제",
+  "q": "What do you do to stay healthy? Tell me about your daily habits for staying healthy."
+ },
+ {
+  "title": "⭐D4-6 세대별 건강관 비교",
+  "q": "How has the idea of a healthy person changed between generations in your country? Compare your parents' generation with people today."
+ },
+ {
+  "title": "D4-8 친구 두 명 비교",
+  "q": "Tell me about two of your close friends. How are they similar, and how are they different?"
+ },
+ {
+  "title": "⭐D4-7 건강 문제→해결 — 스트레스",
+  "q": "Tell me about a health problem you've had. What caused it, and what did you do to get better?"
+ },
+ {
+  "title": "D4-9 친구와 최근 대화 주제",
+  "q": "When you meet your friends these days, what do you usually talk about? Tell me about a recent conversation you had with them."
+ },
+ {
+  "title": "⭐D5-1 날씨로 약속 못 감 — 결혼식",
+  "q": "Tell me about a time when bad weather kept you from going somewhere important. What happened, and how did you handle it?"
+ },
+ {
+  "title": "D5-5 RP 파티 준비문의 (대화형)",
+  "q": "I'd like to give you a situation and ask you to act it out. A friend has invited you to a party. Call your friend and ask three or four questions about the party."
+ },
+ {
+  "title": "⭐D5-2 여행 취소·연기 — 태풍",
+  "q": "Have you ever had to cancel or postpone a trip? Tell me why it happened, and what you did afterward."
+ },
+ {
+  "title": "⭐D5-6 RP 파티 가다 차 고장 (대화형)",
+  "q": "I'm sorry, but there's a problem I need you to resolve. On your way to the party, your car broke down. Call your friend, explain the situation, and suggest two or three alternatives."
+ },
+ {
+  "title": "D5-3 기억나는 여행 — 중국 가족여행",
+  "q": "Tell me about the most memorable trip you've ever taken. Where did you go, and what made it so memorable?"
+ },
+ {
+  "title": "D5-7 RP 약속 문의 — 영양사 (대화형)",
+  "q": "I'd like to give you a situation and ask you to act it out. You want to make an appointment with a nutritionist. Call the office and ask three or four questions to set up the appointment."
+ },
+ {
+  "title": "⭐D5-4 여행지 분실 — 파리 소매치기",
+  "q": "Have you ever lost something, or had something stolen, while traveling? Tell me what happened, and how you dealt with it."
+ },
+ {
+  "title": "⭐D5-8 RP 약속 변경 (대화형·대안체인)",
+  "q": "I'm sorry, but there's a problem. You can't make it to your appointment today because you have to work late. Call the office, explain the situation, and offer two or three alternatives."
+ },
+ {
+  "title": "⭐D6-1 hair salon 묘사 — 사무실 근처/실력",
+  "q": "Tell me about the hair salon you usually go to. Where is it, what does it look like, and why do you go there?"
+ },
+ {
+  "title": "⭐D6-3 hair salon 기억 경험 — 발표 전날",
+  "q": "Tell me about a memorable experience you had at a hair salon. When was it, and what happened?"
+ },
+ {
+  "title": "D6-2 hair salon 하는 것 — 순서",
+  "q": "What do you usually do when you go to the hair salon? Tell me everything you do, from the moment you walk in until you leave."
+ },
+ {
+  "title": "⭐D6-6 beach memorable — LA Redondo 크랩하우스",
+  "q": "Tell me about your most memorable experience at the beach. What happened, and why do you still remember it?"
+ },
+ {
+  "title": "⭐D6-4 자주 가는 beach 묘사",
+  "q": "Tell me about a beach you often go to. Where is it, what does it look like, and who do you go with?"
+ },
+ {
+  "title": "⭐D6-7 movie 문제 경험 — 예매 시간 오류",
+  "q": "Have you ever had a problem when you went to see a movie? Tell me what happened, and how it was resolved."
+ },
+ {
+  "title": "D6-5 beach 하는 활동",
+  "q": "What do you usually do when you go to the beach? Tell me about a typical day at the beach for you."
+ },
+ {
+  "title": "D6-10 집 vacation 기억나는 일",
+  "q": "Tell me about a memorable day you had during a vacation at home. What happened, and why was it memorable?"
+ },
+ {
+  "title": "D6-8 movie 취향 — SF/현실 탈출",
+  "q": "What kind of movies do you like the most? Why do you like that genre?"
+ },
+ {
+  "title": "D6-12 국내여행 기억 경험 — 우연한 바닷가 카페",
+  "q": "Tell me about a memorable trip you took in your country. What happened that made it special?"
+ },
+ {
+  "title": "⭐D6-9 집에서 보낸 vacation",
+  "q": "Tell me about the last vacation you spent at home. What did you do, and who did you spend it with?"
+ },
+ {
+  "title": "D6-13 최근 본 건강 뉴스 — 수면·정신건강",
+  "q": "Tell me about a health-related news story you heard recently. What was it about, and what do you think about it?"
+ },
+ {
+  "title": "⭐D6-11 국내여행 어디 가는지 — 강릉·속초",
+  "q": "Where do you usually go when you travel in your country? Why do you like going there?"
+ },
+ {
+  "title": "D6-14 최근 많이 얘기하는 이슈 — AI",
+  "q": "What is an issue that people in your country are talking about these days? Why is it important, and what is your opinion on it?"
+ },
+ {
+  "title": "D6-15 식료품점 묘사 — 한 곳에서 다",
+  "q": "Tell me about a grocery store you often go to. What is it like, and what do you usually buy there?"
+ },
+ {
+  "title": "D6-16 식습관 변화 (과거 vs 현재)",
+  "q": "How have your eating habits changed over the years? Compare what you ate in the past with what you eat now."
+ },
+ {
+  "title": "⭐D6-17A RP 미아 신고 (대화형·관리사무소)",
+  "q": "I'd like to give you a situation and ask you to act it out. There is a lost child near the main entrance of a shopping mall. Call the management office, explain the situation, and ask three or four questions about what to do."
+ },
+ {
+  "title": "D6-17B 낯선 사람 도운 경험 (아묻따 #8)",
+  "q": "Have you ever helped a stranger? Tell me what happened, and how you helped them."
+ },
+ {
+  "title": "2-1 미아 발견",
+  "q": "I'd like to give you a situation and ask you to act it out. You've found a little child who is lost at a shopping mall. Talk to the child, ask three or four questions to find out what happened, and help the child find their parents."
+ },
+ {
+  "title": "2-3 분실 경험",
+  "q": "Have you ever lost something important? Tell me the whole story. Where were you, what did you lose, what did you do to find it, and how did it all end?"
+ },
+ {
+  "title": "2-2 신고",
+  "q": "I'm sorry, but there's a problem I need you to resolve. You couldn't find the lost child's parents. Call the information center, explain the situation, and ask them to help you find the parents."
+ },
+ {
+  "title": "2-4 AI 변화",
+  "q": "How has technology like AI changed over the past few years? Compare how people used technology in the past with how they use it today."
+ },
+ {
+  "title": "2-5 기술 이슈",
+  "q": "What are some concerns people have about new technology these days? Tell me about one issue in detail, and give me your opinion about it."
+ }
+]

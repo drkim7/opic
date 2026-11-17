@@ -9,7 +9,7 @@ const hash = value => require('node:crypto').createHash('sha256').update(JSON.st
 const file = process.argv[2] || path.join(root, 'index.html');
 const FIXED_NOW = new Date('2026-10-23T09:00:00+09:00').getTime();
 const passed = [], failed = [];
-function fixture(filename = file, seed = {}) {
+function fixture(filename = file, seed = {}, now = FIXED_NOW) {
   const nodes = new Map(), saved = new Map(Object.entries(seed)), timers = [], alerts = [];
   function node(id) {
     if (!nodes.has(id)) {
@@ -21,7 +21,7 @@ function fixture(filename = file, seed = {}) {
     }
     return nodes.get(id);
   }
-  class Clock extends Date { constructor(...args){super(...(args.length?args:[FIXED_NOW]))} static now(){return FIXED_NOW} }
+  class Clock extends Date { constructor(...args){super(...(args.length?args:[now]))} static now(){return now} }
   const localStorage = {getItem:k=>saved.get(k)??null,setItem:(k,v)=>saved.set(k,String(v)),removeItem:k=>saved.delete(k),clear:()=>saved.clear()};
   class Reader { readAsText(file){this.result=file.content;this.onload()} }
   const ctx = vm.createContext({console,localStorage,document:{getElementById:node,querySelectorAll:()=>[],querySelector:node,createElement:node,body:node('body'),addEventListener(){}},
@@ -38,23 +38,23 @@ function fixture(filename = file, seed = {}) {
 async function test(name, fn) {try {await fn();passed.push(name);console.log('PASS',name)}catch(e){failed.push(name);console.error('FAIL',name,e.message)}}
 const answer = 'Last weekend I visited a quiet park with my family. We enjoyed the fresh air and I felt relaxed. In the past I stayed home more often, but now I try to go outside because it helps me feel better. In the end we had a wonderful time.';
 async function main() {
- await test('132 cards and 44 expressions unchanged from production v14.1',()=>{
+ await test('original 132 cards and 44 expressions unchanged from production v14.1',()=>{
    const a=fixture();
-   assert.equal(a.run('DEFAULT_CARDS.length'),132);assert.equal(a.run('exAll().length'),44);
-   assert.equal(hash(a.json('DEFAULT_CARDS')),baseline.cardsSha256);assert.equal(hash(a.json('exAll()')),baseline.expressionsSha256);
+   assert.equal(a.run('DEFAULT_CARDS.length'),137);assert.equal(a.run('exAll().length'),49);
+   assert.equal(hash(a.json('DEFAULT_CARDS.filter(c=>c.set!=="v15")')),baseline.cardsSha256);assert.equal(hash(a.json('exAll().filter(c=>c.cat!=="repair")')),baseline.expressionsSha256);
  });
- await test('all 132 Telegram cards in identical order; Day3 story matches',()=>{
+ await test('original Telegram stories in relative order and Day3 unchanged',()=>{
    const f=fixture(),bot=baseline.botTitles;
-   assert.deepEqual(f.json('botOrder().map(c=>c.title)'),bot);
+   assert.deepEqual(f.json('botOrder().filter(c=>c.set!=="v15").map(c=>c.title)'),bot);
    assert.equal(f.run('todayStory().day'),3);assert.equal(f.run('todayStory().card.title'),bot[2]);
  });
  await test('default routine bounded to 3 cards and 2 new cards',()=>{
-   const f=fixture();assert(f.run('todayCardQueue().length<=3'));assert(f.run('todayCardQueue().filter(c=>srsOf(ck(c)).box===0).length<=2'));
+   const f=fixture();f.run('examState.date="";delete dayRec().qv');assert(f.run('todayCardQueue().length<=3'));assert(f.run('todayCardQueue().filter(c=>srsOf(ck(c)).box===0).length<=2'));
    assert.equal(f.run('ck(todayCardQueue()[0])'),f.run('ck(todayStory().card)'));
  });
  await test('v14.1 same-day queue migration caps workload and preserves completed card',()=>{
    const f=fixture();f.run(`{const r=dayRec();r.cq=CARD_DATA.filter(c=>ck(c)!==ck(todayStory().card)).slice(0,3).map(ck);r.cd=[r.cq[0]];delete r.qv;todayCardQueue()}`);
-   assert.equal(f.run('dayRec().cq.length'),3);assert.equal(f.run('dayRec().cd.length'),1);assert(f.run('dayRec().cq.includes(dayRec().cd[0])'));
+   assert(f.run('dayRec().cq.length<=3'));assert.equal(f.run('dayRec().cd.length'),1);assert(f.run('dayRec().cq.includes(dayRec().cd[0])'));
    assert(f.run('todayCardQueue().filter(c=>srsOf(ck(c)).box===0).length<=2'));
  });
  await test('finished same-day routine is not reopened or injected with cards',()=>{

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OPIc AL Trainer v14.2.1 — 오픽 여행 지도</title>
+<title>OPIc AL Trainer v15.1.1 — 가볍게 말하기</title>
 <style>
   :root {
     --bg: #0a0a0f; --surface: #12121a; --surface2: #1a1a26;
@@ -388,6 +388,18 @@
   .mem-shell { margin:0 0 12px; }
   .mem-home-row { display:flex; justify-content:space-between; align-items:center; gap:8px; font-size:13px; color:var(--accent3); background:rgba(0,212,170,.07); border:1px dashed rgba(0,212,170,.45); border-radius:12px; padding:11px 14px; margin:-4px 0 14px; cursor:pointer; }
   .mem-home-row span { font-size:18px; }
+  /* v15 시험 모드 */
+  .exam-box { background:linear-gradient(145deg, rgba(255,215,0,.07), rgba(108,99,255,.06)); border:1px solid rgba(255,215,0,.4); border-radius:14px; padding:14px; margin-bottom:14px; }
+  .exam-ready { font-size:14px; } .exam-ready b { font-size:22px; color:var(--gold); } .exam-ready span { font-size:11px; color:var(--dim); }
+  .exam-box .mem-actions .btn small { font-size:11px; color:var(--dim); font-weight:500; }
+  .exam-core { font-size:11px; border:1px dashed var(--border); border-radius:20px; padding:1px 8px; color:var(--dim); cursor:pointer; white-space:nowrap; }
+  .exam-core.on { border:1px solid var(--gold); color:var(--gold); font-weight:700; }
+  .mock-clock { font-family:monospace; font-size:22px; font-weight:800; color:var(--text); }
+  .mock-clock.good { color:var(--gold); } .mock-clock.over { color:var(--error); }
+  .mock-item { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:11px 13px; margin-bottom:8px; font-size:13px; }
+  .mock-item summary { cursor:pointer; line-height:1.6; }
+  .mock-tag { font-size:11px; background:var(--surface2); border-radius:6px; padding:1px 6px; color:var(--accent3); }
+  .up { color:var(--success); font-size:11px; } .down { color:var(--warn); font-size:11px; }
   /* v14.2 여행 지도 */
   .game-story { margin-top:10px; padding-top:10px; border-top:1px solid rgba(255,255,255,.08); font-size:13px; color:#d8d8ee; line-height:1.6; }
   .game-day { display:inline-block; margin-left:4px; font-size:11px; color:var(--accent3); border:1px solid rgba(0,212,170,.35); border-radius:20px; padding:1px 8px; cursor:pointer; }
@@ -426,7 +438,7 @@
   <header>
     <div class="logo">
       <div class="logo-main">OPIc Trainer</div>
-      <div class="logo-badge">AL · v14.2.1</div>
+      <div class="logo-badge">AL · v15.1.1</div>
     </div>
     <div class="config-status" id="configStatus" onclick="openConfig()">
       <span class="dot-ind" id="dotInd" style="background:var(--error)"></span>
@@ -672,6 +684,8 @@
     <button class="btn btn-primary" id="speakSubmit" style="width:100%; margin-top:12px;" onclick="submitSpeak()">✨ OPIc 기준 피드백 받기</button>
     <div id="speakFeedback" style="margin-top:14px;"></div>
   </div>
+
+  <div id="panel-mock" class="panel"><div id="mockBody"></div></div>
 
   <div id="panel-roleplay" class="panel">
     <div class="question-box" style="background:linear-gradient(135deg,rgba(255,107,157,0.08),rgba(108,99,255,0.08)); border-color:rgba(255,107,157,0.25)">
@@ -2381,10 +2395,15 @@ const DEFAULT_CARDS = [
       { en: "I had an unexpected clinic visit as a child", ko: "어릴 때 병원 인트로 변형" },
       { en: "a sharp edge cut my finger deeply", ko: "사고 발생" },
       { en: "I've always been extremely careful when handling glass", ko: "교훈 마무리" }
-    ] }
+    ] },
+  {"cat":"desc","set":"v15","place":"cafe","title":"☕ cafe — 사무실 근처 카페","topicEn":"coffee shops","koreanFlow":"사무실 근처 → 창가와 잔잔한 음악 → 사람 구경 → 잠깐 재충전","hint":"카페 묘사 예시. 위치·분위기·주문은 내 실제 경험으로 바꿔 말하기.","keyEnglish":"It feels like a little pause in the middle of a busy day.","fullScript":"There's a little coffee shop near my office. It's simple: a few wooden tables, a big window, and usually some music playing in the background. My favorite spot is by the window. I can watch people go by while I have my coffee. What I like about the place is how easy it is to switch off for a few minutes. It feels like a little pause in the middle of a busy day.","keywords":["window","music","switch off"],"mustUse":[{"en":"There's a little coffee shop near my office.","ko":"사무실 근처에 작은 카페가 있어요."},{"en":"My favorite spot is by the window.","ko":"제일 좋아하는 곳은 창가 자리예요."},{"en":"It feels like a little pause in the middle of a busy day.","ko":"바쁜 하루 중 잠깐 쉬어가는 느낌이에요."}]},
+  {"cat":"desc","set":"v15","place":"cafe","title":"☕ cafe — 평일과 주말 루틴","topicEn":"your coffee shop routine","koreanFlow":"평일은 짧은 점심 휴식 → 폰을 내려놓기 → 주말에 여유가 있을 땐 같이 디저트 → 대화하기","hint":"카페 루틴 예시. 시간대·함께 가는 사람·주문은 편한 실제 예로 바꾸기.","keyEnglish":"It's a nice place to catch up.","fullScript":"My café routine depends on how much time I have. On a weekday, I might stop by for a quick coffee after lunch. I try to put my phone face down and take a short break. On a weekend, if we have time, we might take a walk to a café and share something sweet. On busy days I go there to recharge. When there's more time, it's a nice place to catch up.","keywords":["lunch","short break","catch up"],"mustUse":[{"en":"I might stop by for a quick coffee after lunch.","ko":"점심 뒤에 잠깐 커피를 마시러 들르곤 해요."},{"en":"I try to put my phone face down and take a short break.","ko":"폰을 엎어두고 잠깐 쉬려고 해요."},{"en":"It's a nice place to catch up.","ko":"밀린 이야기를 나누기 좋은 곳이에요."}]},
+  {"cat":"desc","set":"v15","place":"walk","title":"🏃 walking — 저녁 산책","topicEn":"walking for exercise","koreanFlow":"시간 날 때 식후 걷기 → 예전보다 짧게 → 음악 듣거나 주변 보기 → 기분 전환","hint":"산책 루틴 예시. 실제 동선·횟수·시작 계기 중 하나를 골라 내 이야기로 바꾸기.","keyEnglish":"My head feels a little clearer.","fullScript":"When I have time after dinner, I like to go for a walk. I usually pick an easy route, somewhere I don't have to think about where I'm going. I used to spend more time on exercise, but these days even a short walk feels worthwhile. Sometimes I listen to music, and sometimes I just pay attention to what's around me. By the time I get home, my head feels a little clearer.","keywords":["after dinner","walk","clear my head"],"mustUse":[{"en":"When I have time after dinner, I like to go for a walk.","ko":"저녁 먹고 시간이 나면 산책하는 걸 좋아해요."},{"en":"Even a short walk feels worthwhile.","ko":"짧게 걸어도 보람이 있어요."},{"en":"My head feels a little clearer.","ko":"머리가 조금 맑아지는 느낌이에요."}]},
+  {"cat":"exp","set":"v15","place":"cafe","title":"🌧 산책 중 소나기와 카페","topicEn":"a memorable café visit","koreanFlow":"산책 → 갑자기 비 → 우산 없음 → 카페에서 비 피함 → 아쉬웠던 산책이 편안한 휴식으로","hint":"상황 연습용 예시. 실제로 겪은 일이 있으면 장소·문제·결말을 내 경험으로 교체. 카페 질문이면 카페, 걷기 질문이면 산책부터 답하기.","keyEnglish":"I ended up enjoying the break.","fullScript":"One of my most memorable café visits started with a walk. I was walking by the river when it suddenly started pouring. I didn't have an umbrella, so I got completely soaked and ducked into a small café. I ordered a hot drink and sat by the window until the rain let up. At first I was annoyed that my walk had been cut short. But I ended up enjoying the break. Looking back, it turned out better than I expected.","keywords":["pouring","soaked","let up"],"mustUse":[{"en":"It suddenly started pouring.","ko":"갑자기 비가 쏟아지기 시작했어요."},{"en":"I got completely soaked and ducked into a small café.","ko":"흠뻑 젖어서 작은 카페로 급히 들어갔어요."},{"en":"I ended up enjoying the break.","ko":"결국 그 휴식이 좋았어요."}],"alsoPlaces":["walk","cafe"]},
+  {"cat":"desc","set":"v15","place":"local","title":"👋 자기소개 — 균형","topicEn":"yourself","koreanFlow":"간단한 인사 → 평소 생활 → 한국 록과 산책 → 바쁜 날에도 균형을 찾는 편","hint":"30초 워밍업 예시. 공개 카드에는 이름·가족·회사 정보를 넣지 않았어요. 소개하고 싶은 실제 디테일 하나만 덧붙이세요.","keyEnglish":"I'd say those small breaks are what keep me balanced.","fullScript":"Hi. I'd describe myself as someone who likes to stay busy but also needs time to unwind. I enjoy listening to music, especially Korean rock. When I have a little time in the evening, I like to go for a walk and clear my head. Lately I've been trying to make more room for those small breaks. I'd say they're what keep me balanced.","keywords":["unwind","Korean rock","small breaks"],"mustUse":[{"en":"I like to stay busy but also need time to unwind.","ko":"바쁘게 지내는 걸 좋아하지만 쉴 시간도 필요해요."},{"en":"I like to go for a walk and clear my head.","ko":"산책하며 머리를 식히는 걸 좋아해요."},{"en":"I'd say those small breaks are what keep me balanced.","ko":"그런 짧은 휴식 덕분에 균형을 찾는 것 같아요."}]}
 ];
 const CATS = [
-  { id: "today", label: "📅 오늘 복습" }, { id: "mem", label: "🔔 다시 떠올리기" }, { id: "all", label: "전체" }, { id: "w2", label: "W2 세트" }, { id: "exam", label: "기출 세트" }, { id: "day1", label: "Day1" }, { id: "day2", label: "Day2" }, { id: "day3", label: "Day3" }, { id: "day4", label: "Day4" }, { id: "day5", label: "Day5" }, { id: "day6", label: "Day6" }, { id: "amudda", label: "🎯아묻따" },
+  { id: "today", label: "📅 오늘 복습" }, { id: "mem", label: "🔔 다시 떠올리기" }, { id: "core", label: "🎯 핵심" }, { id: "all", label: "전체" }, { id: "w2", label: "W2 세트" }, { id: "exam", label: "기출 세트" }, { id: "day1", label: "Day1" }, { id: "day2", label: "Day2" }, { id: "day3", label: "Day3" }, { id: "day4", label: "Day4" }, { id: "day5", label: "Day5" }, { id: "day6", label: "Day6" }, { id: "amudda", label: "🎯아묻따" },
   { id: "rp", label: "롤플레이" }, { id: "exp", label: "경험 묘사" }, { id: "opi", label: "의견/기술" }, { id: "desc", label: "묘사/루틴" },
   { id: "my", label: "내 카드" }, { id: "weak", label: "취약 카드" },
 ];
@@ -2431,7 +2450,8 @@ function saveUserCards() { localStorage.setItem(LS_CARDS, JSON.stringify(userCar
 function filteredCards() {
   if (currentCat === "today") return todayCardQueue();
   if (currentCat === "mem") return memPendingCards();
-  if (String(currentCat).startsWith("place:")) { const pid = currentCat.slice(6); return CARD_DATA.filter(c => gamePlaceOf(c) === pid); }
+  if (currentCat === "core") return coreCards();
+  if (String(currentCat).startsWith("place:")) { const pid = currentCat.slice(6); return CARD_DATA.filter(c => gameMatchesPlace(c, pid)); }
   if (currentCat === "all") return CARD_DATA;
   if (currentCat === "w2") return CARD_DATA.filter(c => c.set === "w2");
   if (currentCat === "exam") return CARD_DATA.filter(c => c.set === "exam");
@@ -2482,7 +2502,7 @@ function showCard() {
     document.getElementById("transcript").innerHTML = '<span style="color:var(--dim)">녹음을 시작하면 영어 음성이 여기에 전사됩니다.</span>';
     document.getElementById("recallFeedback").innerHTML = "";
   }
-  const cs = document.getElementById("cardSrs"); if (cs) cs.innerHTML = srsBoxHtml(ck(c)) + gameCardBadge(c);
+  const cs = document.getElementById("cardSrs"); if (cs) cs.innerHTML = srsBoxHtml(ck(c)) + gameCardBadge(c) + examCoreBadge(c);
   const status = progress[c.title];
   const statusIcon = status === "ok" ? " ✅" : status === "mid" ? " ⚠️" : status === "no" ? " ❌" : "";
   document.getElementById("cardTag").textContent = "스크립트 카드" + statusIcon;
@@ -2782,10 +2802,6 @@ async function submitSpeak() {
   }
 }
 function renderSpeakFeedback(data) {
-  const g = String(data.grade || "");
-  const isScore = g.includes("/");
-  const gc = g === "AL" ? "grade-al" : g === "IH" || isScore ? "grade-ih" : "grade-im";
-  data = Object.assign({}, data, { grade: isScore ? "구조 " + g : g + " 추정" });
   const checksHtml = (data.checks||[]).map(c => `<div class="check-item"><span class="check-icon">${c.pass?"✅":"❌"}</span><span>${escapeHtml(String(c.label))}</span></div>`).join("");
   const sugHtml = (data.suggestions||[]).map(s => `<div style="font-size:13px; color:var(--accent3); margin-bottom:6px;">→ ${escapeHtml(String(s))}</div>`).join("");
   const cmpS = attemptCompareHtml(spPrevAttempt, data.checks);
@@ -2793,12 +2809,13 @@ function renderSpeakFeedback(data) {
   spPrevAttempt = { checks: data.checks || [], n: spPrevAttempt ? spPrevAttempt.n + 1 : 1 };
   document.getElementById("speakFeedback").innerHTML = `
     <div class="feedback">
-      <div class="fb-head"><span style="font-weight:700;">📊 OPIc 기준 피드백</span><span class="grade-badge ${gc}">${escapeHtml(String(data.grade))}</span></div>
-      <div class="fb-body">${checksHtml}
+      <div class="fb-head"><span style="font-weight:700;">📊 말하기 연습 피드백</span></div>
+      <div class="fb-body"><div class="mem-note"><b>다시 말할 때 하나만:</b> ${escapeHtml(fixS || "구체적인 예 하나를 덧붙여보세요.")}</div>
+        <details><summary>상세 피드백 보기</summary>${checksHtml}
         <div class="fb-section-title" style="color:var(--accent3)">피드백</div>
         <div style="font-size:14px; line-height:1.6; color:#c8c8e0;">${escapeHtml(String(data.feedback || ""))}</div>
         ${sugHtml ? `<div class="fb-section-title" style="color:var(--accent)">영어 표현 제안</div>${sugHtml}` : ""}
-        ${cmpS}
+        ${cmpS}</details>
         <div class="retry-row">
           <button class="btn btn-primary" onclick="speakRetry()">${fixS ? `🔁 같은 질문 다시 — 이번엔 '${escapeHtml(fixS)}'` : "🔁 같은 질문 한 번 더"}</button>
           <button class="btn" onclick="newSpeakQ()">🔄 새 문제</button>
@@ -3064,6 +3081,7 @@ function escapeHtml(s) { return String(s).replace(/[&<>"]/g, c => ({ "&":"&amp;"
 function switchTab(name) {
   const tabs = ["home", "cards", "expr", "twist", "speaking", "roleplay"];
   if (name === "home") { routine.step = null; renderRoutineBar(); }
+  if (name !== "mock" && mock) mockRelease();
   document.querySelectorAll(".tab").forEach((t, i) => t.classList.toggle("active", tabs[i] === name));
   document.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
   document.getElementById("panel-" + name).classList.add("active");
@@ -3475,8 +3493,8 @@ function twCompareHtml(prev, cur) {
   return out;
 }
 function twRenderFeedback(data, isAI, habits, prevAttempt) {
-  const badge = isAI ? escapeHtml(String(data.grade || "?")) + " 추정" : "구조 " + escapeHtml(String(data.score || "?"));
-  const gc = isAI ? (data.grade === "AL" ? "grade-al" : data.grade === "IH" ? "grade-ih" : "grade-im") : "grade-ih";
+  const badge = isAI ? "연습 피드백" : "구조 참고";
+  const gc = "grade-ih";
   const checksHtml = (data.checks || []).map(c => `<div class="check-item"><span class="check-icon">${c.info ? "ℹ️" : c.pass ? "✅" : "❌"}</span><span>${escapeHtml(String(c.label))}</span></div>`).join("");
   const sugHtml = (data.suggestions || []).map(s => `<div style="font-size:13px; color:var(--accent3); margin-bottom:6px;">→ ${escapeHtml(String(s))}</div>`).join("");
   const compareHtml = prevAttempt ? twCompareHtml(prevAttempt, data.checks || []) : "";
@@ -3489,13 +3507,15 @@ function twRenderFeedback(data, isAI, habits, prevAttempt) {
           <span class="grade-badge ${gc}">${badge}</span>
         </span>
       </div>
-      <div class="fb-body">${checksHtml}
+      <div class="fb-body">
+        <div class="mem-note"><b>다시 말할 때 하나만:</b> ${escapeHtml(String(data.primaryFix || "질문에 바로 답하고, 한 가지 디테일을 더 말해보세요."))}</div>
+        <details><summary>상세 피드백 보기</summary>${checksHtml}
         ${compareHtml}
         <div class="fb-section-title" style="color:var(--accent3)">피드백</div>
         <div style="font-size:14px; line-height:1.6; color:#c8c8e0;">${escapeHtml(String(data.feedback || ""))}</div>
         ${habits ? `<div style="font-size:12px; color:var(--warn); margin-top:8px;">${escapeHtml(habits)}</div>` : ""}
         ${sugHtml ? `<div class="fb-section-title" style="color:var(--accent)">이렇게 시작해보세요</div>${sugHtml}` : ""}
-        <div style="font-size:11px; color:var(--dim); margin-top:10px;">${isAI ? "※ 단일 답변 기준 추정이에요. 실제 OPIc은 12~15문항 전체를 종합 평가해요." : "※ 구조 표지만 확인한 연습 지표예요 — 질문 적합성·문법·자연스러움은 판정하지 않아요. 실제 OPIc은 12~15문항 종합 평가입니다."}</div>
+        <div style="font-size:11px; color:var(--dim); margin-top:10px;">${isAI ? "※ 이 답변에 대한 참고용 피드백이에요." : "※ 구조 표지만 확인한 연습 지표예요 — 질문 적합성·문법·자연스러움은 판정하지 않아요. 실제 OPIc은 전체 답변을 종합 평가해요."}</div></details>
         <div style="margin-top:12px; display:flex; gap:8px; flex-wrap:wrap;">
           <button class="btn btn-primary" onclick="twRetrySame()">${retryLabel}</button>
           <button class="btn" onclick="twNewTwist()">🎲 다른 각도로</button>
@@ -3515,7 +3535,7 @@ function twLogResult(data, isAI, wc, prevAttempt, answer) {
     d: twTodayKey().slice(5),
     card: twCard ? twCard.title : "?",
     twist: twTwist ? twTwist.label : "?",
-    grade: isAI ? (data.grade || "?") : (data.score || "?"),
+    grade: isAI ? "피드백" : (data.score || "?"),
     wc,
     retry: prevAttempt ? prevAttempt.n + 1 : 0,
     gained,
@@ -3555,9 +3575,9 @@ function speakTTS(text, onDone) {
 }
 
 /* ---- 전체 백업 / 복원 ---- */
-const BACKUP_KEYS = () => [LS_PROG, LS_CARDS, LS_TWIST, LS_EXPR, LS_SRS, LS_DAILY, LS_MEM, LS_GAME];  // API 키(LS_CFG)는 보안상 제외
+const BACKUP_KEYS = () => [LS_PROG, LS_CARDS, LS_TWIST, LS_EXPR, LS_SRS, LS_DAILY, LS_MEM, LS_GAME, LS_EXAM];  // API 키(LS_CFG)는 보안상 제외
 function exportAll() {
-  const data = { app: "opic-al-trainer", version: 1421, exportedAt: new Date().toISOString(), data: {} };
+  const data = { app: "opic-al-trainer", version: 1511, exportedAt: new Date().toISOString(), data: {} };
   BACKUP_KEYS().forEach(k => { const v = localStorage.getItem(k); if (v !== null) data.data[k] = v; });
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
   const a = document.createElement("a");
@@ -3575,14 +3595,16 @@ function importAll(input) {
       const parsed = JSON.parse(reader.result);
       if (!parsed || parsed.app !== "opic-al-trainer" || !parsed.data) { alert("올바른 백업 파일이 아닙니다."); return; }
       const hasMemoryBackup = Object.prototype.hasOwnProperty.call(parsed.data, LS_MEM);
-      if (!confirm("이 기기의 진도·내 카드·훈련 기록을 백업 파일 내용으로 덮어씁니다." + (hasMemoryBackup ? "" : "\n이 백업에는 v14 기억 엔진 기록이 없어 기존 기억 엔진 기록도 초기화됩니다.") + " 계속할까요?")) return;
+      if (!confirm("이 기기의 학습 기록과 시험·지도 설정을 백업 파일 내용으로 바꿉니다." + (hasMemoryBackup ? "" : "\n이 백업에는 v14 기억 엔진 기록이 없어 기존 기억 엔진 기록도 초기화됩니다.") + " 계속할까요?")) return;
       Object.entries(parsed.data).forEach(([k, v]) => {
         if (BACKUP_KEYS().includes(k) && typeof v === "string") localStorage.setItem(k, v);
       });
       if (!hasMemoryBackup) localStorage.removeItem(LS_MEM);
       if (!Object.prototype.hasOwnProperty.call(parsed.data, LS_GAME)) localStorage.removeItem(LS_GAME);
+      if (!Object.prototype.hasOwnProperty.call(parsed.data, LS_EXAM)) localStorage.removeItem(LS_EXAM);
+      mockRelease();
       gameEndMission(); gameQuestOpen = false; gameQuestPeek = false; routine.step = null;
-      loadState(); srsLoad(); dailyLoad(); twLoad(); memLoad(); memResetSession(); gameLoad(); gameCheck(true); cardHintFor = null; renderPills(); showCard(); twRenderStats(); twRenderHist(); initExpr(); renderHome();
+      loadState(); srsLoad(); dailyLoad(); twLoad(); memLoad(); memResetSession(); gameLoad(); examLoad(); gameCheck(true); cardHintFor = null; renderPills(); showCard(); twRenderStats(); twRenderHist(); initExpr(); renderHome();
       alert("복원 완료! 진도·카드·훈련 기록을 불러왔습니다.");
     } catch (e) { alert("파일을 읽지 못했습니다: " + e.message); }
     input.value = "";
@@ -3666,9 +3688,11 @@ function fillGeminiPreset() {
 
 /* ===================== v11: 표현 암기 (SRS 간격 반복) ===================== */
 const LS_EXPR = "opic_expr_v1";
-const EX_CATS = { hook:"운 시작", compare:"비교", hypo:"가정", emotion:"감정/의견", transition:"전환/디테일", closing:"마무리", rp:"롤플레이" };
+const EX_CATS = { hook:"운 시작", compare:"비교", hypo:"가정", emotion:"감정/의견", transition:"전환/디테일", closing:"마무리", rp:"롤플레이", repair:"말 이어가기" };
 const EX_INTERVALS = [1, 3, 7, 14, 30]; // box1~5 통과 시 다음 복습까지 일수
+const REPAIR_EXPRESSIONS = [{"id":"repair1","cat":"repair","en":"I mean...","ko":"뜻을 짧게 바로잡기"},{"id":"repair2","cat":"repair","en":"Let me put it another way.","ko":"다른 쉬운 말로 바꾸기"},{"id":"repair3","cat":"repair","en":"It's the thing you use to...","ko":"단어가 생각나지 않을 때 기능으로 설명하기"},{"id":"repair4","cat":"repair","en":"Anyway, the point is...","ko":"핵심으로 돌아오기"},{"id":"repair5","cat":"repair","en":"What I'm trying to say is...","ko":"전하려던 뜻으로 돌아오기"}];
 const EXPR_DATA = [
+  ...REPAIR_EXPRESSIONS,
   // 운 시작 (hook)
   { id:"h1", cat:"hook", en:"Oh, where do I even start? There's a lot to say about this.", ko:"어디서부터 말해야 하지? 할 얘기가 정말 많아요." },
   { id:"h2", cat:"hook", en:"You know what, the first thing that comes to mind is...", ko:"있잖아요, 제일 먼저 떠오르는 건..." },
@@ -4026,7 +4050,7 @@ function srsGrade(title, level, hint) {
   return { p, promoted, held, early: false };
 }
 function cardByKey(k) { return CARD_DATA.find(c => c && ck(c) === k); }
-const NEW_SET_PRIORITY = ["amudda", "exam", "day1", "day2", "day3", "day4", "day5", "day6", "w2"];
+const NEW_SET_PRIORITY = ["v15", "amudda", "exam", "day1", "day2", "day3", "day4", "day5", "day6", "w2"];
 function pickNewCards(n, usedCats) {
   const pr = c => { const i = NEW_SET_PRIORITY.indexOf(c.set); return i === -1 ? NEW_SET_PRIORITY.length : i; };
   const pool = CARD_DATA.map((c, i) => ({ c, i })).filter(x => x.c && srsOf(ck(x.c)).box === 0)
@@ -4042,16 +4066,13 @@ function pickNewCards(n, usedCats) {
 }
 function todayCardQueue() {
   const r = dayRec();
-  if (!Array.isArray(r.cq)) {
-    r.cq = gameBuildQueue(); r.cd = []; r.cr = []; r.qv = 1421;
-    dailySave();
-  } else if (r.qv !== 1421) {
-    // 완료 기록은 보존하고, 남은 큐만 오늘 목표 안에서 보정한다.
-    if (!r.s.card) gameRefreshQueue(r);
-    r.qv = 1421; dailySave();
-  }
   if (!Array.isArray(r.cd)) r.cd = [];
   if (!Array.isArray(r.cr)) r.cr = [];
+  if (!Array.isArray(r.cq) || r.qv !== 1511) {
+    if (!r.s.card) gameRefreshQueue(r);
+    else if (!Array.isArray(r.cq)) r.cq = r.cd.slice();
+    r.qv = 1511; dailySave();
+  }
   return r.cq.map(k => CARD_ALIASES[k] || k).filter(t => !r.cd.includes(t)).map(cardByKey).filter(Boolean);
 }
 function srsDueTotal() {
@@ -4130,7 +4151,10 @@ function exprRoutineQueue() {
   const review = due.filter(it => exProg(it.id).box > 0);
   for (let i = review.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [review[i], review[j]] = [review[j], review[i]]; }
   const fresh = due.filter(it => exProg(it.id).box === 0).slice(0, Math.max(0, 10 - introToday));
-  return review.concat(fresh).slice(0, gameComeback() ? 3 : ROUTINE_EXPR_MAX);
+  const max = gameComeback() ? 3 : ROUTINE_EXPR_MAX;
+  const repair = review.find(it => it.cat === 'repair') || fresh.find(it => it.cat === 'repair');
+  const queue = review.concat(fresh).filter(it => it.cat !== 'repair');
+  return repair ? [repair, ...queue.slice(0, max - 1)] : queue.slice(0, max);
 }
 function stepInfo() {
   const r = dayRec();
@@ -4230,8 +4254,8 @@ function renderHome() {
   const d = new Date();
   const dateTxt = `${d.getMonth()+1}월 ${d.getDate()}일 ${["일","월","화","수","목","금","토"][d.getDay()]}요일`;
   const cb = gameComeback();
-  const title = doneN === steps.length ? "오늘 루틴 끝! 🎉" : cb && doneN === 0 ? "🧭 돌아온 걸 환영해요!" : doneN === 0 ? `오늘은 약 ${mins}분이면 끝나요` : `${doneN}/${steps.length} 완료 · 남은 건 약 ${mins}분`;
-  const sub = doneN === steps.length ? "지도에서 다음 목표를 골라보세요." : cb && !dayActive(today) ? `오늘은 가볍게 — 표현 3개와 쉬운 카드 하나, 약 ${mins}분. 밀린 건 신경 쓰지 마세요.` : (dayActive(today) ? "✅ 오늘 연속 기록은 이미 지켰어요. 여유 있으면 나머지도!" : "바쁜 날엔 30초 퀘스트나 1단계만 해도 연속 기록이 이어져요.");
+  const title = doneN === steps.length ? "오늘 루틴 끝! 🎉" : cb && doneN === 0 ? "🧭 돌아온 걸 환영해요!" : doneN === 0 ? `오늘 루틴 · 약 ${mins}분` : `${doneN}/${steps.length} 완료 · 남은 건 약 ${mins}분`;
+  const sub = doneN === steps.length ? "지도에서 다음 목표를 골라보세요." : cb && !dayActive(today) ? `오늘은 가볍게 — 표현 최대 3개${cdN ? '와 카드 하나' : ''}, 약 ${mins}분. 밀린 공부는 보충하지 않아도 돼요.` : (dayActive(today) ? "✅ 오늘은 이미 말해봤어요. 여기서 끝내도 좋아요." : "2분만 말해도 오늘 연습으로 기록돼요. 하루 쉬어도 보충할 필요 없어요.");
 
   // 성장 씨앗 지표 (v15 성장 화면용 데이터 누적)
   const allTitles = CARD_DATA.map(ck);
@@ -4251,7 +4275,7 @@ function renderHome() {
     </div>
     <div class="home-streak">
       <div class="home-fire">🔥 ${st.n}<small>일 연속</small></div>
-      <div style="font-size:12px; color:var(--dim); line-height:1.5;">이번 주 ${weekDone}일<br>❄ 주 1회는 쉬어도 유지</div>
+      <div style="font-size:12px; color:var(--dim); line-height:1.5;">이번 주 말해본 날 ${weekDone}일<br>쉬어도 다음 날 다시 시작</div>
       <div class="week-dots">${dots}</div>
     </div>
     <div class="step-list">
@@ -4264,9 +4288,11 @@ function renderHome() {
     </div>
     ${nx
       ? `<button class="btn btn-primary home-cta" onclick="startRoutine()">${doneN === 0 ? "▶ 오늘 학습 시작" : "▶ 이어서 하기 — " + nx.name}</button>`
-      : `<div class="home-done">🏆 <b>오늘 ${steps.length}단계 모두 완료${cb ? ' · 복귀 퀘스트' : ''}</b><br><span style="font-size:13px;color:var(--dim)">스크립트 복습 예정: 내일 ${CARD_DATA.filter(c => { const p = srsOf(ck(c)); return p.box > 0 && p.due && p.due <= dAdd(today, 1); }).length}장</span></div>`}
+      : `<div class="home-done">🏆 <b>오늘 ${steps.length}단계 모두 완료${cb ? ' · 복귀 퀘스트' : ''}</b><br><span style="font-size:13px;color:var(--dim)">오늘은 여기서 끝내도 좋아요.</span></div>`}
     <div class="home-note">단계마다 끝나면 자동으로 다음 단계를 안내해요.<br>어떤 탭에서든 1번이라도 연습하면 오늘은 '인정'이에요.</div>
+    ${lightHomeHtml()}
     ${gameQuestHtml(!nx)}
+    ${examHomeHtml()}
     ${memHomeHtml(!nx)}
     ${gameMissionHtml(!nx, !memPendingCards().length)}
     ${gameMapHtml()}
@@ -4276,7 +4302,7 @@ function renderHome() {
       <div class="hs"><div class="num">${nhRate}</div><div class="lab">7일간<br>힌트 없이 성공</div></div>
       <div class="hs"><div class="num">${avgWc}</div><div class="lab">7일 평균<br>답변 단어 수</div></div>
     </div>
-    <div class="home-note" style="margin-bottom:4px;">몸에 붙은 표현 ${exSettled}/${exAll().length}${cb ? '' : ` · 밀린 카드 복습 ${srsDueTotal()}장`}</div>`;
+    <div class="home-note" style="margin-bottom:4px;">몸에 붙은 표현 ${exSettled}/${exAll().length}</div>`;
 }
 
 
@@ -4556,21 +4582,18 @@ function gameLoad() {
 function gameSave() { try { localStorage.setItem(LS_GAME, JSON.stringify(gameState)); } catch (e) { console.warn('게임 기록 저장 불가', e); } }
 
 /* ---------- 오늘의 이야기: 텔레그램 봇과 같은 순서표 ---------- */
-const BOT_SET_PRIORITY = ['amudda', 'exam', 'day1', 'day2', 'day3', 'day4', 'day5', 'day6', 'w2'];
+// Keep the same explicit rotation as opic-daily-bot/content.json.
+const BOT_ROTATION = ["아묻따#1 라이브 음악/공연","아묻따#3 여행/공원서 폰 분실","아묻따#2 날씨/교통으로 못 감","⭐아묻따#4 에어컨 고장/Staycation","⭐아묻따#12 과로→건강식·휴식 (만능)","아묻따#5 책상 고장→홈오피스","🎵 music — 묘사/라이브경험","아묻따#6 어릴 적 중국 여행","🏠 house — 집/최애 방","⭐아묻따#7 렌트 EV 충전 문제","🛋️ home vacation — 집콕 휴가","아묻따#8 식당서 외국인 도와줌","🥗 health — 스트레스/회복 (만능)","아묻따#9 온라인쇼핑 보안 문제","🌐 internet — 용도/변화","⭐아묻따#10 ATM PIN+폰 방전","🌳 park — 한강공원","아묻따#11 첫 캠핑+지역 축제","🤖 tech — AI/스마트홈 변화","아묻따#13 미용실서 유명인","🏨 hotel — 호캉스/무료 업그레이드","⭐아묻따#14 배달앱 첫 주문 실수","🏖️ beach — 해운대","아묻따#15 재활용하다 손 다침","💇 hair shop — 단골 미용실","✈️ travel — 어릴 적 중국 여행","🎬 movie — Project Hail Mary","⛺ camping — 캠핑/폭우 에피소드","☕ cafe — 사무실 근처 카페","👗 fashion — 핏·소재 중시","☕ cafe — 평일과 주말 루틴","♻️ recycling — 분리수거 변화","🌧 산책 중 소나기와 카페","📱 phone — 카메라·모바일결제","🏃 walking — 저녁 산책","🍔 delivery — 배달 실수 경험","👋 자기소개 — 균형","📹 video — 유튜브 알고리즘","🏭 industry — 반도체·AI","🎊 holiday — 설·추석","🏢 workplace — 재택·AI직군","🗺️ geography — 삼면 바다","☀️ weather — 길어진 여름","🔌 home appliance — 스타일러","🏥 clinic — 치과 공포 극복","🪑 furniture — 침대·모듈가구","🏘️ community — 동네 축제","👨‍👩‍👧 friends — 정반대 두 친구","🧹 responsibility — 분리수거 깜빡","🕐 free time — 혼자 충전","🎧 RP: MP3 (11·12·13)","🚇 transportation — 지하철","🎉 RP: party (11·12·13)","💪 gym — 월수금 루틴","🏨 RP: hotel/택시 분실 (11·12·13)","⭐D1 집 묘사 — 안방/회복","✈️ RP: 렌터카/환불 (11·12·13)","D1 집에서 가족과 — 아내와 Netflix","🏥 RP: 영양사 약속 (11·12·13)","⭐D1 옛집 vs 지금집 — 커뮤니티시설","🛒 RP: 가게/지갑 (11·12·13)","D1 Housing issue — 입지 불균형","🎬 RP: 티켓 오류 (11·12·13)","⭐D1 좋아하는 음악 — Hearts2Hearts","📱 RP: 새 폰 결함 (11·12·13)","D1 언제 음악 듣나 — 운동/반복작업","🌐 RP: 인터넷 먹통 (11·12·13)","D1 음악 취향 변화 — 부르던→에너지받는","🏦 RP: 은행 계좌·카드 (11·12·13)","⭐D1 라이브 음악 — Santa Monica/Hotel California","♻️ RP: 분리수거·소음 사과 (11·12·13)","D2-1 내 직장 묘사 — 개방형 오피스","🏠 RP: 친척 집 열쇠 (11·12·13)","D2-2 직장 과거 vs 현재 — 하이브리드","🎤 RP: 인터뷰 (11·12·13)","D2-3 기술이 바꾼 직장 — AI","⛺ RP: 캠핑장 미아 (11·13)","⭐D2-4 유망산업 — EV/배터리","🪑 RP: 오배송·카드 두고옴 (12·13)","⭐D2-5 유망기업 — 현대차","🏖️🌳 RP: 폭염·공사 취소 (12·13)","⭐D2-6 젊은이 선호 회사 — 대기업 vs 공기업","⭐D2-7 직업 위한 노력 — 영어·LA석사","⭐D2-8 미래 직업 준비 과정 — 구조는 같되 기준↑","D2-9 새 기술 적용 어려움→극복 — AI 프롬프트","D2-10 기술 뉴스 — AI 양면","⭐D3-1 캠핑 준비 — 날씨→옷","D3-4 최근 캠핑 경험 — 강가","D3-2 캠핑 챙기는 것 — 불멍","D3-5 기억나는 캠핑 — 첫 캠핑+축제","D3-3 캠핑 음식 — 라면","⭐D3-6 RP 슬리핑백 구매문의 (대화형)","D3-8 산 물건 하자 경험 (similar exp)","⭐D3-7 RP 슬리핑백 하자 (대화형·대안체인)","D3-11 기기 고장 경험 (similar exp)","D3-9 RP MP3 구매문의 (대화형·친구)","⭐D4-1 자주 가는 병원 의사 묘사","D3-10 RP MP3 고장알림 (대화형·대안체인)","D4-2 병원 memorable — 검진 안도","⭐D4-4 건강한 사람 — 아버지","D4-3 어릴 때 병원 — 치과 공포","⭐D4-5 건강 위해 하는 일 — 현재시제+영양제","⭐D4-6 세대별 건강관 비교","D4-8 친구 두 명 비교","⭐D4-7 건강 문제→해결 — 스트레스","D4-9 친구와 최근 대화 주제","⭐D5-1 날씨로 약속 못 감 — 결혼식","D5-5 RP 파티 준비문의 (대화형)","⭐D5-2 여행 취소·연기 — 태풍","⭐D5-6 RP 파티 가다 차 고장 (대화형)","D5-3 기억나는 여행 — 중국 가족여행","D5-7 RP 약속 문의 — 영양사 (대화형)","⭐D5-4 여행지 분실 — 파리 소매치기","⭐D5-8 RP 약속 변경 (대화형·대안체인)","⭐D6-1 hair salon 묘사 — 사무실 근처/실력","⭐D6-3 hair salon 기억 경험 — 발표 전날","D6-2 hair salon 하는 것 — 순서","⭐D6-6 beach memorable — LA Redondo 크랩하우스","⭐D6-4 자주 가는 beach 묘사","⭐D6-7 movie 문제 경험 — 예매 시간 오류","D6-5 beach 하는 활동","D6-10 집 vacation 기억나는 일","D6-8 movie 취향 — SF/현실 탈출","D6-12 국내여행 기억 경험 — 우연한 바닷가 카페","⭐D6-9 집에서 보낸 vacation","D6-13 최근 본 건강 뉴스 — 수면·정신건강","⭐D6-11 국내여행 어디 가는지 — 강릉·속초","D6-14 최근 많이 얘기하는 이슈 — AI","D6-15 식료품점 묘사 — 한 곳에서 다","D6-16 식습관 변화 (과거 vs 현재)","⭐D6-17A RP 미아 신고 (대화형·관리사무소)","D6-17B 낯선 사람 도운 경험 (아묻따 #8)","2-1 미아 발견","2-3 분실 경험","2-2 신고","2-4 AI 변화","2-5 기술 이슈"];
 let _botOrder = null;
-function botOrder() {                                 // tools/build_content.py 와 똑같은 규칙 (우선순위 + 전날과 다른 유형)
-  if (_botOrder) return _botOrder;
-  const pr = c => { const i = BOT_SET_PRIORITY.indexOf(c.set); return i === -1 ? BOT_SET_PRIORITY.length : i; };
-  const pool = DEFAULT_CARDS.map((c, i) => ({ c, i })).sort((a, b) => pr(a.c) - pr(b.c) || a.i - b.i);
-  const order = []; let last = null;
-  while (pool.length) {
-    let j = pool.findIndex(x => x.c.cat !== last); if (j === -1) j = 0;
-    const x = pool.splice(j, 1)[0]; order.push(x.c); last = x.c.cat;
+function botOrder() {
+  if (!_botOrder) {
+    const byTitle = new Map(DEFAULT_CARDS.map(c => [c.title, c]));
+    _botOrder = BOT_ROTATION.map(title => byTitle.get(title)).filter(Boolean);
   }
-  return (_botOrder = order);
+  return _botOrder;
 }
 function gameValidDate(value) {
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(value || '')) return false;
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value || '') || value.startsWith('0000')) return false;
   const date = new Date(value + 'T00:00:00Z');
   return Number.isFinite(date.getTime()) && date.toISOString().slice(0, 10) === value;
 }
@@ -4579,7 +4602,11 @@ function gameDayIndex(key) {
   const [y1, m1, d1] = gameStartDate().split('-').map(Number), [y2, m2, d2] = key.split('-').map(Number);
   return Math.max(0, Math.round((Date.UTC(y2, m2 - 1, d2) - Date.UTC(y1, m1 - 1, d1)) / 86400000));
 }
-function todayStory() { const n = gameDayIndex(twTodayKey()), o = botOrder(); return { card: cardByKey(o[n % o.length].title) || o[n % o.length], day: n + 1 }; }
+function todayStory() {
+  const n = gameDayIndex(twTodayKey()), order = botOrder();
+  const card = order[n % order.length];
+  return { card: cardByKey(card.title) || card, day: n + 1 };
+}
 function gameFirstSentence(c) {
   const s = String(c.fullScript || '').trim().replace(/^\(\w+[^)]*\)\s*/, '');
   const m = s.match(/^(.+?[.!?])(\s|$)/); return (m ? m[1] : s).slice(0, 160);
@@ -4612,7 +4639,7 @@ function gameComeback() {
 }
 function gamePickNew(n, usedCats, exclude) {          // 새 카드 고르기 (앱 기존 규칙과 같음) + 제외 목록
   const pr = c => { const i = NEW_SET_PRIORITY.indexOf(c.set); return i === -1 ? NEW_SET_PRIORITY.length : i; };
-  const pool = CARD_DATA.map((c, i) => ({ c, i })).filter(x => x.c && srsOf(ck(x.c)).box === 0 && !exclude.has(ck(x.c)))
+  const pool = CARD_DATA.map((c, i) => ({ c, i })).filter(x => x.c && srsOf(ck(x.c)).box === 0 && !exclude.has(ck(x.c)) && (!examOn() || isCore(x.c)))
     .sort((a, b) => pr(a.c) - pr(b.c) || a.i - b.i).map(x => x.c);
   const out = [], cats = new Set(usedCats || []);
   while (out.length < n && pool.length) {
@@ -4621,36 +4648,47 @@ function gamePickNew(n, usedCats, exclude) {          // 새 카드 고르기 (�
   }
   return out;
 }
-function gameBuildQueue() {                           // 루틴 2단계 카드 큐: 오늘의 이야기 + 복습 + 새 카드 (최대 3장)
+function gameBuildQueue(completed = []) {
   const today = twTodayKey(), story = todayStory().card, sk = ck(story);
-  const due = CARD_DATA.filter(c => { const p = srsOf(ck(c)); return p.box > 0 && p.due && p.due <= today; })
-    .sort((a, b) => { const pa = srsOf(ck(a)), pb = srsOf(ck(b)); return pa.due < pb.due ? -1 : pa.due > pb.due ? 1 : pa.box - pb.box; });
-  if (gameComeback()) {                               // 복귀한 날: 가장 쉬운(단계가 높은) 복습 카드 하나, 없으면 오늘의 이야기
-    const easy = due.slice().sort((a, b) => srsOf(ck(b)).box - srsOf(ck(a)).box)[0];
-    return [easy ? ck(easy) : sk];
+  const seen = new Set(completed);
+  const exam = examOn(), limit = examNewLimit();
+  const due = CARD_DATA.filter(c => {
+    const p = srsOf(ck(c));
+    return !seen.has(ck(c)) && p.box > 0 && p.due && p.due <= today;
+  }).sort((a, b) => {
+    const pa = srsOf(ck(a)), pb = srsOf(ck(b));
+    return (exam ? Number(isCore(b)) - Number(isCore(a)) : 0) || pa.due.localeCompare(pb.due) || pa.box - pb.box;
+  });
+  if (gameComeback()) {
+    if (completed.length) return [];
+    const easy = due.slice().sort((a,b) => srsOf(ck(b)).box - srsOf(ck(a)).box)[0]
+      || CARD_DATA.filter(c => srsOf(ck(c)).box > 0 && (!exam || isCore(c)))
+        .sort((a,b) => srsOf(ck(b)).box - srsOf(ck(a)).box)[0];
+    return easy ? [ck(easy)] : limit > 0 && !exam ? [sk] : gamePickNew(limit > 0 ? 1 : 0, [], seen).map(ck);
   }
-  const q = [sk], used = [story.cat];
-  for (const c of due) { if (q.length >= ROUTINE_CARD_MAX) break; if (ck(c) !== sk) { q.push(ck(c)); used.push(c.cat); } }
-  if (q.length < ROUTINE_CARD_MAX) {
-    const newAllowed = ROUTINE_NEW_CARD_MAX - (srsOf(sk).box === 0 ? 1 : 0);
-    gamePickNew(Math.max(0, Math.min(newAllowed, ROUTINE_CARD_MAX - q.length)), used, new Set(q)).forEach(c => q.push(ck(c)));
-  }
+  const capacity = Math.max(0, ROUTINE_CARD_MAX - completed.length);
+  const q = [], used = [];
+  // Count completed cards that were first introduced today, even after promotion.
+  let newLeft = Math.max(0, limit - completed.filter(k => (srsOf(k).n || 0) <= 1).length);
+  const add = c => {
+    const key = ck(c);
+    if (q.length >= capacity || seen.has(key)) return;
+    const fresh = srsOf(key).box === 0;
+    if (fresh && (newLeft <= 0 || (exam && !isCore(c)))) return;
+    if (fresh) newLeft--;
+    q.push(key); used.push(c.cat); seen.add(key);
+  };
+  // Exam preparation puts the new survey cards and known core reviews before unrelated stories.
+  if (!exam) add(story);
+  for (const c of due.filter(c => !exam || isCore(c))) add(c);
+  if (exam && isCore(story) && srsOf(sk).box > 0) add(story);
+  gamePickNew(Math.min(newLeft, capacity - q.length), used, seen).forEach(add);
+  if (exam) due.forEach(add);
   return q;
 }
 function gameRefreshQueue(r) {
   const completed = [...new Set(r.cd || [])];
-  if (gameComeback()) {
-    r.cq = completed.length ? completed : gameBuildQueue();
-    return;
-  }
-  const story = ck(todayStory().card);
-  let fresh = 0;
-  const pending = [...new Set([story, ...r.cq])].filter(k => {
-    if (completed.includes(k) || !cardByKey(k)) return false;
-    if (srsOf(k).box === 0 && ++fresh > ROUTINE_NEW_CARD_MAX) return false;
-    return true;
-  });
-  r.cq = completed.concat(pending.slice(0, Math.max(0, ROUTINE_CARD_MAX - completed.length)));
+  r.cq = completed.concat(gameBuildQueue(completed));
 }
 function gameCardStepMeta(cards) {
   const sk = ck(todayStory().card), has = cards.some(c => ck(c) === sk);
@@ -4667,6 +4705,7 @@ const PLACES = [
   { id: 'beach', icon: '🏖️', name: '바닷가' }, { id: 'travel', icon: '✈️', name: '여행' }, { id: 'health', icon: '🏥', name: '병원·건강' },
   { id: 'movie', icon: '🎬', name: '영화관' }, { id: 'work', icon: '💼', name: '회사' }, { id: 'tech', icon: '📱', name: '테크 거리' },
   { id: 'town', icon: '🛍️', name: '시내' }, { id: 'local', icon: '🌳', name: '동네·사람' }, { id: 'korea', icon: '🌏', name: '날씨·명절' },
+  { id: 'cafe', icon: '☕', name: '카페' }, { id: 'walk', icon: '🏃', name: '걷기·조깅' },
   { id: 'rp', icon: '🎭', name: '롤플레이 광장', noMission: true }, { id: 'mine', icon: '📒', name: '내 이야기', noMission: true },
 ];
 const PLACE_RULES = [   // 위에서부터 처음 맞는 장소 (제목 + 영어 주제로 판단)
@@ -4678,10 +4717,14 @@ const PLACE_RULES = [   // 위에서부터 처음 맞는 장소 (제목 + 영어
   ['home', /home|house|집|furniture|가구|appliance|가전|chore|lived|housing/],
   ['local', /park|공원|friend|친구|community|동네|recycl|재활용|transport|지하철|free time|stranger|conversation|belonging/],
 ];
+function gameMatchesPlace(c, id) {
+  return gamePlaceOf(c) === id || (Array.isArray(c.alsoPlaces) && c.alsoPlaces.includes(id));
+}
 function gamePlaceOf(c) {
   if (!c) return 'local';
   if (c._user) return 'mine';
   if (c.cat === 'rp') return 'rp';
+  if (c.place && PLACES.some(p => p.id === c.place)) return c.place;
   const t = (c.title + ' ' + (c.topicEn || '')).toLowerCase();
   for (const [id, re] of PLACE_RULES) if (re.test(t)) return id;
   return 'local';
@@ -4720,6 +4763,12 @@ const PLACE_MISSIONS = {   // 장소별 돌발 미션 (id는 변형 훈련의 �
   town: [['past', "Tell me about a time you had a problem with something you bought or ordered. What happened, and how was it resolved?"],
          ['hypo', "Imagine you got a completely different haircut by mistake right before an important event. What would you do?"],
          ['compare', "How has the way people shop changed compared to ten years ago? Talk about two big differences."]],
+  cafe: [['past', "Tell me about a time something unexpected happened at a coffee shop. What happened, and how did you handle it?"],
+         ['hypo', "Imagine you could open your own coffee shop. What kind of place would it be, and why?"],
+         ['compare', "How have coffee shops in your country changed compared to ten years ago? Talk about two big differences."]],
+  walk: [['past', "Tell me about a time something unexpected happened while you were walking or jogging. What happened?"],
+         ['hypo', "If you had to stop walking and jogging for a month, how would you stay healthy instead?"],
+         ['issue', "Your friend says walking isn't real exercise. Convince them that walking is worth it."]],
   local: [['past', "Tell me about a time you helped a stranger, or a stranger helped you. What happened?"],
           ['hypo', "If you could add one new place or facility to your neighborhood, what would it be, and why?"],
           ['issue', "Your friend never recycles because they think it doesn't make a difference. Convince them otherwise."]],
@@ -4816,7 +4865,7 @@ function gameQuestDone() {
   if (gameState.quest30[twTodayKey()]) return;
   gameState.quest30[twTodayKey()] = true; gameSave();
   gameQuestOpen = false; logActivity();
-  gameToast('🔥 30초 퀘스트 완료 — 오늘 연속 기록 지켰어요!');
+  gameToast('🔥 30초 퀘스트 완료 — 오늘도 말해봤어요!');
   renderHome();
 }
 
@@ -4949,11 +4998,451 @@ function gameOpenPlace(id) {
 function gamePlacePill() {
   if (!String(currentCat).startsWith('place:')) return '';
   const p = PLACES.find(x => x.id === currentCat.slice(6)); if (!p) return '';
-  const n = CARD_DATA.filter(c => gamePlaceOf(c) === p.id).length;
+  const n = CARD_DATA.filter(c => gameMatchesPlace(c, p.id)).length;
   return `<div class="pill active" onclick="setCat('all')">🗺 ${p.icon} ${p.name} ${n}개 ✕</div>`;
 }
 
-gameLoad(); memLoad(); loadState(); dailyLoad(); srsLoad(); renderPills(); showCard(); updateConfigStatus(); newSpeakQ(); initTwist(); twRenderHist(); initExpr(); gameCheck(true); if (!gameState.init) { gameState.init = true; gameSave(); } renderHome();
+/* ========== v15 시험 모드 — D-day · 핵심 카드 · 모의고사(미니 5 / 전체 15) ==========
+   시험일을 넣으면 핵심 카드부터 연습하고, 텔레그램 이야기 순서는 별도로 유지한다.
+   D-5부터 새 카드를 멈춘다. 모의고사는 문제 사이에 피드백이 없고, 끝난 뒤 한 번에 리포트(등급은 AI 연결 시 여기서만). */
+const LS_EXAM = 'opic_exam_v1';
+const EXAM_DEFAULT_DATE = '2026-12-12';
+// 서베이(영화·공연·콘서트·공원·캠핑·해변·카페·음악·조깅·걷기·집 휴가·국내여행 + 집) 기준 핵심 43장
+const CORE_TITLES = ["아묻따#1 라이브 음악/공연", "아묻따#2 날씨/교통으로 못 감", "아묻따#3 여행/공원서 폰 분실", "⭐아묻따#4 에어컨 고장/Staycation", "아묻따#5 책상 고장→홈오피스", "아묻따#6 어릴 적 중국 여행", "⭐아묻따#7 렌트 EV 충전 문제", "아묻따#8 식당서 외국인 도와줌", "아묻따#9 온라인쇼핑 보안 문제", "⭐아묻따#10 ATM PIN+폰 방전", "아묻따#11 첫 캠핑+지역 축제", "⭐아묻따#12 과로→건강식·휴식 (만능)", "아묻따#13 미용실서 유명인", "⭐아묻따#14 배달앱 첫 주문 실수", "아묻따#15 재활용하다 손 다침", "🎵 music — 묘사/라이브경험", "D1 음악 취향 변화 — 부르던→에너지받는", "⭐D1 라이브 음악 — Santa Monica/Hotel California", "⛺ camping — 캠핑/폭우 에피소드", "⭐D3-1 캠핑 준비 — 날씨→옷", "D3-4 최근 캠핑 경험 — 강가", "⭐D6-4 자주 가는 beach 묘사", "D6-5 beach 하는 활동", "⭐D6-6 beach memorable — LA Redondo 크랩하우스", "🎬 movie — Project Hail Mary", "⭐D6-7 movie 문제 경험 — 예매 시간 오류", "D6-8 movie 취향 — SF/현실 탈출", "🌳 park — 한강공원", "⭐D1 집 묘사 — 안방/회복", "⭐D1 옛집 vs 지금집 — 커뮤니티시설", "⭐D6-9 집에서 보낸 vacation", "D6-10 집 vacation 기억나는 일", "⭐D6-11 국내여행 어디 가는지 — 강릉·속초", "D6-12 국내여행 기억 경험 — 우연한 바닷가 카페", "⭐D3-6 RP 슬리핑백 구매문의 (대화형)", "⭐D3-7 RP 슬리핑백 하자 (대화형·대안체인)", "🎬 RP: 티켓 오류 (11·12·13)", "🏖️🌳 RP: 폭염·공사 취소 (12·13)", "☕ cafe — 사무실 근처 카페", "☕ cafe — 평일과 주말 루틴", "🏃 walking — 저녁 산책", "🌧 산책 중 소나기와 카페", "👋 자기소개 — 균형"];
+const CARD_Q = {"2-1 미아 발견": "I'd like to give you a situation and ask you to act it out. You've found a little child who is lost at a shopping mall. Talk to the child, ask three or four questions to find out what happened, and help the child find their parents.", "2-2 신고": "I'm sorry, but there's a problem I need you to resolve. You couldn't find the lost child's parents. Call the information center, explain the situation, and ask them to help you find the parents.", "2-3 분실 경험": "Have you ever lost something important? Tell me the whole story. Where were you, what did you lose, what did you do to find it, and how did it all end?", "2-4 AI 변화": "How has technology like AI changed over the past few years? Compare how people used technology in the past with how they use it today.", "2-5 기술 이슈": "What are some concerns people have about new technology these days? Tell me about one issue in detail, and give me your opinion about it.", "🎵 music — 묘사/라이브경험": "In your survey, you indicated that you like listening to music. What kind of music do you enjoy, and who are your favorite musicians? Tell me why you like them.", "🏠 house — 집/최애 방": "Please describe your home. What does it look like, and which room do you like the most? Why?", "🛋️ home vacation — 집콕 휴가": "You indicated that you spend your vacations at home. What do you usually do during your vacations at home, and who do you spend time with?", "✈️ travel — 어릴 적 중국 여행": "Tell me about your first trip abroad. Where did you go, who were you with, and what do you remember most about that trip?", "⛺ camping — 캠핑/폭우 에피소드": "You indicated that you go camping. What do you usually bring when you go camping? Also, tell me about something unexpected that happened on a camping trip.", "🥗 health — 스트레스/회복 (만능)": "What is the biggest health issue for you or the people around you? Tell me about a time you had a health problem, and how you overcame it.", "🌐 internet — 용도/변화": "How do you usually use the internet? What do you do online, and how has the way you use the internet changed over the years?", "🌳 park — 한강공원": "You indicated that you go to parks. Tell me about a park you often go to. What does it look like, and what do you usually do there?", "🤖 tech — AI/스마트홈 변화": "Tell me about the technology people use at home these days. How has it changed people's daily lives compared to the past?", "🏨 hotel — 호캉스/무료 업그레이드": "Tell me about the hotels in your country. What are they like? Also, tell me about a memorable experience you had while staying at a hotel.", "🏖️ beach — 해운대": "You indicated that you go to the beach. Tell me about your favorite beach. Where is it, what is it like, and what do you usually do there?", "💇 hair shop — 단골 미용실": "Tell me about the hair salon you usually go to. What is it like, and what do you usually get done there? Have you ever had a bad experience there?", "🎬 movie — Project Hail Mary": "What kinds of movies do you like? Tell me about a movie you saw recently. What was it about, and how did you feel about it?", "👗 fashion — 핏·소재 중시": "Tell me about fashion in your country. What kinds of clothes do people usually wear? How has your own style changed over time?", "📱 phone — 카메라·모바일결제": "Tell me about your smartphone. What features do you use the most, and how has the way people use phones changed over the years?", "📹 video — 유튜브 알고리즘": "You indicated that you watch videos online. What kinds of videos do you usually watch, and when do you watch them? Tell me about something you watched recently.", "🎊 holiday — 설·추석": "Tell me about a traditional holiday in your country. What do people usually do on that day, and how have holidays changed compared to the past?", "♻️ recycling — 분리수거 변화": "Tell me about recycling in your country. How do people recycle, and how has recycling changed over the years?", "🍔 delivery — 배달 실수 경험": "Do you often order food delivery? Tell me about a time when something went wrong with your order. What happened, and how did you deal with it?", "🏭 industry — 반도체·AI": "What are the major industries in your country? Tell me about one of them, how it has changed over the past few years, and what people say about it these days.", "🏢 workplace — 재택·AI직군": "Describe the working environment at your company. How have work environments in your country changed in recent years?", "🗺️ geography — 삼면 바다": "Tell me about the geography of your country. What are some of its natural features, and how does the geography affect what people do there?", "🔌 home appliance — 스타일러": "Tell me about a home appliance that people in your country often use. What is it, what does it do, and why do people like it?", "🪑 furniture — 침대·모듈가구": "Describe the furniture in your home. What is your favorite piece, and how has furniture changed over the years?", "☀️ weather — 길어진 여름": "Describe the weather in your country. What are the seasons like, and how has the weather changed compared to when you were young?", "🏥 clinic — 치과 공포 극복": "Tell me about the clinics or hospitals you go to. Also, tell me about a memorable experience you had at a hospital when you were a child.", "👨‍👩‍👧 friends — 정반대 두 친구": "Tell me about one or two of your close friends. What are they like, and what do you usually talk about when you get together?", "🕐 free time — 혼자 충전": "What do you usually do in your free time? How is the way you spend your free time now different from when you were younger?", "🚇 transportation — 지하철": "Describe the public transportation in your city. How do people usually get around, and what are some of the problems with it?", "🏘️ community — 동네 축제": "Tell me about community events in your neighborhood. How have these events changed over the years, and what do people think about them?", "💪 gym — 월수금 루틴": "You indicated that you go to the gym. Describe the gym you go to and your workout routine. When and why did you start working out?", "🧹 responsibility — 분리수거 깜빡": "Who does the household chores in your home, and how do you divide them? Tell me about a time when you forgot to do a chore. What happened?", "🎧 RP: MP3 (11·12·13)": "I'm sorry, but there's a problem I need you to resolve. You borrowed your friend's MP3 player, and now it's broken. Call your friend, explain what happened, and offer two or three options to solve the problem.", "🎉 RP: party (11·12·13)": "I'm sorry, but there's a problem I need you to resolve. You can't go to your friend's party because of a family emergency. Call your friend, explain the situation, and suggest two or three alternatives.", "🏨 RP: hotel/택시 분실 (11·12·13)": "I'm sorry, but there's a problem. You left your bag in a taxi on your way to the hotel. Call the taxi company, describe your bag, and offer two or three ways to get it back.", "✈️ RP: 렌터카/환불 (11·12·13)": "I'm sorry, but there's a problem I need you to resolve. Your tour was canceled, and you want a refund. Call the travel agency, explain the situation, and offer two or three alternatives.", "🏥 RP: 영양사 약속 (11·12·13)": "I'm sorry, but there's a problem. You can't make it to your appointment with the nutritionist because you have to work late. Call the office, explain the situation, and suggest two or three alternatives.", "🛒 RP: 가게/지갑 (11·12·13)": "I'm sorry, but there's a problem I need you to resolve. You think you left your wallet at a new store you visited today. Call the store, explain where you were sitting, and ask them to help you.", "🎬 RP: 티켓 오류 (11·12·13)": "I'm sorry, but there's a problem. The tickets you bought show the wrong time, and the seats aren't together. Call the ticket office, explain the problem, and offer two or three ways to fix it.", "📱 RP: 새 폰 결함 (11·12·13)": "I'm sorry, but there's a problem I need you to resolve. The new phone you bought a week ago keeps overheating, and the battery drains quickly. Call the store, explain the problem, and ask about your options.", "🌐 RP: 인터넷 먹통 (11·12·13)": "I'm sorry, but there's a problem. Your internet has been down for an hour, and you need to work from home today. Call your internet provider, explain the problem, and ask for a quick solution.", "🏦 RP: 은행 계좌·카드 (11·12·13)": "I'd like to give you a situation and ask you to act it out. You want to open a new bank account. Call the bank and ask three or four questions about opening an account.", "♻️ RP: 분리수거·소음 사과 (11·12·13)": "I'm sorry, but there's a problem I need you to resolve. After your party last night, your neighbor complained about the noise and the trash. Talk to your neighbor, apologize, and offer two or three ways to make it right.", "🏠 RP: 친척 집 열쇠 (11·12·13)": "I'd like to give you a situation and ask you to act it out. You're looking after a relative's house, but you can't find the spare key. Call the hotel where your relative is staying, leave a message, and explain the situation.", "🎤 RP: 인터뷰 (11·12·13)": "I'd like to give you a situation and ask you to act it out. You're interviewing a famous person for a magazine. Ask them three or four questions about their career.", "⛺ RP: 캠핑장 미아 (11·13)": "I'd like to give you a situation and ask you to act it out. You found a lost boy at a campsite. Call the campsite office, describe the boy, and ask them to make an announcement.", "🪑 RP: 오배송·카드 두고옴 (12·13)": "I'm sorry, but there's a problem I need you to resolve. The sofa that was delivered to your home is the wrong color. Call the furniture store, explain the problem, and offer two or three solutions.", "🏖️🌳 RP: 폭염·공사 취소 (12·13)": "I'm sorry, but there's a problem. You planned a beach trip with a friend this weekend, but a heat wave is coming. Call your friend, explain the situation, and suggest two or three alternatives.", "⭐D1 집 묘사 — 안방/회복": "Tell me about the place where you live. Describe it in as much detail as possible, and tell me about your favorite room.", "D1 집에서 가족과 — 아내와 Netflix": "What do you usually do at home with your family? Tell me about a typical evening at home.", "⭐D1 옛집 vs 지금집 — 커뮤니티시설": "Compare the home you lived in before with the home you live in now. What are the biggest differences between them?", "D1 Housing issue — 입지 불균형": "What are some issues related to housing in your country? Tell me about one issue in detail, and why people are concerned about it.", "⭐D1 좋아하는 음악 — Hearts2Hearts": "What kind of music do you like, and who is your favorite singer or group? Why do you like them?", "D1 언제 음악 듣나 — 운동/반복작업": "When and where do you usually listen to music? Tell me about your music listening habits.", "D1 음악 취향 변화 — 부르던→에너지받는": "How has your taste in music changed since you were younger? What kind of music did you like back then, and what do you like now?", "⭐D1 라이브 음악 — Santa Monica/Hotel California": "Tell me about the most memorable live music performance you've ever seen. Where was it, who was performing, and what made it so special?", "D2-1 내 직장 묘사 — 개방형 오피스": "Please describe your workplace. What does your office look like, and what is the atmosphere like?", "D2-2 직장 과거 vs 현재 — 하이브리드": "How have workplaces in your country changed over the past few years? Compare the way people worked in the past with how they work today.", "D2-3 기술이 바꾼 직장 — AI": "How has technology changed the way you work? Tell me about one technology that has made a big difference in your job.", "⭐D2-4 유망산업 — EV/배터리": "What is one promising industry in your country? Why is it important, and how has it changed over the last few years?", "⭐D2-5 유망기업 — 현대차": "Tell me about a well-known company in that industry. What does the company do, and how does it benefit people or society?", "⭐D2-6 젊은이 선호 회사 — 대기업 vs 공기업": "What kinds of companies do young people in your country want to work for? Why are those companies so popular?", "⭐D2-7 직업 위한 노력 — 영어·LA석사": "What have you done to prepare for your career? Tell me about the efforts you made to get where you are today.", "⭐D2-8 미래 직업 준비 과정 — 구조는 같되 기준↑": "How do people in your country prepare for their future jobs? How has this process changed over the past several years?", "D2-9 새 기술 적용 어려움→극복 — AI 프롬프트": "Tell me about a time when you had difficulty learning a new technology. What was the problem, and how did you overcome it?", "D2-10 기술 뉴스 — AI 양면": "Tell me about a technology-related news story you heard recently. What was it about, and how did you feel about it?", "⭐D3-1 캠핑 준비 — 날씨→옷": "How do you prepare for a camping trip? Tell me, step by step, what you do before you leave.", "D3-2 캠핑 챙기는 것 — 불멍": "What do you usually bring when you go camping? Which item is the most important to you, and why?", "D3-3 캠핑 음식 — 라면": "What kind of food do you usually eat when you go camping? Why do you like eating that food outdoors?", "D3-4 최근 캠핑 경험 — 강가": "Tell me about the last time you went camping. Where did you go, who did you go with, and what did you do there?", "D3-5 기억나는 캠핑 — 첫 캠핑+축제": "Tell me about your most memorable camping trip. What happened that made it so special?", "⭐D3-6 RP 슬리핑백 구매문의 (대화형)": "I'd like to give you a situation and ask you to act it out. You want to buy a sleeping bag for a camping trip. Call the store and ask three or four questions about the sleeping bag.", "⭐D3-7 RP 슬리핑백 하자 (대화형·대안체인)": "I'm sorry, but there's a problem I need you to resolve. The sleeping bag you bought yesterday has a hole, and the zipper is broken. Call the store, explain the problem, and offer two or three solutions.", "D3-8 산 물건 하자 경험 (similar exp)": "Have you ever bought something that turned out to be broken or defective? Tell me what happened, and how you handled the situation.", "D3-9 RP MP3 구매문의 (대화형·친구)": "I'd like to give you a situation and ask you to act it out. Your friend just bought a new MP3 player, and you want to buy one too. Call your friend and ask three or four questions about it.", "D3-10 RP MP3 고장알림 (대화형·대안체인)": "I'm sorry, but there's a problem I need you to resolve. You borrowed your friend's MP3 player, but you dropped it, and now it won't turn on. Call your friend, explain what happened, and offer two or three solutions.", "D3-11 기기 고장 경험 (similar exp)": "Have you ever had an electronic device break down at a bad time? Tell me what happened, and how you solved the problem.", "⭐D4-1 자주 가는 병원 의사 묘사": "Tell me about a doctor you often visit. What is the doctor like, and why do you keep going back?", "D4-2 병원 memorable — 검진 안도": "Tell me about a memorable experience you had at a hospital or clinic. What happened, and how did you feel?", "D4-3 어릴 때 병원 — 치과 공포": "Tell me about a time you went to the hospital or the dentist when you were a child. What happened, and how did you feel?", "⭐D4-4 건강한 사람 — 아버지": "Who is the healthiest person you know? Describe that person, and tell me what they do to stay healthy.", "⭐D4-5 건강 위해 하는 일 — 현재시제+영양제": "What do you do to stay healthy? Tell me about your daily habits for staying healthy.", "⭐D4-6 세대별 건강관 비교": "How has the idea of a healthy person changed between generations in your country? Compare your parents' generation with people today.", "⭐D4-7 건강 문제→해결 — 스트레스": "Tell me about a health problem you've had. What caused it, and what did you do to get better?", "D4-8 친구 두 명 비교": "Tell me about two of your close friends. How are they similar, and how are they different?", "D4-9 친구와 최근 대화 주제": "When you meet your friends these days, what do you usually talk about? Tell me about a recent conversation you had with them.", "⭐D5-1 날씨로 약속 못 감 — 결혼식": "Tell me about a time when bad weather kept you from going somewhere important. What happened, and how did you handle it?", "⭐D5-2 여행 취소·연기 — 태풍": "Have you ever had to cancel or postpone a trip? Tell me why it happened, and what you did afterward.", "D5-3 기억나는 여행 — 중국 가족여행": "Tell me about the most memorable trip you've ever taken. Where did you go, and what made it so memorable?", "⭐D5-4 여행지 분실 — 파리 소매치기": "Have you ever lost something, or had something stolen, while traveling? Tell me what happened, and how you dealt with it.", "D5-5 RP 파티 준비문의 (대화형)": "I'd like to give you a situation and ask you to act it out. A friend has invited you to a party. Call your friend and ask three or four questions about the party.", "⭐D5-6 RP 파티 가다 차 고장 (대화형)": "I'm sorry, but there's a problem I need you to resolve. On your way to the party, your car broke down. Call your friend, explain the situation, and suggest two or three alternatives.", "D5-7 RP 약속 문의 — 영양사 (대화형)": "I'd like to give you a situation and ask you to act it out. You want to make an appointment with a nutritionist. Call the office and ask three or four questions to set up the appointment.", "⭐D5-8 RP 약속 변경 (대화형·대안체인)": "I'm sorry, but there's a problem. You can't make it to your appointment today because you have to work late. Call the office, explain the situation, and offer two or three alternatives.", "⭐D6-1 hair salon 묘사 — 사무실 근처/실력": "Tell me about the hair salon you usually go to. Where is it, what does it look like, and why do you go there?", "D6-2 hair salon 하는 것 — 순서": "What do you usually do when you go to the hair salon? Tell me everything you do, from the moment you walk in until you leave.", "⭐D6-3 hair salon 기억 경험 — 발표 전날": "Tell me about a memorable experience you had at a hair salon. When was it, and what happened?", "⭐D6-4 자주 가는 beach 묘사": "Tell me about a beach you often go to. Where is it, what does it look like, and who do you go with?", "D6-5 beach 하는 활동": "What do you usually do when you go to the beach? Tell me about a typical day at the beach for you.", "⭐D6-6 beach memorable — LA Redondo 크랩하우스": "Tell me about your most memorable experience at the beach. What happened, and why do you still remember it?", "⭐D6-7 movie 문제 경험 — 예매 시간 오류": "Have you ever had a problem when you went to see a movie? Tell me what happened, and how it was resolved.", "D6-8 movie 취향 — SF/현실 탈출": "What kind of movies do you like the most? Why do you like that genre?", "⭐D6-9 집에서 보낸 vacation": "Tell me about the last vacation you spent at home. What did you do, and who did you spend it with?", "D6-10 집 vacation 기억나는 일": "Tell me about a memorable day you had during a vacation at home. What happened, and why was it memorable?", "⭐D6-11 국내여행 어디 가는지 — 강릉·속초": "Where do you usually go when you travel in your country? Why do you like going there?", "D6-12 국내여행 기억 경험 — 우연한 바닷가 카페": "Tell me about a memorable trip you took in your country. What happened that made it special?", "D6-13 최근 본 건강 뉴스 — 수면·정신건강": "Tell me about a health-related news story you heard recently. What was it about, and what do you think about it?", "D6-14 최근 많이 얘기하는 이슈 — AI": "What is an issue that people in your country are talking about these days? Why is it important, and what is your opinion on it?", "D6-15 식료품점 묘사 — 한 곳에서 다": "Tell me about a grocery store you often go to. What is it like, and what do you usually buy there?", "D6-16 식습관 변화 (과거 vs 현재)": "How have your eating habits changed over the years? Compare what you ate in the past with what you eat now.", "⭐D6-17A RP 미아 신고 (대화형·관리사무소)": "I'd like to give you a situation and ask you to act it out. There is a lost child near the main entrance of a shopping mall. Call the management office, explain the situation, and ask three or four questions about what to do.", "D6-17B 낯선 사람 도운 경험 (아묻따 #8)": "Have you ever helped a stranger? Tell me what happened, and how you helped them.", "아묻따#1 라이브 음악/공연": "Tell me about a time you went to a live performance or a festival. What did you see, and how did you feel?", "아묻따#2 날씨/교통으로 못 감": "Tell me about a time when bad weather or traffic kept you from getting somewhere important. What happened, and how did you handle it?", "아묻따#3 여행/공원서 폰 분실": "Have you ever lost your phone? Tell me where you lost it, what you did to find it, and what you learned from it.", "⭐아묻따#4 에어컨 고장/Staycation": "Have you ever had a problem with a home appliance? Tell me what happened, how you dealt with it, and how it turned out.", "아묻따#5 책상 고장→홈오피스": "Have you ever had a problem with furniture in your home? Tell me what happened, and what you did about it.", "아묻따#6 어릴 적 중국 여행": "Tell me about a trip you took when you were a child. Where did you go, and what do you remember about it?", "⭐아묻따#7 렌트 EV 충전 문제": "Have you ever rented a car while traveling? Tell me about a memorable or unexpected experience you had with a rental car.", "아묻따#8 식당서 외국인 도와줌": "Tell me about a time you helped someone who was visiting from another country. What happened?", "아묻따#9 온라인쇼핑 보안 문제": "Have you ever had a problem while shopping online? Tell me what happened, and how it turned out.", "⭐아묻따#10 ATM PIN+폰 방전": "Tell me about a problem you had at a bank or an ATM. What happened, and what did you do?", "아묻따#11 첫 캠핑+지역 축제": "Tell me about the first time you went camping. Where did you go, who were you with, and what happened?", "⭐아묻따#12 과로→건강식·휴식 (만능)": "Tell me about a time when stress or overwork affected your health. What happened, and how did you recover?", "아묻따#13 미용실서 유명인": "Tell me about a memorable experience you had at a hair salon. What happened, and why do you still remember it?", "⭐아묻따#14 배달앱 첫 주문 실수": "Tell me about the first time you used a food delivery app. How did it go?", "아묻따#15 재활용하다 손 다침": "Tell me about a time when something unexpected happened while you were recycling or doing chores. What happened?", "☕ cafe — 사무실 근처 카페": "You indicated that you go to coffee shops. Tell me about a coffee shop you often go to. What does it look like, and why do you like it?", "☕ cafe — 평일과 주말 루틴": "What do you usually do when you go to a coffee shop? Tell me about your routine, from the moment you walk in until you leave.", "🏃 walking — 저녁 산책": "You indicated that you go walking and jogging. Where do you usually go, and when did you start? Tell me about your routine.", "🌧 산책 중 소나기와 카페": "Tell me about a memorable experience you had at a coffee shop. When was it, and what happened?", "👋 자기소개 — 균형": "Let's start the interview now. Tell me a little bit about yourself."};                             // 카드 제목 → 오픽 스타일 질문 (텔레그램 봇과 같은 문장)
+const SURVEY_PLACES = ['music', 'camp', 'beach', 'movie', 'home', 'travel', 'local', 'cafe', 'walk'];
+const SURPRISE_PLACES = ['korea', 'health', 'tech', 'town'];
+const RP_SETS = [['D3-6', 'D3-7', 'D3-8'], ['D3-9', 'D3-10', 'D3-11'], ['D5-5', 'D5-6', 'D5-1'], ['D5-7', 'D5-8', 'D5-2']];   // 질문하기 → 문제 해결 → 관련 경험
+let examState = { v: 1, date: EXAM_DEFAULT_DATE, core: {}, mocks: [] };
+let mock = null;                                       // 진행 중인 모의고사
+
+function examLoad() {
+  examState = { v: 1, date: EXAM_DEFAULT_DATE, core: {}, mocks: [] };
+  try { const v = JSON.parse(localStorage.getItem(LS_EXAM) || 'null'); if (v && typeof v === 'object') examState = Object.assign(examState, v); } catch (_) {}
+  if (!examState.core || typeof examState.core !== 'object') examState.core = {};
+  if (!Array.isArray(examState.mocks)) examState.mocks = [];
+}
+function examSave() { try { localStorage.setItem(LS_EXAM, JSON.stringify(examState)); } catch (e) { console.warn('시험 기록 저장 불가', e); } }
+function examDaysLeft() {
+  if (!gameValidDate(examState.date)) return null;
+  const [y1, m1, d1] = twTodayKey().split('-').map(Number), [y2, m2, d2] = examState.date.split('-').map(Number);
+  return Math.round((Date.UTC(y2, m2 - 1, d2) - Date.UTC(y1, m1 - 1, d1)) / 86400000);
+}
+function examOn() { const d = examDaysLeft(); return d !== null && d >= 0; }
+function examPhase() {                                  // 1 범위 굳히기(D-14 전) · 2 실전(D-13~D-6) · 3 마무리(D-5~)
+  const d = examDaysLeft(); if (d === null || d < 0) return 0;
+  return d > 13 ? 1 : d > 5 ? 2 : 3;
+}
+function examNewLimit() { return [ROUTINE_NEW_CARD_MAX, ROUTINE_NEW_CARD_MAX, 1, 0][examPhase()]; }
+const _coreSet = new Set(CORE_TITLES);
+function isCore(c) { if (!c) return false; const k = ck(c), o = examState.core[k]; return o === undefined ? _coreSet.has(c.title) : !!o; }
+function coreCards() { return CARD_DATA.filter(isCore); }
+function examToggleCore() {
+  const c = memCard(); if (!c) return;
+  examState.core[ck(c)] = !isCore(c); examSave(); renderPills(); showCard();
+}
+function examSetDate() {
+  const v = prompt('시험일 (YYYY-MM-DD)\n비우고 확인하면 시험 모드를 꺼요.', examState.date || EXAM_DEFAULT_DATE);
+  if (v === null) return;
+  const t = v.trim();
+  if (t && !gameValidDate(t)) { alert('실제로 존재하는 날짜를 YYYY-MM-DD 형식으로 입력해주세요.'); return; }
+  examState.date = t; examSave();
+  const r = dayRec();
+  if (!r.s.card) { gameRefreshQueue(r); dailySave(); }
+  renderPills(); showCard(); renderHome();
+}
+function examReadiness() {
+  const cs = coreCards();
+  return { total: cs.length, tried: cs.filter(c => (srsOf(ck(c)).n || 0) > 0).length,
+           ready: cs.filter(c => srsOf(ck(c)).box >= 2).length, solid: cs.filter(c => { const p = srsOf(ck(c)); return p.box >= 3 && (p.nh || 0) >= 2; }).length };
+}
+function examCoreBadge(c) {
+  if (!c) return '';
+  return ` <span class="exam-core ${isCore(c) ? 'on' : ''}" onclick="examToggleCore()">${isCore(c) ? '🎯 핵심 ✓' : '＋ 핵심에 추가'}</span>`;
+}
+function examHomeHtml() {
+  const d = examDaysLeft();
+  if (d === null) return `<div class="mem-home-row" onclick="examSetDate()">📅 시험일을 넣으면 시험 모드가 켜져요 (D-day · 핵심 카드 · 모의고사) <span>›</span></div>`;
+  const r = examReadiness(), ph = examPhase(), last = examState.mocks[0];
+  const phaseTxt = d < 0 ? '시험이 끝났어요. 수고했어요. 새 시험일은 필요할 때 바꿔주세요.'
+    : ph === 1 ? '① 익숙한 이야기 몇 개부터 내 말로 해봐요. 여유 있는 날 미니 모의고사로 루틴 한 번을 대신해도 좋아요.'
+    : ph === 2 ? '② 실전 — 새 카드는 하루 1장까지. 컨디션이 좋을 때만 전체 모의고사 한 번.'
+    : '③ 마무리 — 새 카드 없이 익숙한 이야기와 회복 표현만. 전날은 2분만 하거나 쉬어요.';
+  
+  return `<div class="exam-box">
+    <div class="game-map-head"><b>🎯 시험 ${d > 0 ? 'D-' + d : d === 0 ? 'D-DAY' : '종료'}</b><span class="game-day" onclick="examSetDate()">${examState.date} · 바꾸기</span></div>
+    <details style="margin:4px 0 9px;"><summary>핵심 카드 연습 기록 보기</summary>
+      <div class="exam-ready">말해봄 <b>${r.tried}</b>/${r.total} · 2단계 이상 ${r.ready} · 몸에 붙음 ${r.solid}</div>
+    </details>
+    <div class="mem-note" style="margin:0 0 10px;">${phaseTxt}</div>
+    ${d >= 0 ? `<div class="mem-actions" style="margin:0;">
+      <button class="btn" onclick="mockStart('mini')">🎤 미니 모의고사<br><small>5문항 · 약 8분</small></button>
+      <button class="btn" onclick="mockStart('full')">🏁 전체 모의고사<br><small>15문항 · 약 30분</small></button></div>` : ''}
+    ${last ? `<div class="mem-note" style="margin:9px 0 0;cursor:pointer;" onclick="mockShowReport(0)">최근 모의고사 ${last.date.slice(5)} · ${last.kind === 'full' ? '전체' : '미니'} · 평균 ${last.avgWc}단어${last.grade ? ' · ' + escapeHtml(last.grade) : ''} · 리포트 다시 보기 ›</div>` : ''}
+    <div class="mem-note" style="margin:6px 0 0;cursor:pointer;" onclick="setCat('core');switchTab('cards')">🎯 핵심 카드 ${r.total}장 보기 ›</div>
+  </div>`;
+}
+
+/* ---------- 모의고사 문제 만들기 ---------- */
+const CARD_Q_ALT = { '🌧 산책 중 소나기와 카페': { walk: "Tell me about a memorable experience you had while walking or jogging. When was it, and what happened?" }, '💪 gym — 월수금 루틴': { walk: "How do you usually exercise these days? Tell me about your weekly routine and how you got started." } };
+function mockQ(c, place) { return (CARD_Q_ALT[c.title] && CARD_Q_ALT[c.title][place]) || CARD_Q[c.title] || (c.topicEn ? `Tell me about ${c.topicEn}. Describe it in as much detail as possible.` : 'Tell me about a memorable experience you had recently. What happened, and how did you feel?'); }
+function mockShuffle(a) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+function mockCombo(place, n) {                          // 같은 주제로 묘사 → (루틴) → 경험
+  if (place === 'walk') {
+    const walk = DEFAULT_CARDS.find(c => c.title === '🏃 walking — 저녁 산책');
+    const rain = DEFAULT_CARDS.find(c => c.title === '🌧 산책 중 소나기와 카페');
+    const qs = [{type:'desc', q:'Describe a place where you like to go for a walk. What is it like?', card:walk.title},
+      {type:'desc', q:mockQ(walk), card:walk.title}, {type:'exp', q:mockQ(rain, 'walk'), card:rain.title}];
+    return (n === 2 ? [qs[1],qs[2]] : qs).map(x=>({...x,topic:'🏃 걷기·조깅'}));
+  }
+  const cs = mockShuffle(DEFAULT_CARDS.filter(c => c.cat !== 'rp' && c.cat !== undefined && c.title.indexOf('자기소개') === -1 && (gamePlaceOf(c) === place || (c.alsoPlaces || []).includes(place))));
+  const desc = cs.filter(c => c.cat === 'desc' || c.cat === 'opi'), exp = cs.filter(c => c.cat === 'exp');
+  const pick = [];
+  desc.slice(0, n - 1).forEach(c => pick.push({ c, type: 'desc' }));
+  if (exp[0]) pick.push({ c: exp[0], type: 'exp' });
+  for (const c of cs) { if (pick.length >= n) break; if (!pick.some(p => p.c === c)) pick.push({ c, type: c.cat === 'exp' ? 'exp' : 'desc' }); }
+  pick.sort((a, b) => (a.type === 'exp') - (b.type === 'exp'));
+  const p = PLACES.find(x => x.id === place);
+  return pick.slice(0, n).map(x => ({ type: x.type, q: mockQ(x.c, place), topic: p.icon + ' ' + p.name, card: x.c.title }));
+}
+function mockRp(n) {
+  const set = RP_SETS[Math.floor(Math.random() * RP_SETS.length)];
+  const cards = set.map(tag => DEFAULT_CARDS.find(c => c.title.includes(tag))).filter(Boolean);
+  const types = ['rp', 'rp', 'exp'];
+  const items = cards.map((c, i) => ({ type: types[i], q: mockQ(c), topic: '🎭 롤플레이', card: c.title }));
+  return n === 1 ? [items[1] || items[0]] : items;
+}
+const ADV_TOPICS = { cafe: 'coffee shops in your country', walk: 'the way people exercise', music: 'the way people listen to music', camp: 'camping', beach: 'going to the beach', movie: 'the way people watch movies',
+  home: 'housing in your country', travel: 'domestic travel', local: 'the way people use parks' };
+function mockAdvanced(place) {                          // 14·15번: 비교 + 이슈
+  const topic = ADV_TOPICS[place] || 'technology', p = PLACES.find(x => x.id === place);
+  const cmp = TWISTS.find(t => t.id === 'compare'), iss = TWISTS.find(t => t.id === 'issue');
+  return [{ type: 'compare', q: cmp.enT.replace('{topic}', topic), topic: p.icon + ' ' + p.name },
+          { type: 'issue', q: iss.enT.replace('{topic}', topic), topic: p.icon + ' ' + p.name }];
+}
+function mockBuild(kind) {
+  const sv = mockShuffle(SURVEY_PLACES.filter(pl => DEFAULT_CARDS.filter(c => c.cat !== 'rp' && (gamePlaceOf(c) === pl || (c.alsoPlaces || []).includes(pl))).length >= 3 || pl === 'walk')), sp = mockShuffle(SURPRISE_PLACES);
+  if (kind === 'mini') {
+    return [...mockCombo(sv[0], 2), ...mockCombo(sp[0], 3).filter(x => x.type === 'exp').slice(0, 1), ...mockRp(1), mockAdvanced(sv[1])[0]];
+  }
+  return [{ type: 'intro', q: "Let's start the interview now. Tell me a little bit about yourself.", topic: '👋 자기소개', card: '👋 자기소개 — 균형' },
+    ...mockCombo(sv[0], 3), ...mockCombo(sv[1], 3), ...mockCombo(sp[0], 3), ...mockRp(3), ...mockAdvanced(sv[2])];
+}
+
+/* ---------- 모의고사 진행 ---------- */
+const MOCK_TYPE_KO = { intro: '자기소개', desc: '묘사', exp: '경험', rp: '롤플레이', compare: '비교', issue: '이슈' };
+function mockStart(kind) {
+  if (mock && !mock.done && !confirm('진행 중인 연습을 끝내고 새로 시작할까요?')) return;
+  mockRelease();
+  routine.step = null; renderRoutineBar();
+  gameEndMission(); twResetTimer();
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const items = kind === 'light' ? lightQuestion() : mockBuild(kind);
+  mock = { kind, items, i: 0, t0: Date.now(), done: false, voice: kind !== 'light' && !!SR,
+    phase: kind === 'light' ? 'answer' : 'ready', replay: 0, showQ: kind === 'light', sec: 0 };
+  items.forEach(x => { x.answer = ''; x.draft = ''; x.sec = 0; x.audio = null; });
+  switchTab('mock'); mockRender();
+  try { window.scrollTo({ top: 0 }); } catch (_) {}
+}
+function mockStopTimers(s = mock) {
+  if (s?.timer) { clearInterval(s.timer); s.timer = null; }
+  if ('speechSynthesis' in window) speechSynthesis.cancel();
+}
+function mockStopCapture(s, keepAudio = false) {
+  if (!s) return Promise.resolve();
+  const rec = s.rec, mr = s.mr, recording = s.capture;
+  s.rec = null; s.mr = null; s.capture = null;
+  if (rec) { try { rec.forceStop(); } catch (_) {} }
+  if (recording && !keepAudio) recording.cancelled = true;
+  if (mr && mr.state !== 'inactive') { try { mr.stop(); } catch (_) {} }
+  if (recording?.stream) recording.stream.getTracks().forEach(t => t.stop());
+  return recording?.done || Promise.resolve();
+}
+function mockRelease() {
+  if (!mock) return;
+  const s = mock; mock = null;
+  mockStopTimers(s); mockStopCapture(s);
+  s.items.forEach(it => { if (it.audio) URL.revokeObjectURL(it.audio); });
+}
+function mockAsk() {
+  const s = mock, i = s.i;
+  s.phase = 'listen'; s.showQ = false; s.replay = 0; s.sec = 0; s.final = '';
+  mockRender();
+  speakTTS(s.items[i].q, () => { if (mock === s && s.i === i && s.phase === 'listen') mockAnswer(); });
+}
+function mockReplay() {
+  const s = mock;
+  if (!s || s.phase === 'report' || s.replay >= 1 || s.busy) return;
+  const i = s.i, listening = s.phase === 'listen';
+  s.replay++;
+  if (listening) s.phase = 'replay';
+  mockRender();
+  speakTTS(s.items[i].q, () => { if (mock === s && s.i === i && s.phase === 'replay') mockAnswer(); });
+}
+function mockAnswer() {
+  const s = mock;
+  if (!s || !['listen','replay'].includes(s.phase)) return;
+  s.phase = 'answer'; s.sec = 0;
+  mockStopTimers(s);
+  s.timer = setInterval(() => {
+    s.sec++;
+    const el = document.getElementById('mockClock');
+    if (el) el.textContent = twFmt(s.sec);
+  }, 1000);
+  mockRender();
+  if (s.voice) mockRecStart();
+}
+function mockRecStart() {
+  const s = mock, i = s.i, it = s.items[i];
+  s.final = '';
+  const valid = () => mock === s && s.i === i && s.rec === rec;
+  const apply = (fin, interim = '') => {
+    if (!valid()) return;
+    s.final = fin;
+    const el = document.getElementById('mockTranscript');
+    if (el) el.innerHTML = escapeHtml(fin) + `<span class="interim">${escapeHtml(interim)}</span>`;
+  };
+  const rec = makeRecognizer(apply, fin => { if (valid()) { apply(fin); s.stopResolve?.(); } });
+  if (!rec) { s.voice = false; mockRender(); return; }
+  s.rec = rec;
+  try { rec.start(); } catch (_) { s.rec = null; s.voice = false; mockRender(); return; }
+  if (!(navigator.mediaDevices && window.MediaRecorder)) return;
+  const capture = { chunks: [], cancelled: false }; s.capture = capture;
+  navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+    if (!valid() || capture.cancelled || s.phase !== 'answer' || s.busy) { stream.getTracks().forEach(t => t.stop()); return; }
+    capture.stream = stream;
+    let mr;
+    try { mr = new MediaRecorder(stream); } catch (_) { stream.getTracks().forEach(t => t.stop()); return; }
+    s.mr = mr;
+    capture.done = new Promise(resolve => {
+      mr.ondataavailable = e => { if (e.data?.size) capture.chunks.push(e.data); };
+      mr.onstop = () => {
+        stream.getTracks().forEach(t => t.stop());
+        if (mock === s && !capture.cancelled && capture.chunks.length) {
+          if (it.audio) URL.revokeObjectURL(it.audio);
+          it.audio = URL.createObjectURL(new Blob(capture.chunks, { type: mr.mimeType || 'audio/webm' }));
+        }
+        resolve();
+      };
+      try { mr.start(); } catch (_) { stream.getTracks().forEach(t => t.stop()); resolve(); }
+    });
+  }).catch(() => {});
+}
+function mockStoreDraft(value) { if (mock?.phase === 'answer') mock.items[mock.i].draft = value; }
+function mockToggleMode() {
+  const s = mock;
+  if (!s || s.phase !== 'answer' || s.busy) return;
+  if (s.voice && !s.items[s.i].draft) s.items[s.i].draft = s.final || '';
+  mockStopCapture(s); s.voice = !s.voice;
+  mockRender(); if (s.voice) mockRecStart();
+}
+async function mockNext() {
+  const s = mock;
+  if (!s || s.phase !== 'answer' || s.busy || s.kind === 'light') return;
+  s.busy = true;
+  const it = s.items[s.i];
+  if (s.voice && s.rec) {
+    const settled = new Promise(r => { s.stopResolve = r; });
+    try { s.rec.forceStop(); } catch (_) {}
+    await Promise.race([settled, new Promise(r => setTimeout(r, 1800))]);
+    s.stopResolve = null;
+    if (mock !== s) return;
+    it.answer = (s.final || '').trim();
+  } else {
+    const ta = document.getElementById('mockText');
+    it.answer = (ta ? ta.value : it.draft || '').trim();
+  }
+  await Promise.race([mockStopCapture(s, true), new Promise(r => setTimeout(r, 400))]);
+  if (mock !== s) return;
+  it.sec = s.sec; mockStopTimers(s); s.busy = false;
+  if (s.i + 1 < s.items.length) { s.i++; mockAsk(); }
+  else await mockFinish();
+}
+function mockQuit() {
+  if (!mock || mock.kind === 'light' || confirm('연습을 그만둘까요? 아직 제출하지 않은 답변은 저장되지 않아요.')) {
+    mockRelease(); goHome();
+  }
+}
+
+
+/* ---------- 채점·리포트 ---------- */
+function mockCheck(type, answer) {
+  const tw = { exp: 'past', compare: 'compare', issue: 'issue' }[type];
+  if (tw) return twLocalCheck(null, TWISTS.find(t => t.id === tw), answer).checks.filter(c => !c.info).map(c => ({ label: c.label, pass: c.pass }));
+  const lower = ' ' + answer.toLowerCase() + ' ', wc = answer.split(/\s+/).filter(Boolean).length;
+  const n = re => (lower.match(re) || []).length;
+  if (type === 'rp') return [
+    { label: '질문 3개 이상 또는 대안 2개 이상', pass: n(/\?/g) >= 3 || n(/\b(how about|what if|could you|can i|would it be possible|or maybe|instead|alternatively|another option)\b/g) >= 2 },
+    { label: '상황 설명 (I\'m calling / the problem is / I need…)', pass: n(/\b(i'm calling|i am calling|the problem is|there's a problem|i need|i'd like|i would like|i have a|i heard|i'm planning|i'm sorry)\b/g) >= 1 },
+    { label: '공손한 표현·마무리 (thanks / appreciate / sorry)', pass: n(/\b(thank|thanks|appreciate|sorry|please)\b/g) >= 1 }];
+  return [
+    { label: '충분한 분량 (60단어 이상)', pass: wc >= 60 },
+    { label: '구체적 디테일 (장소·시간·사람·이유)', pass: n(/\b(because|since|when|where|with|near|usually|every|especially|for example)\b/g) >= 3 },
+    { label: '감정·의견 표현', pass: n(/\b(love|like|enjoy|favorite|honestly|really|feel|think|amazing|relax|comfortable|proud|excited)\b/g) >= 1 },
+    { label: '마무리 문장', pass: /(so overall|all in all|that's why|that's about it|in the end|anyway|that's pretty much)/.test(lower) }];
+}
+async function mockFinish() {
+  const session = mock;
+  session.done = true; session.phase = 'report';
+  const items = session.items;
+  if (session.kind === 'light') return lightReport(session);
+  items.forEach(it => { it.wc = it.answer.split(/\s+/).filter(Boolean).length; it.wpm = it.sec >= 5 ? Math.round(it.wc / it.sec * 60) : 0; it.checks = it.wc ? mockCheck(it.type, it.answer) : []; });
+  const answered = items.filter(it => it.wc > 0);
+  const avg = a => a.length ? Math.round(a.reduce((x, y) => x + y, 0) / a.length) : 0;
+  const half = Math.ceil(items.length / 2);
+  const rec = { date: twTodayKey(), at: Date.now(), kind: mock.kind, n: items.length, answered: answered.length,
+    totalSec: items.reduce((a, it) => a + it.sec, 0), avgWc: avg(answered.map(it => it.wc)), avgSec: avg(answered.map(it => it.sec)), avgWpm: avg(answered.filter(it => it.wpm).map(it => it.wpm)),
+    firstHalf: avg(items.slice(0, half).map(it => it.wc)), secondHalf: avg(items.slice(half).map(it => it.wc)),
+    passRate: (() => { const all = items.flatMap(it => it.checks); return all.length ? Math.round(all.filter(c => c.pass).length / all.length * 100) : 0; })(),
+    items: items.map(it => ({ type: it.type, topic: it.topic, q: it.q, wc: it.wc, sec: it.sec, wpm: it.wpm, checks: it.checks, a: it.answer.slice(0, 700) })), grade: '', ai: null };
+  examState.mocks.unshift(rec); examState.mocks = examState.mocks.slice(0, 12); examSave();
+  if (answered.length) logActivity({ wc: rec.avgWc });
+  session.report = rec;
+  mockRenderReport(rec, items);
+}
+async function mockRequestAI(i) {
+  const rec = examState.mocks[i], box = document.getElementById('mockAi');
+  if (!rec || !box || rec.ai || !config.apiUrl || !config.modelName || !rec.answered) return;
+  const live = mock?.report === rec ? mock.items : null;
+  box.textContent = '답변 텍스트를 분석 중이에요…';
+  try {
+    const body = rec.items.map((it, j) => `Q${j + 1} ${it.q}\nA${j + 1}: ${live?.[j].answer || it.a || '(무응답)'}`).join('\n\n');
+    const ai = parseLLMJson(await callLLM([{ role: 'user', content: body }],
+      'Analyze the OPIc practice transcripts only, in Korean. Prioritize answering the question directly, connected ideas and clarity. Do not infer pronunciation, fluency or a test score from text. Return JSON only: {"strengths":["one strength"],"next":["one specific improvement to practice next"]}.', 0.2));
+    rec.ai = {strengths: Array.isArray(ai?.strengths) ? ai.strengths.slice(0, 1) : [],
+      next: Array.isArray(ai?.next) ? ai.next.slice(0, 1) : []};
+    examSave();
+    if (document.getElementById('mockAi') === box && document.getElementById('panel-mock').classList.contains('active')) mockRenderReport(rec, live);
+  } catch (_) {
+    box.textContent = 'AI 피드백을 가져오지 못했어요. 아래 구조 기록은 그대로 확인할 수 있어요.';
+  }
+}
+function mockShowReport(i) { const rec = examState.mocks[i]; if (!rec) return; mockRelease(); switchTab('mock'); mockRenderReport(rec, null); try { window.scrollTo({ top: 0 }); } catch (_) {} }
+function mockRenderReport(rec, live) {
+  const el = document.getElementById('mockBody'); if (!el) return;
+  const idx = examState.mocks.indexOf(rec), prev = examState.mocks.slice(idx + 1).find(m => m.kind === rec.kind);
+  const delta = (a, b, unit) => prev ? ` <span class="${a >= b ? 'up' : 'down'}">${a >= b ? '▲' : '▼'}${Math.abs(a - b)}${unit}</span>` : '';
+  
+  const weak = rec.items.map((it, i) => ({ it, i })).filter(x => x.it.wc > 0).sort((a, b) => a.it.wc - b.it.wc).slice(0, 3);
+  const failCount = {}; rec.items.forEach(it => (it.checks || []).filter(c => !c.pass).forEach(c => { const k = String(c.label).replace(/\s*\(.*$/, ''); failCount[k] = (failCount[k] || 0) + 1; }));
+  const topFail = Object.entries(failCount).sort((a, b) => b[1] - a[1]).slice(0, 3);
+  const ai = rec.ai;
+  el.innerHTML = `
+    <div class="exam-box">
+      <div class="game-map-head"><b>🏁 ${rec.kind === 'full' ? '전체' : '미니'} 모의고사 리포트</b><span>${escapeHtml(rec.date)} · ${Number(rec.answered)}/${Number(rec.n)}문항 · ${twFmt(rec.totalSec)}</span></div>
+      <div class="home-stats" style="margin:10px 0;">
+        <div class="hs"><div class="num">${rec.avgWc}${delta(rec.avgWc, prev && prev.avgWc, '')}</div><div class="lab">평균 단어 수</div></div>
+        <div class="hs"><div class="num">${rec.avgSec}초${delta(rec.avgSec, prev && prev.avgSec, '초')}</div><div class="lab">평균 답변 시간</div></div>
+        <div class="hs"><div class="num">${rec.passRate}%${delta(rec.passRate, prev && prev.passRate, '')}</div><div class="lab">구조 항목 통과</div></div>
+      </div>
+      <div id="mockAi">${ai ? `<div class="game-pass"><b>답변 텍스트 피드백</b> <small>발음·실제 등급은 판정하지 않아요.</small><br>👍 ${escapeHtml(ai.strengths?.[0] || '답변에서 잘 전달한 부분을 찾아보세요.')}</div>`
+        : `<div class="mem-note">아래는 분량·시간·구조 참고 기록이에요. 다음번에 바꿀 점 하나만 골라보세요.</div>
+           ${config.apiUrl && config.modelName && rec.answered ? `<button class="btn" onclick="mockRequestAI(${idx})">답변 텍스트를 보내고 AI 피드백 받기</button>` : ''}`}</div>
+      <div class="mem-note" style="margin:8px 0 0;">
+        ${rec.n >= 4 ? `<b>연습 기록:</b> 앞 절반 평균 ${rec.firstHalf}단어 → 뒤 절반 ${rec.secondHalf}단어. 문항 종류도 달라서 분량만으로 실력을 판단할 수 없어요.<br>` : ''}
+        ${weak.length ? `<b>가장 짧았던 답변:</b> ${weak.map(x => `Q${x.i + 1} ${MOCK_TYPE_KO[x.it.type]}(${x.it.wc}단어)`).join(' · ')}<br>` : ''}
+        ${topFail.length ? `<b>자주 놓친 항목:</b> ${topFail.map(([k, v]) => `${escapeHtml(k)} ${v}회`).join(' · ')}` : ''}
+      </div>
+    </div>
+    <div class="mem-note"><b>다음 연습 한 가지:</b> ${escapeHtml(ai?.next?.[0] || "질문에 한 문장으로 바로 답하고 구체적인 예 하나를 덧붙여보세요.")}</div>
+    ${rec.items.map((it, i) => `<details class="mock-item"><summary><b>Q${i + 1}</b> <span class="mock-tag">${MOCK_TYPE_KO[it.type]}</span> ${escapeHtml(it.topic || '')} · ${it.wc}단어 · ${it.sec}초 ${(it.checks || []).map(c => c.pass ? '✅' : '❌').join('')}</summary>
+      <div class="mem-note" style="margin:8px 0 4px;color:var(--text);">${escapeHtml(it.q)}</div>
+      ${live && live[i] && live[i].audio ? `<audio controls src="${live[i].audio}" style="width:100%;margin:6px 0;"></audio>` : ''}
+      <div class="mem-note" style="margin:4px 0;">${escapeHtml(it.a || '(무응답)')}</div>
+      ${(it.checks || []).map(c => `<div class="check-item" style="font-size:13px;margin-bottom:4px;"><span class="check-icon">${c.pass ? '✅' : '❌'}</span><span>${escapeHtml(c.label)}</span></div>`).join('')}
+    </details>`).join('')}
+    <div class="mem-note">${live ? '녹음은 이 화면을 떠나면 사라져요. 지금 한 번 들어보세요 — 필러, 침묵, 시제가 귀로 들려요.' : '저장된 리포트예요 (녹음은 보관하지 않아요).'}</div>
+    <div class="mem-actions"><button class="btn btn-primary" onclick="goHome()">🏠 홈으로</button></div>`;
+}
+function mockRender() {
+  const el = document.getElementById('mockBody'); if (!el || !mock) return;
+  const it = mock.items[mock.i], n = mock.items.length;
+  const head = `<div class="routine-bar" style="display:flex;margin:0 0 14px;"><div class="rb-text"><span class="rb-step">${mock.kind === 'full' ? '전체' : '미니'} 모의고사 ${mock.i + 1}/${n}</span> · 문제 사이 피드백 없음 · 총 ${twFmt(Math.round((Date.now() - mock.t0) / 1000))}</div><button class="btn" onclick="mockQuit()">그만두기</button></div>`;
+  if (mock.kind === 'light') return lightRender();
+  if (mock.phase === 'ready') {
+    el.innerHTML = head + `<div class="exam-box"><div class="game-map-head"><b>🎧 준비되면 시작하세요</b></div>
+      <div class="mem-note" style="margin:0 0 10px;">시험 흐름을 연습해요.<br>· 앱에서는 질문을 듣고 한 번 다시 들을 수 있어요. 글로 보기 또한 가능해요<br>· 답변 중에는 피드백이 없어요. 다 말하면 '다음 문제'<br>· 답변 길이는 참고용이에요. 끝나면 리포트가 한 번에 나와요<br>· ${mock.voice ? '마이크 권한을 물으면 허용해주세요' : '이 브라우저는 음성 인식이 안 돼서 글로 입력해요'}</div>
+      <div class="mem-actions"><button class="btn btn-primary" onclick="mockAsk()">▶ 시작</button></div></div>`;
+    return;
+  }
+  const qBox = `<div class="question-box"><div class="q-label">● Question ${mock.i + 1} of ${n}</div>
+      <div class="q-text">${mock.showQ ? escapeHtml(it.q) : (mock.phase === 'listen' ? '🔊 질문을 듣는 중...' : '🎙 답변하세요')}</div></div>
+    <div class="mem-actions" style="margin-bottom:12px;">
+      <button class="btn" onclick="mockReplay()" ${mock.replay >= 1 ? 'disabled style="opacity:.45"' : ''}>🔁 다시 듣기 ${mock.replay >= 1 ? '(사용함)' : '(1번)'}</button>
+      <button class="btn" onclick="mock.showQ=!mock.showQ;mockRender()">${mock.showQ ? '질문 숨기기' : '👀 질문 글로 보기 (연습용)'}</button></div>`;
+  if (mock.phase === 'listen') {
+    el.innerHTML = head + qBox + `<div class="mem-actions"><button class="btn btn-primary" onclick="mockAnswer()">🎙 바로 답변 시작</button></div>`;
+    return;
+  }
+  const keep = mock.voice ? '' : (mock.items[mock.i].draft || '');
+  el.innerHTML = head + qBox + `<div class="voice-box">
+      <div class="voice-head"><span class="mock-clock" id="mockClock">${twFmt(mock.sec)}</span>
+        <button class="mode-btn" onclick="mockToggleMode()">${mock.voice ? '글로 입력' : '음성으로'}</button></div>
+      ${mock.voice ? `<div class="transcript" id="mockTranscript">${mock.final ? escapeHtml(mock.final) : '<span style="color:var(--accent3)">🔴 듣는 중...</span>'}</div>`
+        : `<textarea id="mockText" oninput="mockStoreDraft(this.value)" placeholder="영어 답변을 입력하세요..." style="min-height:130px;"></textarea>`}
+      <div class="small-note">시간은 참고용이에요. 질문에 맞는 얘기를 마치면 다음 문제로 넘어가세요.</div>
+    </div>
+    <button class="btn btn-primary" style="width:100%;margin-top:12px;" onclick="mockNext()">${mock.i + 1 < n ? '다음 문제 →' : '✅ 마지막 답변 제출 · 리포트 보기'}</button>`;
+  if (!mock.voice && keep) document.getElementById('mockText').value = keep;
+}
+
+function lightHomeHtml() {
+  return `<button type="button" class="mem-home-row" style="width:100%;text-align:left" onclick="mockStart('light')">🌿 2분만 말하기 · 질문 하나, 점수 없이 <span>›</span></button>
+    <details class="exam-box"><summary>컨디션에 맞춰 공부하는 법</summary>
+      <div class="mem-note" style="margin:8px 0 0">
+      <b>바쁜 날:</b> 질문 하나에 한 문장부터. 2분으로 끝내도 충분해요.<br>
+      <b>보통 날:</b> 루틴 약 10~13분. 길게 집중하기 어렵다면 표현·카드와 실전을 나눠도 돼요.<br>
+      <b>쉬는 날:</b> 그대로 쉬어요. 못 한 분량은 다음 날로 가져오지 않아요.<br>
+      한 주 예시: 루틴 3회 + 짧게 2회 + 휴식 2일. 미니 모의고사는 여유 있을 때 루틴 1회를 대신해요.<br><br>
+      <b>첫 답변:</b> 질문에 바로 답하고 예를 하나 말해요. 뜻이 전달되면 작은 문법 실수는 지나가요.<br>
+      <b>다시 말할 때:</b> 피드백에서 가장 영향 큰 것 하나만 골라 같은 질문에 한 번 더 답해요.<br>
+      낯선 질문도 아는 이야기부터 꺼내기 전에, 먼저 질문의 핵심에 짧게 답해요.
+      </div></details>`;
+}
+function lightQuestion() {
+  const n = gameDayIndex(twTodayKey()), core = coreCards().filter(c => !c._user && c.cat !== 'rp');
+  const practiced = core.filter(c => srsOf(ck(c)).n > 0);
+  const q = practiced.length ? practiced : DEFAULT_CARDS.filter(c => c.set === 'v15');
+  const c = q[n % q.length] || todayStory().card;
+  return [{ type: c.cat === 'exp' ? 'exp' : 'desc', q: mockQ(c), topic: PLACES.find(p => p.id === gamePlaceOf(c)).name, card: c.title }];
+}
+function lightRender() {
+  const it = mock.items[0];
+  const expr = REPAIR_EXPRESSIONS[gameDayIndex(twTodayKey()) % REPAIR_EXPRESSIONS.length];
+  document.getElementById('mockBody').innerHTML = `<div class="exam-box">
+    <div class="game-map-head"><b>🌿 2분만 말하기</b><button class="btn" onclick="mockQuit()">홈으로</button></div>
+    <div class="mem-note">30~60초 정도 소리 내어 말해보세요. 한 문장으로 끝내도 돼요. 녹음이나 입력 없이 진행합니다.</div>
+    <div class="question-box" style="margin-top:10px;"><div class="q-text">${escapeHtml(it.q)}</div></div>
+    <div class="mem-actions"><button class="btn" onclick="speakTTS(mock.items[0].q)">🔊 질문 듣기</button></div>
+    <div class="mem-note"><b>막히면:</b> ${escapeHtml(expr.en)} · ${escapeHtml(expr.ko)}</div>
+    <button class="btn btn-primary" style="margin-top:10px;width:100%;" onclick="lightDone()">✅ 한 번 말했어요</button>
+  </div>`;
+}
+function lightDone() {
+  if (!mock || mock.kind !== 'light' || mock.done) return;
+  mockStopTimers();
+  mock.done = true; mock.phase = 'report';
+  const r = dayRec();
+  if (!r.light) { r.light = true; logActivity(); }
+  lightReport(mock);
+}
+function lightReport(s) {
+  const it = s.items[0];
+  document.getElementById('mockBody').innerHTML = `<div class="exam-box">
+    <div class="game-map-head"><b>✅ 오늘도 말해봤어요</b></div>
+    <div class="mem-note">오늘은 여기서 끝내도 좋아요. 한 번 더 하고 싶다면 <b>구체적인 디테일 하나</b>만 더해보세요.</div>
+    <div class="question-box" style="margin-top:10px;"><div class="q-text">${escapeHtml(it.q)}</div></div>
+    <div class="mem-actions"><button class="btn btn-primary" onclick="goHome()">오늘은 여기까지</button>
+      <button class="btn" onclick="lightRetry()">같은 질문 한 번 더 (선택)</button></div>
+  </div>`;
+}
+function lightRetry() {
+  if (mock?.kind !== 'light') return;
+  mock.done = false; mock.phase = 'answer'; mock.replay = 0;
+  lightRender();
+}
+
+examLoad(); gameLoad(); memLoad(); loadState(); dailyLoad(); srsLoad(); renderPills(); showCard(); updateConfigStatus(); newSpeakQ(); initTwist(); twRenderHist(); initExpr(); gameCheck(true); if (!gameState.init) { gameState.init = true; gameSave(); } renderHome();
 </script>
 </body>
 </html>
